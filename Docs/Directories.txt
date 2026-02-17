@@ -1,0 +1,221 @@
+total 0
+drwxr-xr-x  19 alihafeez  staff  608 Feb 17 20:39 EmployeeManagementSystem
+
+./EmployeeManagementSystem:
+total 32
+drwxr-xr-x  3 alihafeez  staff   96 Feb 17 20:39 Controllers
+drwxr-xr-x  2 alihafeez  staff   64 Feb 17 20:39 Data
+drwxr-xr-x@ 9 alihafeez  staff  288 Feb 17 20:59 Docs
+drwxr-xr-x  3 alihafeez  staff   96 Feb 17 20:39 Models
+-rw-r--r--  1 alihafeez  staff  669 Feb 17 20:39 Program.cs
+drwxr-xr-x  3 alihafeez  staff   96 Feb 17 20:39 Properties
+-rw-r--r--@ 1 alihafeez  staff   44 Feb 17 17:20 README.md
+drwxr-xr-x  2 alihafeez  staff   64 Feb 17 20:39 Services
+drwxr-xr-x  6 alihafeez  staff  192 Feb 17 20:39 Views
+-rw-r--r--  1 alihafeez  staff  119 Feb 17 20:39 appsettings.Development.json
+-rw-r--r--@ 1 alihafeez  staff  333 Feb 17 20:42 appsettings.json
+drwxr-xr-x  3 alihafeez  staff   96 Feb 17 20:39 bin
+drwxr-xr-x  8 alihafeez  staff  256 Feb 17 20:42 obj
+drwxr-xr-x  6 alihafeez  staff  192 Feb 17 20:39 wwwroot
+
+./EmployeeManagementSystem/Controllers:
+total 8
+-rw-r--r--  1 alihafeez  staff  529 Feb 17 20:39 HomeController.cs
+
+./EmployeeManagementSystem/Data:
+total 0
+
+./EmployeeManagementSystem/Docs:
+total 200
+-rw-r--r--@ 1 alihafeez  staff  13520 Feb 17 17:23 Development Roadmap.md
+-rw-r--r--@ 1 alihafeez  staff      0 Feb 17 20:59 Directories.txt
+-rw-r--r--@ 1 alihafeez  staff  14566 Feb 17 17:22 Module Breakdown.md
+-rw-r--r--@ 1 alihafeez  staff  13079 Feb 17 20:57 Progress Tracker.md
+-rw-r--r--@ 1 alihafeez  staff   8824 Feb 17 17:21 Project Overview & Requirements.md
+-rw-r--r--@ 1 alihafeez  staff  19492 Feb 17 20:57 Setup Instructions.md
+-rw-r--r--@ 1 alihafeez  staff  18871 Feb 17 17:53 Technical Architecture.md
+
+./EmployeeManagementSystem/Models:
+total 8
+-rw-r--r--@ 1 alihafeez  staff  208 Feb 17 20:43 ErrorViewModel.cs
+
+./EmployeeManagementSystem/Properties:
+total 8
+-rw-r--r--  1 alihafeez  staff  619 Feb 17 20:39 launchSettings.json
+
+./EmployeeManagementSystem/Services:
+total 0
+
+./EmployeeManagementSystem/Views:
+total 16
+drwxr-xr-x  4 alihafeez  staff  128 Feb 17 20:39 Home
+drwxr-xr-x  6 alihafeez  staff  192 Feb 17 20:39 Shared
+-rw-r--r--  1 alihafeez  staff   81 Feb 17 20:39 _ViewImports.cshtml
+-rw-r--r--  1 alihafeez  staff   32 Feb 17 20:39 _ViewStart.cshtml
+
+./EmployeeManagementSystem/Views/Home:
+total 16
+-rw-r--r--  1 alihafeez  staff  232 Feb 17 20:39 Index.cshtml
+-rw-r--r--  1 alihafeez  staff  138 Feb 17 20:39 Privacy.cshtml
+
+./EmployeeManagementSystem/Views/Shared:
+total 32
+-rw-r--r--  1 alihafeez  staff   859 Feb 17 20:39 Error.cshtml
+-rw-r--r--  1 alihafeez  staff  2336 Feb 17 20:39 _Layout.cshtml
+-rw-r--r--  1 alihafeez  staff   877 Feb 17 20:39 _Layout.cshtml.css
+-rw-r--r--  1 alihafeez  staff   179 Feb 17 20:39 _ValidationScriptsPartial.cshtml
+
+./EmployeeManagementSystem/bin:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 17 20:39 Debug
+
+./EmployeeManagementSystem/bin/Debug:
+total 0
+drwxr-xr-x  2 alihafeez  staff  64 Feb 17 20:39 net10.0
+
+./EmployeeManagementSystem/bin/Debug/net10.0:
+total 0
+
+./EmployeeManagementSystem/obj:
+total 432
+drwxr-xr-x  3 alihafeez  staff      96 Feb 17 20:39 Debug
+-rw-r--r--  1 alihafeez  staff  210286 Feb 17 20:41 project.assets.json
+-rw-r--r--  1 alihafeez  staff    6692 Feb 17 20:42 project.nuget.cache
+
+./EmployeeManagementSystem/obj/Debug:
+total 0
+drwxr-xr-x  19 alihafeez  staff  608 Feb 17 20:44 net10.0
+
+./EmployeeManagementSystem/obj/Debug/net10.0:
+total 120
+drwxr-xr-x  2 alihafeez  staff     64 Feb 17 20:39 ref
+drwxr-xr-x  2 alihafeez  staff     64 Feb 17 20:39 refint
+-rw-r--r--  1 alihafeez  staff  58721 Feb 17 20:44 rpswa.dswa.cache.json
+drwxr-xr-x  2 alihafeez  staff     64 Feb 17 20:39 staticwebassets
+
+./EmployeeManagementSystem/obj/Debug/net10.0/ref:
+total 0
+
+./EmployeeManagementSystem/obj/Debug/net10.0/refint:
+total 0
+
+./EmployeeManagementSystem/obj/Debug/net10.0/staticwebassets:
+total 0
+
+./EmployeeManagementSystem/wwwroot:
+total 16
+drwxr-xr-x  3 alihafeez  staff    96 Feb 17 20:39 css
+-rw-r--r--  1 alihafeez  staff  5430 Feb 17 20:39 favicon.ico
+drwxr-xr-x  3 alihafeez  staff    96 Feb 17 20:39 js
+drwxr-xr-x  6 alihafeez  staff   192 Feb 17 20:39 lib
+
+./EmployeeManagementSystem/wwwroot/css:
+total 8
+-rw-r--r--  1 alihafeez  staff  637 Feb 17 20:39 site.css
+
+./EmployeeManagementSystem/wwwroot/js:
+total 8
+-rw-r--r--  1 alihafeez  staff  227 Feb 17 20:39 site.js
+
+./EmployeeManagementSystem/wwwroot/lib:
+total 0
+drwxr-xr-x  4 alihafeez  staff  128 Feb 17 20:39 bootstrap
+drwxr-xr-x  4 alihafeez  staff  128 Feb 17 20:39 jquery
+drwxr-xr-x  4 alihafeez  staff  128 Feb 17 20:39 jquery-validation
+drwxr-xr-x  4 alihafeez  staff  128 Feb 17 20:39 jquery-validation-unobtrusive
+
+./EmployeeManagementSystem/wwwroot/lib/bootstrap:
+total 8
+-rw-r--r--  1 alihafeez  staff  1131 Feb 17 20:39 LICENSE
+drwxr-xr-x  4 alihafeez  staff   128 Feb 17 20:39 dist
+
+./EmployeeManagementSystem/wwwroot/lib/bootstrap/dist:
+total 0
+drwxr-xr-x  34 alihafeez  staff  1088 Feb 17 20:39 css
+drwxr-xr-x  14 alihafeez  staff   448 Feb 17 20:39 js
+
+./EmployeeManagementSystem/wwwroot/lib/bootstrap/dist/css:
+total 12120
+-rw-r--r--  1 alihafeez  staff   70329 Feb 17 20:39 bootstrap-grid.css
+-rw-r--r--  1 alihafeez  staff  203221 Feb 17 20:39 bootstrap-grid.css.map
+-rw-r--r--  1 alihafeez  staff   51795 Feb 17 20:39 bootstrap-grid.min.css
+-rw-r--r--  1 alihafeez  staff  115986 Feb 17 20:39 bootstrap-grid.min.css.map
+-rw-r--r--  1 alihafeez  staff   70403 Feb 17 20:39 bootstrap-grid.rtl.css
+-rw-r--r--  1 alihafeez  staff  203225 Feb 17 20:39 bootstrap-grid.rtl.css.map
+-rw-r--r--  1 alihafeez  staff   51870 Feb 17 20:39 bootstrap-grid.rtl.min.css
+-rw-r--r--  1 alihafeez  staff  116063 Feb 17 20:39 bootstrap-grid.rtl.min.css.map
+-rw-r--r--  1 alihafeez  staff   12065 Feb 17 20:39 bootstrap-reboot.css
+-rw-r--r--  1 alihafeez  staff  129371 Feb 17 20:39 bootstrap-reboot.css.map
+-rw-r--r--  1 alihafeez  staff   10126 Feb 17 20:39 bootstrap-reboot.min.css
+-rw-r--r--  1 alihafeez  staff   51369 Feb 17 20:39 bootstrap-reboot.min.css.map
+-rw-r--r--  1 alihafeez  staff   12058 Feb 17 20:39 bootstrap-reboot.rtl.css
+-rw-r--r--  1 alihafeez  staff  129386 Feb 17 20:39 bootstrap-reboot.rtl.css.map
+-rw-r--r--  1 alihafeez  staff   10198 Feb 17 20:39 bootstrap-reboot.rtl.min.css
+-rw-r--r--  1 alihafeez  staff   63943 Feb 17 20:39 bootstrap-reboot.rtl.min.css.map
+-rw-r--r--  1 alihafeez  staff  107823 Feb 17 20:39 bootstrap-utilities.css
+-rw-r--r--  1 alihafeez  staff  267535 Feb 17 20:39 bootstrap-utilities.css.map
+-rw-r--r--  1 alihafeez  staff   85352 Feb 17 20:39 bootstrap-utilities.min.css
+-rw-r--r--  1 alihafeez  staff  180381 Feb 17 20:39 bootstrap-utilities.min.css.map
+-rw-r--r--  1 alihafeez  staff  107691 Feb 17 20:39 bootstrap-utilities.rtl.css
+-rw-r--r--  1 alihafeez  staff  267476 Feb 17 20:39 bootstrap-utilities.rtl.css.map
+-rw-r--r--  1 alihafeez  staff   85281 Feb 17 20:39 bootstrap-utilities.rtl.min.css
+-rw-r--r--  1 alihafeez  staff  180217 Feb 17 20:39 bootstrap-utilities.rtl.min.css.map
+-rw-r--r--  1 alihafeez  staff  281046 Feb 17 20:39 bootstrap.css
+-rw-r--r--  1 alihafeez  staff  679755 Feb 17 20:39 bootstrap.css.map
+-rw-r--r--  1 alihafeez  staff  232803 Feb 17 20:39 bootstrap.min.css
+-rw-r--r--  1 alihafeez  staff  589892 Feb 17 20:39 bootstrap.min.css.map
+-rw-r--r--  1 alihafeez  staff  280259 Feb 17 20:39 bootstrap.rtl.css
+-rw-r--r--  1 alihafeez  staff  679615 Feb 17 20:39 bootstrap.rtl.css.map
+-rw-r--r--  1 alihafeez  staff  232911 Feb 17 20:39 bootstrap.rtl.min.css
+-rw-r--r--  1 alihafeez  staff  589087 Feb 17 20:39 bootstrap.rtl.min.css.map
+
+./EmployeeManagementSystem/wwwroot/lib/bootstrap/dist/js:
+total 5000
+-rw-r--r--  1 alihafeez  staff  207819 Feb 17 20:39 bootstrap.bundle.js
+-rw-r--r--  1 alihafeez  staff  444579 Feb 17 20:39 bootstrap.bundle.js.map
+-rw-r--r--  1 alihafeez  staff   80721 Feb 17 20:39 bootstrap.bundle.min.js
+-rw-r--r--  1 alihafeez  staff  332090 Feb 17 20:39 bootstrap.bundle.min.js.map
+-rw-r--r--  1 alihafeez  staff  135829 Feb 17 20:39 bootstrap.esm.js
+-rw-r--r--  1 alihafeez  staff  305438 Feb 17 20:39 bootstrap.esm.js.map
+-rw-r--r--  1 alihafeez  staff   73935 Feb 17 20:39 bootstrap.esm.min.js
+-rw-r--r--  1 alihafeez  staff  222455 Feb 17 20:39 bootstrap.esm.min.js.map
+-rw-r--r--  1 alihafeez  staff  145401 Feb 17 20:39 bootstrap.js
+-rw-r--r--  1 alihafeez  staff  306606 Feb 17 20:39 bootstrap.js.map
+-rw-r--r--  1 alihafeez  staff   60635 Feb 17 20:39 bootstrap.min.js
+-rw-r--r--  1 alihafeez  staff  220561 Feb 17 20:39 bootstrap.min.js.map
+
+./EmployeeManagementSystem/wwwroot/lib/jquery:
+total 8
+-rw-r--r--  1 alihafeez  staff  1097 Feb 17 20:39 LICENSE.txt
+drwxr-xr-x  8 alihafeez  staff   256 Feb 17 20:39 dist
+
+./EmployeeManagementSystem/wwwroot/lib/jquery/dist:
+total 1816
+-rw-r--r--  1 alihafeez  staff  285314 Feb 17 20:39 jquery.js
+-rw-r--r--  1 alihafeez  staff   87533 Feb 17 20:39 jquery.min.js
+-rw-r--r--  1 alihafeez  staff  134755 Feb 17 20:39 jquery.min.map
+-rw-r--r--  1 alihafeez  staff  232015 Feb 17 20:39 jquery.slim.js
+-rw-r--r--  1 alihafeez  staff   70264 Feb 17 20:39 jquery.slim.min.js
+-rw-r--r--  1 alihafeez  staff  107143 Feb 17 20:39 jquery.slim.min.map
+
+./EmployeeManagementSystem/wwwroot/lib/jquery-validation:
+total 8
+-rw-r--r--  1 alihafeez  staff  1095 Feb 17 20:39 LICENSE.md
+drwxr-xr-x  6 alihafeez  staff   192 Feb 17 20:39 dist
+
+./EmployeeManagementSystem/wwwroot/lib/jquery-validation/dist:
+total 312
+-rw-r--r--  1 alihafeez  staff  51529 Feb 17 20:39 additional-methods.js
+-rw-r--r--  1 alihafeez  staff  22122 Feb 17 20:39 additional-methods.min.js
+-rw-r--r--  1 alihafeez  staff  52536 Feb 17 20:39 jquery.validate.js
+-rw-r--r--  1 alihafeez  staff  25308 Feb 17 20:39 jquery.validate.min.js
+
+./EmployeeManagementSystem/wwwroot/lib/jquery-validation-unobtrusive:
+total 8
+-rw-r--r--  1 alihafeez  staff  1116 Feb 17 20:39 LICENSE.txt
+drwxr-xr-x  4 alihafeez  staff   128 Feb 17 20:39 dist
+
+./EmployeeManagementSystem/wwwroot/lib/jquery-validation-unobtrusive/dist:
+total 56
+-rw-r--r--  1 alihafeez  staff  19385 Feb 17 20:39 jquery.validate.unobtrusive.js
+-rw-r--r--  1 alihafeez  staff   5824 Feb 17 20:39 jquery.validate.unobtrusive.min.js
