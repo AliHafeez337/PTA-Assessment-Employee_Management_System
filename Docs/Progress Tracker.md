@@ -13,7 +13,7 @@
 
 | Module | Status | Progress | Start Date | End Date |
 |--------|--------|----------|------------|----------|
-| Module 0: Setup | 🟡 In Progress | 85% | - | - |
+| Module 0: Setup | 🟢 Completed | 100% | - | - |
 | Module 1: Database | 🔴 Not Started | 0% | - | - |
 | Module 2: Departments | 🔴 Not Started | 0% | - | - |
 | Module 3: Employees | 🔴 Not Started | 0% | - | - |
