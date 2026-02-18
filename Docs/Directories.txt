@@ -1,40 +1,52 @@
 total 40
-drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Controllers
-drwxr-xr-x  2 alihafeez  staff   64 Feb 17 22:18 Data
-drwxr-xr-x@ 9 alihafeez  staff  288 Feb 17 21:34 Docs
--rw-r--r--  1 alihafeez  staff  211 Feb 17 21:08 EmployeeManagementSystem.csproj
-drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Models
--rw-r--r--  1 alihafeez  staff  669 Feb 17 21:08 Program.cs
-drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Properties
--rw-r--r--@ 1 alihafeez  staff   44 Feb 17 17:20 README.md
-drwxr-xr-x  2 alihafeez  staff   64 Feb 17 22:18 Services
-drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 Views
--rw-r--r--  1 alihafeez  staff  119 Feb 17 21:08 appsettings.Development.json
--rw-r--r--@ 1 alihafeez  staff  333 Feb 17 22:18 appsettings.json
-drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:10 bin
-drwxr-xr-x  8 alihafeez  staff  256 Feb 17 21:10 obj
-drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 wwwroot
+drwxr-xr-x   4 alihafeez  staff  128 Feb 18 10:21 Controllers
+drwxr-xr-x   3 alihafeez  staff   96 Feb 18 08:04 Data
+drwxr-xr-x@ 10 alihafeez  staff  320 Feb 18 11:42 Docs
+-rw-r--r--   1 alihafeez  staff  837 Feb 18 08:21 EmployeeManagementSystem.csproj
+drwxr-xr-x   5 alihafeez  staff  160 Feb 18 08:22 Migrations
+drwxr-xr-x   5 alihafeez  staff  160 Feb 18 08:01 Models
+-rw-r--r--@  1 alihafeez  staff  929 Feb 18 08:20 Program.cs
+drwxr-xr-x   3 alihafeez  staff   96 Feb 17 21:08 Properties
+-rw-r--r--@  1 alihafeez  staff   44 Feb 17 17:20 README.md
+drwxr-xr-x   2 alihafeez  staff   64 Feb 17 22:18 Services
+drwxr-xr-x   7 alihafeez  staff  224 Feb 18 10:22 Views
+-rw-r--r--   1 alihafeez  staff  119 Feb 17 21:08 appsettings.Development.json
+-rw-r--r--@  1 alihafeez  staff  333 Feb 17 22:18 appsettings.json
+drwxr-xr-x   3 alihafeez  staff   96 Feb 17 21:10 bin
+drwxr-xr-x   8 alihafeez  staff  256 Feb 18 08:21 obj
+drwxr-xr-x   6 alihafeez  staff  192 Feb 17 21:08 wwwroot
 
 ./Controllers:
-total 8
--rw-r--r--  1 alihafeez  staff  575 Feb 17 21:08 HomeController.cs
+total 24
+-rw-r--r--@ 1 alihafeez  staff  6623 Feb 18 11:42 DepartmentController.cs
+-rw-r--r--  1 alihafeez  staff   575 Feb 17 21:08 HomeController.cs
 
 ./Data:
-total 0
+total 8
+-rw-r--r--@ 1 alihafeez  staff  2644 Feb 18 08:04 ApplicationDbContext.cs
 
 ./Docs:
-total 200
--rw-r--r--@ 1 alihafeez  staff  13520 Feb 17 17:23 Development Roadmap.md
--rw-r--r--@ 1 alihafeez  staff      0 Feb 18 07:45 Directories.txt
+total 216
+-rw-r--r--@ 1 alihafeez  staff  11613 Feb 18 11:42 Concepts & Q&A Notes.md
+-rw-r--r--@ 1 alihafeez  staff   8612 Feb 18 11:03 Development Roadmap.md
+-rw-r--r--@ 1 alihafeez  staff      0 Feb 18 11:45 Directories.txt
 -rw-r--r--@ 1 alihafeez  staff  14566 Feb 17 17:22 Module Breakdown.md
--rw-r--r--@ 1 alihafeez  staff  13471 Feb 17 21:34 Progress Tracker.md
+-rw-r--r--@ 1 alihafeez  staff  15992 Feb 18 11:43 Progress Tracker.md
 -rw-r--r--@ 1 alihafeez  staff   8824 Feb 17 17:21 Project Overview & Requirements.md
 -rw-r--r--@ 1 alihafeez  staff  19492 Feb 17 21:34 Setup Instructions.md
 -rw-r--r--@ 1 alihafeez  staff  18871 Feb 17 17:53 Technical Architecture.md
 
+./Migrations:
+total 24
+-rw-r--r--  1 alihafeez  staff  4015 Feb 18 08:22 20260218032204_InitialCreate.Designer.cs
+-rw-r--r--  1 alihafeez  staff  3312 Feb 18 08:22 20260218032204_InitialCreate.cs
+-rw-r--r--  1 alihafeez  staff  3922 Feb 18 08:22 ApplicationDbContextModelSnapshot.cs
+
 ./Models:
-total 8
--rw-r--r--  1 alihafeez  staff  187 Feb 17 21:08 ErrorViewModel.cs
+total 24
+-rw-r--r--@ 1 alihafeez  staff  1390 Feb 18 07:57 Department.cs
+-rw-r--r--@ 1 alihafeez  staff  1774 Feb 18 08:04 Employee.cs
+-rw-r--r--  1 alihafeez  staff   187 Feb 17 21:08 ErrorViewModel.cs
 
 ./Properties:
 total 8
@@ -45,10 +57,17 @@ total 0
 
 ./Views:
 total 16
+drwxr-xr-x@ 5 alihafeez  staff  160 Feb 18 10:44 Department
 drwxr-xr-x  4 alihafeez  staff  128 Feb 17 21:08 Home
 drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 Shared
 -rw-r--r--  1 alihafeez  staff  127 Feb 17 21:08 _ViewImports.cshtml
 -rw-r--r--  1 alihafeez  staff   32 Feb 17 21:08 _ViewStart.cshtml
+
+./Views/Department:
+total 24
+-rw-r--r--@ 1 alihafeez  staff  2215 Feb 18 10:22 Create.cshtml
+-rw-r--r--@ 1 alihafeez  staff  2003 Feb 18 10:44 Edit.cshtml
+-rw-r--r--@ 1 alihafeez  staff  3376 Feb 18 10:55 Index.cshtml
 
 ./Views/Home:
 total 16
@@ -58,7 +77,7 @@ total 16
 ./Views/Shared:
 total 32
 -rw-r--r--  1 alihafeez  staff   859 Feb 17 21:08 Error.cshtml
--rw-r--r--  1 alihafeez  staff  2428 Feb 17 21:08 _Layout.cshtml
+-rw-r--r--@ 1 alihafeez  staff  2637 Feb 18 10:45 _Layout.cshtml
 -rw-r--r--  1 alihafeez  staff   877 Feb 17 21:08 _Layout.cshtml.css
 -rw-r--r--  1 alihafeez  staff   179 Feb 17 21:08 _ValidationScriptsPartial.cshtml
 
@@ -68,58 +87,276 @@ drwxr-xr-x  3 alihafeez  staff  96 Feb 17 21:10 Debug
 
 ./bin/Debug:
 total 0
-drwxr-xr-x  11 alihafeez  staff  352 Feb 17 21:31 net10.0
+drwxr-xr-x  65 alihafeez  staff  2080 Feb 18 11:43 net10.0
 
 ./bin/Debug/net10.0:
+total 49872
+-rwxr--r--  1 alihafeez  staff   321424 Jul  1  2022 Azure.Core.dll
+-rwxr--r--  1 alihafeez  staff   306064 Sep 20  2022 Azure.Identity.dll
+-rwxr-xr-x  1 alihafeez  staff   124712 Feb 18 11:43 EmployeeManagementSystem
+-rw-r--r--  1 alihafeez  staff    38661 Feb 18 08:22 EmployeeManagementSystem.deps.json
+-rw-r--r--  1 alihafeez  staff   126464 Feb 18 11:43 EmployeeManagementSystem.dll
+-rw-r--r--  1 alihafeez  staff    54576 Feb 18 11:43 EmployeeManagementSystem.pdb
+-rw-r--r--  1 alihafeez  staff      469 Feb 18 08:22 EmployeeManagementSystem.runtimeconfig.json
+-rw-r--r--  1 alihafeez  staff   275509 Feb 17 21:10 EmployeeManagementSystem.staticwebassets.endpoints.json
+-rw-r--r--  1 alihafeez  staff    19434 Feb 17 21:10 EmployeeManagementSystem.staticwebassets.runtime.json
+-rwxr--r--  1 alihafeez  staff   355944 Jan 29  2022 Humanizer.dll
+-rwxr--r--  1 alihafeez  staff    16000 Oct 23  2021 Microsoft.Bcl.AsyncInterfaces.dll
+-rwxr--r--  1 alihafeez  staff   870048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+-rwxr--r--  1 alihafeez  staff  6221488 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.dll
+-rwxr--r--  1 alihafeez  staff  3643568 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.dll
+-rwxr--r--  1 alihafeez  staff  2856112 Feb 10  2023 Microsoft.CodeAnalysis.dll
+-rwxr--r--  1 alihafeez  staff   275952 Mar 28  2023 Microsoft.Data.SqlClient.dll
+-rwxr--r--  1 alihafeez  staff    34848 Nov  1  2023 Microsoft.EntityFrameworkCore.Abstractions.dll
+-rwxr--r--  1 alihafeez  staff   484896 Nov  1  2023 Microsoft.EntityFrameworkCore.Design.dll
+-rwxr--r--  1 alihafeez  staff  1980448 Nov  1  2023 Microsoft.EntityFrameworkCore.Relational.dll
+-rwxr--r--  1 alihafeez  staff   543264 Nov  1  2023 Microsoft.EntityFrameworkCore.SqlServer.dll
+-rwxr--r--  1 alihafeez  staff  2520096 Nov  1  2023 Microsoft.EntityFrameworkCore.dll
+-rwxr--r--  1 alihafeez  staff    79624 Oct 31  2023 Microsoft.Extensions.DependencyModel.dll
+-rwxr--r--  1 alihafeez  staff    62984 Nov 20  2021 Microsoft.Identity.Client.Extensions.Msal.dll
+-rwxr--r--  1 alihafeez  staff  1455576 Oct  3  2022 Microsoft.Identity.Client.dll
+-rwxr--r--  1 alihafeez  staff    18864 Oct 14  2022 Microsoft.IdentityModel.Abstractions.dll
+-rwxr--r--  1 alihafeez  staff    89520 Oct 14  2022 Microsoft.IdentityModel.JsonWebTokens.dll
+-rwxr--r--  1 alihafeez  staff    34224 Oct 14  2022 Microsoft.IdentityModel.Logging.dll
+-rwxr--r--  1 alihafeez  staff   114048 Oct 14  2022 Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+-rwxr--r--  1 alihafeez  staff    38288 Oct 14  2022 Microsoft.IdentityModel.Protocols.dll
+-rwxr--r--  1 alihafeez  staff   983472 Oct 14  2022 Microsoft.IdentityModel.Tokens.dll
+-rwxr--r--  1 alihafeez  staff    23976 Jan 27  2022 Microsoft.SqlServer.Server.dll
+-rwxr--r--  1 alihafeez  staff    26224 Oct 23  2021 Microsoft.Win32.SystemEvents.dll
+-rwxr--r--  1 alihafeez  staff   114688 Feb 23  2021 Mono.TextTemplating.dll
+-rwxr--r--  1 alihafeez  staff   187224 Jul 19  2017 System.CodeDom.dll
+-rwxr--r--  1 alihafeez  staff    18536 Oct 23  2021 System.Composition.AttributedModel.dll
+-rwxr--r--  1 alihafeez  staff    52840 Oct 23  2021 System.Composition.Convention.dll
+-rwxr--r--  1 alihafeez  staff    54376 Oct 23  2021 System.Composition.Hosting.dll
+-rwxr--r--  1 alihafeez  staff    24680 Oct 23  2021 System.Composition.Runtime.dll
+-rwxr--r--  1 alihafeez  staff    61032 Oct 23  2021 System.Composition.TypedParts.dll
+-rwxr--r--  1 alihafeez  staff   396424 Aug 20  2022 System.Configuration.ConfigurationManager.dll
+-rwxr--r--  1 alihafeez  staff   175216 Oct 23  2021 System.Drawing.Common.dll
+-rwxr--r--  1 alihafeez  staff    90504 Oct 14  2022 System.IdentityModel.Tokens.Jwt.dll
+-rwxr--r--  1 alihafeez  staff    21368 Apr  8  2021 System.Memory.Data.dll
+-rwxr--r--  1 alihafeez  staff    89200 Oct 23  2021 System.Runtime.Caching.dll
+-rwxr--r--  1 alihafeez  staff    20592 Oct 23  2021 System.Security.Cryptography.ProtectedData.dll
+-rwxr--r--  1 alihafeez  staff   104048 Oct 23  2021 System.Security.Permissions.dll
+-rwxr--r--  1 alihafeez  staff    25712 Oct 23  2021 System.Windows.Extensions.dll
+-rw-r--r--  1 alihafeez  staff      119 Feb 17 21:08 appsettings.Development.json
+-rw-r--r--@ 1 alihafeez  staff      333 Feb 17 22:18 appsettings.json
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 cs
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 de
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 es
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 fr
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 it
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 ja
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 ko
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 pl
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 pt-BR
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 ru
+drwxr-xr-x  8 alihafeez  staff      256 Feb 18 08:22 runtimes
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 tr
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 zh-Hans
+drwxr-xr-x  6 alihafeez  staff      192 Feb 18 08:22 zh-Hant
+
+./bin/Debug/net10.0/cs:
+total 1008
+-rwxr--r--  1 alihafeez  staff   18048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  395440 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   47744 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   45744 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/de:
+total 1072
+-rwxr--r--  1 alihafeez  staff   18560 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  425632 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49784 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47280 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/es:
+total 1056
+-rwxr--r--  1 alihafeez  staff   18080 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  415904 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49272 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47280 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/fr:
+total 1072
+-rwxr--r--  1 alihafeez  staff   18080 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  425648 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   50320 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47792 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/it:
+total 1072
+-rwxr--r--  1 alihafeez  staff   18040 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  422576 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49792 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47792 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/ja:
+total 1160
+-rwxr--r--  1 alihafeez  staff   18592 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  465056 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   52856 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   50864 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/ko:
+total 1080
+-rwxr--r--  1 alihafeez  staff   18048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  427696 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49784 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47776 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/pl:
+total 1080
+-rwxr--r--  1 alihafeez  staff   18096 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  428208 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49808 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   47776 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/pt-BR:
+total 1040
+-rwxr--r--  1 alihafeez  staff   18048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  408736 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   49280 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   46240 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/ru:
+total 1368
+-rwxr--r--  1 alihafeez  staff   19072 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  562336 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   56976 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   57008 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/runtimes:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 unix
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 win
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 win-arm
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 win-arm64
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 win-x64
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 win-x86
+
+./bin/Debug/net10.0/runtimes/unix:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 lib
+
+./bin/Debug/net10.0/runtimes/unix/lib:
+total 0
+drwxr-xr-x  4 alihafeez  staff  128 Feb 18 08:22 net6.0
+
+./bin/Debug/net10.0/runtimes/unix/lib/net6.0:
+total 3872
+-rwxr--r--  1 alihafeez  staff  1548304 Mar 28  2023 Microsoft.Data.SqlClient.dll
+-rwxr--r--  1 alihafeez  staff   427112 Oct 23  2021 System.Drawing.Common.dll
+
+./bin/Debug/net10.0/runtimes/win:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 lib
+
+./bin/Debug/net10.0/runtimes/win/lib:
+total 0
+drwxr-xr-x  8 alihafeez  staff  256 Feb 18 08:22 net6.0
+
+./bin/Debug/net10.0/runtimes/win/lib/net6.0:
+total 4536
+-rwxr--r--  1 alihafeez  staff  1631712 Mar 28  2023 Microsoft.Data.SqlClient.dll
+-rwxr--r--  1 alihafeez  staff    53352 Oct 23  2021 Microsoft.Win32.SystemEvents.dll
+-rwxr--r--  1 alihafeez  staff   454248 Oct 23  2021 System.Drawing.Common.dll
+-rwxr--r--  1 alihafeez  staff    91240 Oct 23  2021 System.Runtime.Caching.dll
+-rwxr--r--  1 alihafeez  staff    33904 Oct 23  2021 System.Security.Cryptography.ProtectedData.dll
+-rwxr--r--  1 alihafeez  staff    43112 Oct 23  2021 System.Windows.Extensions.dll
+
+./bin/Debug/net10.0/runtimes/win-arm:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 native
+
+./bin/Debug/net10.0/runtimes/win-arm/native:
+total 752
+-rwxr--r--  1 alihafeez  staff  381848 Jan 13  2023 Microsoft.Data.SqlClient.SNI.dll
+
+./bin/Debug/net10.0/runtimes/win-arm64:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 native
+
+./bin/Debug/net10.0/runtimes/win-arm64/native:
+total 960
+-rwxr--r--  1 alihafeez  staff  491424 Jan 13  2023 Microsoft.Data.SqlClient.SNI.dll
+
+./bin/Debug/net10.0/runtimes/win-x64:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 native
+
+./bin/Debug/net10.0/runtimes/win-x64/native:
+total 992
+-rwxr--r--  1 alihafeez  staff  506272 Jan 13  2023 Microsoft.Data.SqlClient.SNI.dll
+
+./bin/Debug/net10.0/runtimes/win-x86:
+total 0
+drwxr-xr-x  3 alihafeez  staff  96 Feb 18 08:22 native
+
+./bin/Debug/net10.0/runtimes/win-x86/native:
+total 816
+-rwxr--r--  1 alihafeez  staff  414096 Jan 13  2023 Microsoft.Data.SqlClient.SNI.dll
+
+./bin/Debug/net10.0/tr:
 total 1032
--rwxr-xr-x  1 alihafeez  staff  124712 Feb 17 21:31 EmployeeManagementSystem
--rw-r--r--  1 alihafeez  staff     444 Feb 17 21:10 EmployeeManagementSystem.deps.json
--rw-r--r--  1 alihafeez  staff   48640 Feb 17 21:31 EmployeeManagementSystem.dll
--rw-r--r--  1 alihafeez  staff   36140 Feb 17 21:31 EmployeeManagementSystem.pdb
--rw-r--r--  1 alihafeez  staff     401 Feb 17 21:10 EmployeeManagementSystem.runtimeconfig.json
--rw-r--r--  1 alihafeez  staff  275509 Feb 17 21:10 EmployeeManagementSystem.staticwebassets.endpoints.json
--rw-r--r--  1 alihafeez  staff   19434 Feb 17 21:10 EmployeeManagementSystem.staticwebassets.runtime.json
--rw-r--r--  1 alihafeez  staff     119 Feb 17 21:08 appsettings.Development.json
--rw-r--r--  1 alihafeez  staff     142 Feb 17 21:08 appsettings.json
+-rwxr--r--  1 alihafeez  staff   18048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  405664 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   48256 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   45728 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/zh-Hans:
+total 936
+-rwxr--r--  1 alihafeez  staff   18096 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  360624 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   45696 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   43184 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
+
+./bin/Debug/net10.0/zh-Hant:
+total 936
+-rwxr--r--  1 alihafeez  staff   18048 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff  360608 Feb 10  2023 Microsoft.CodeAnalysis.CSharp.resources.dll
+-rwxr--r--  1 alihafeez  staff   45712 Feb 10  2023 Microsoft.CodeAnalysis.Workspaces.resources.dll
+-rwxr--r--  1 alihafeez  staff   43184 Feb 10  2023 Microsoft.CodeAnalysis.resources.dll
 
 ./obj:
-total 152
-drwxr-xr-x  3 alihafeez  staff     96 Feb 17 21:10 Debug
--rw-r--r--  1 alihafeez  staff  31039 Feb 17 21:08 EmployeeManagementSystem.csproj.nuget.dgspec.json
--rw-r--r--  1 alihafeez  staff   1127 Feb 17 21:08 EmployeeManagementSystem.csproj.nuget.g.props
--rw-r--r--  1 alihafeez  staff    149 Feb 17 21:08 EmployeeManagementSystem.csproj.nuget.g.targets
--rw-r--r--  1 alihafeez  staff  30054 Feb 17 21:08 project.assets.json
--rw-r--r--  1 alihafeez  staff    226 Feb 17 21:08 project.nuget.cache
+total 376
+drwxr-xr-x  3 alihafeez  staff      96 Feb 17 21:10 Debug
+-rw-r--r--  1 alihafeez  staff   31768 Feb 18 08:21 EmployeeManagementSystem.csproj.nuget.dgspec.json
+-rw-r--r--  1 alihafeez  staff    2307 Feb 18 08:21 EmployeeManagementSystem.csproj.nuget.g.props
+-rw-r--r--  1 alihafeez  staff     149 Feb 17 21:08 EmployeeManagementSystem.csproj.nuget.g.targets
+-rw-r--r--  1 alihafeez  staff  135465 Feb 18 08:21 project.assets.json
+-rw-r--r--  1 alihafeez  staff    9323 Feb 18 08:21 project.nuget.cache
 
 ./obj/Debug:
 total 0
-drwxr-xr-x  33 alihafeez  staff  1056 Feb 17 21:31 net10.0
+drwxr-xr-x  35 alihafeez  staff  1120 Feb 18 11:43 net10.0
 
 ./obj/Debug/net10.0:
-total 2272
--rw-r--r--   1 alihafeez  staff    1024 Feb 17 21:31 EmployeeManagementSystem.AssemblyInfo.cs
--rw-r--r--   1 alihafeez  staff      65 Feb 17 21:31 EmployeeManagementSystem.AssemblyInfoInputs.cache
--rw-r--r--   1 alihafeez  staff    2670 Feb 17 21:10 EmployeeManagementSystem.GeneratedMSBuildEditorConfig.editorconfig
+total 2600
+-rw-r--r--   1 alihafeez  staff       0 Feb 18 08:22 Employee.A4622930.Up2Date
+-rw-r--r--   1 alihafeez  staff    1024 Feb 18 11:43 EmployeeManagementSystem.AssemblyInfo.cs
+-rw-r--r--   1 alihafeez  staff      65 Feb 18 11:43 EmployeeManagementSystem.AssemblyInfoInputs.cache
+-rw-r--r--   1 alihafeez  staff    3324 Feb 18 10:45 EmployeeManagementSystem.GeneratedMSBuildEditorConfig.editorconfig
 -rw-r--r--   1 alihafeez  staff     625 Feb 17 21:10 EmployeeManagementSystem.GlobalUsings.g.cs
--rw-r--r--   1 alihafeez  staff       0 Feb 17 21:10 EmployeeManagementSystem.MvcApplicationPartsAssemblyInfo.cache
+-rw-r--r--   1 alihafeez  staff       0 Feb 18 08:21 EmployeeManagementSystem.MvcApplicationPartsAssemblyInfo.cache
 -rw-r--r--   1 alihafeez  staff      65 Feb 17 21:10 EmployeeManagementSystem.RazorAssemblyInfo.cache
 -rw-r--r--   1 alihafeez  staff     677 Feb 17 21:10 EmployeeManagementSystem.RazorAssemblyInfo.cs
--rw-r--r--   1 alihafeez  staff     154 Feb 17 21:10 EmployeeManagementSystem.assets.cache
--rw-r--r--   1 alihafeez  staff      65 Feb 17 21:10 EmployeeManagementSystem.csproj.CoreCompileInputs.cache
--rw-r--r--   1 alihafeez  staff   11935 Feb 17 21:31 EmployeeManagementSystem.csproj.FileListAbsolute.txt
--rw-r--r--   1 alihafeez  staff   48640 Feb 17 21:31 EmployeeManagementSystem.dll
--rw-r--r--   1 alihafeez  staff      65 Feb 17 21:10 EmployeeManagementSystem.genruntimeconfig.cache
--rw-r--r--   1 alihafeez  staff   36140 Feb 17 21:31 EmployeeManagementSystem.pdb
--rw-r--r--   1 alihafeez  staff     210 Feb 17 21:31 EmployeeManagementSystem.sourcelink.json
--rwxr-xr-x   1 alihafeez  staff  124712 Feb 17 21:31 apphost
+-rw-r--r--   1 alihafeez  staff   43188 Feb 18 08:21 EmployeeManagementSystem.assets.cache
+-rw-r--r--   1 alihafeez  staff    9936 Feb 18 08:21 EmployeeManagementSystem.csproj.AssemblyReference.cache
+-rw-r--r--   1 alihafeez  staff      65 Feb 18 10:45 EmployeeManagementSystem.csproj.CoreCompileInputs.cache
+-rw-r--r--   1 alihafeez  staff   24608 Feb 18 08:22 EmployeeManagementSystem.csproj.FileListAbsolute.txt
+-rw-r--r--   1 alihafeez  staff  126464 Feb 18 11:43 EmployeeManagementSystem.dll
+-rw-r--r--   1 alihafeez  staff      65 Feb 18 08:22 EmployeeManagementSystem.genruntimeconfig.cache
+-rw-r--r--   1 alihafeez  staff   54576 Feb 18 11:43 EmployeeManagementSystem.pdb
+-rw-r--r--   1 alihafeez  staff     210 Feb 18 11:43 EmployeeManagementSystem.sourcelink.json
+-rwxr-xr-x   1 alihafeez  staff  124712 Feb 18 11:43 apphost
 drwxr-xr-x  66 alihafeez  staff    2112 Feb 17 21:10 compressed
 -rw-r--r--   1 alihafeez  staff   75793 Feb 17 21:10 rbcswa.dswa.cache.json
-drwxr-xr-x   3 alihafeez  staff      96 Feb 17 21:31 ref
+drwxr-xr-x   3 alihafeez  staff      96 Feb 18 11:43 ref
 drwxr-xr-x   3 alihafeez  staff      96 Feb 17 21:10 refint
 -rw-r--r--   1 alihafeez  staff    3501 Feb 17 21:10 rjimswa.dswa.cache.json
--rw-r--r--   1 alihafeez  staff    4513 Feb 17 21:31 rjsmcshtml.dswa.cache.json
--rw-r--r--   1 alihafeez  staff    4513 Feb 17 21:31 rjsmrazor.dswa.cache.json
--rw-r--r--   1 alihafeez  staff   60018 Feb 17 21:10 rpswa.dswa.cache.json
+-rw-r--r--   1 alihafeez  staff    4681 Feb 18 11:43 rjsmcshtml.dswa.cache.json
+-rw-r--r--   1 alihafeez  staff    4681 Feb 18 11:43 rjsmrazor.dswa.cache.json
+-rw-r--r--   1 alihafeez  staff   60159 Feb 18 10:56 rpswa.dswa.cache.json
 drwxr-xr-x   5 alihafeez  staff     160 Feb 17 21:10 scopedcss
 drwxr-xr-x   2 alihafeez  staff      64 Feb 17 21:10 staticwebassets
 -rw-r--r--   1 alihafeez  staff  275509 Feb 17 21:10 staticwebassets.build.endpoints.json
@@ -196,12 +433,12 @@ total 3936
 -rw-r--r--  1 alihafeez  staff   56670 Feb 17 21:10 zr3rk255lx-{0}-y7v9cxd14o-y7v9cxd14o.gz
 
 ./obj/Debug/net10.0/ref:
-total 32
--rw-r--r--  1 alihafeez  staff  15360 Feb 17 21:31 EmployeeManagementSystem.dll
+total 64
+-rw-r--r--  1 alihafeez  staff  29184 Feb 18 11:43 EmployeeManagementSystem.dll
 
 ./obj/Debug/net10.0/refint:
-total 32
--rw-r--r--  1 alihafeez  staff  15360 Feb 17 21:31 EmployeeManagementSystem.dll
+total 64
+-rw-r--r--  1 alihafeez  staff  29184 Feb 18 11:43 EmployeeManagementSystem.dll
 
 ./obj/Debug/net10.0/scopedcss:
 total 0
