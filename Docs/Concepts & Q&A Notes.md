@@ -263,6 +263,115 @@ if (res && res.success === true) {
 
 ---
 
+## MODULE 3 — ADDITIONAL Q&A
+
+### Q11: What is the difference between `View()` and `PartialView()`?
+A normal `View()` returns a full HTML page — layout, navbar, `<html>`, `<head>`, everything. A `PartialView()` returns just a fragment of HTML — only what's inside the `.cshtml` file, nothing else.
+
+We use partial views for modal forms because we only want the form HTML so jQuery can inject it into the modal container. If we used `View()`, the response would include the full layout and injecting that into a modal would break the page.
+
+```
+Controller: return PartialView("_CreateEmployee", model)
+    → sends back only the form HTML
+        → jQuery: $('#modalContent').html(response)
+            → modal opens showing just the form
+```
+
+---
+
+### Q12: What is `$.validator.unobtrusive` and what does `.parse()` do?
+`$.validator.unobtrusive` is a jQuery plugin (loaded by `_ValidationScriptsPartial`) that reads `data-val-*` attributes on your inputs and wires up validation rules automatically. When the page first loads it scans all forms. But when you inject a new form via AJAX after the page has loaded, it doesn't know the new form exists — you must tell it to re-scan:
+
+```javascript
+$.validator.unobtrusive.parse('#createForm');
+// "New form was added to the DOM — please set up validation on it"
+```
+
+Without this call, the `data-val-*` attributes are there in the HTML but nothing is listening to them — the form submits without any client-side checks.
+
+---
+
+### Q13: Is it okay to use POST for both Create and Edit?
+Yes — this is standard MVC practice. HTML forms only support two methods: `GET` and `POST`. There is no `<form method="PUT">`. REST convention says use PUT for updates, but that applies to APIs, not traditional web forms.
+
+In MVC, the action URL distinguishes the operation:
+```
+POST /Employee/Create  → creates a new employee
+POST /Employee/Edit    → updates an existing employee
+```
+The hidden `<input asp-for="EmployeeId" />` in the edit form carries the ID so the controller knows which record to update. Same `bindFormSubmit` function works for both — only the URL differs.
+
+---
+
+### Q14: What is `form.serialize()`?
+It collects all input fields in a form and converts them into a URL-encoded string ready to send in a POST body:
+
+```javascript
+// Form has: Name="Ali", Email="ali@x.com", Salary=5000
+form.serialize()
+// → "Name=Ali&Email=ali%40x.com&Salary=5000&__RequestVerificationToken=xyz..."
+```
+
+This is the exact same format a browser uses when submitting a form normally. The antiforgery token is included automatically because it's a hidden input inside the form. AJAX uses `serialize()` to send the same data without reloading the page.
+
+---
+
+### Q15: What is in `res` and why do we inject it back into the modal?
+`res` is whatever the server sends back. The server sends two different things depending on what happened:
+
+**Case A — success:** Server sends JSON:
+```json
+{ "success": true, "message": "Employee added successfully." }
+```
+`res.success` is `true` → close the modal, show the success alert.
+
+**Case B — validation failed:** Server sends HTML (the partial view re-rendered with error messages):
+```html
+<div class="modal-header">...</div>
+<form>
+  <span class="text-danger">Email is required.</span>
+</form>
+```
+
+We inject this HTML back into `#modalContent` because the user is still on the form — they need to see what went wrong without the modal closing. The form re-renders in place with red error messages, and the data they typed is still filled in:
+```javascript
+$('#modalContent').html(res);  // swap the modal content with the error version
+bindFormSubmit(formId, url);   // re-bind submit handler for the new content
+```
+
+---
+
+### Q16: What does `$(this).remove()` do inside a fadeOut callback?
+`$(this)` inside a `.fadeOut()` callback refers to the element that just finished fading — in this case the table row `<tr id="row-1">`. `.remove()` completely removes it from the DOM:
+
+```javascript
+$('#row-' + id).fadeOut(300, function () {
+    $(this).remove();  // runs after the 300ms fade completes
+});
+```
+
+We do it inside the callback (not immediately) so the visual fade plays first, then the row disappears. Calling `.remove()` directly would make the row vanish instantly with no animation.
+
+---
+
+### Q17: Why do we use POST for delete instead of DELETE?
+Two reasons:
+
+**1. HTML only supports GET and POST.** There is no `<form method="DELETE">`. This is a fundamental HTML limitation — REST methods like DELETE, PUT, and PATCH only exist in the API world, not in browser forms.
+
+**2. GET must never change data.** Browsers, search engines, and proxies cache and pre-fetch GET requests. If delete were a GET link (`/Employee/Delete/5`), a browser pre-fetching links could accidentally delete records. POST is the correct method for anything that changes or removes data.
+
+The antiforgery token on POST adds a second layer of protection — it ensures the request originated from your own page:
+```javascript
+// Correct — POST with token:
+$.post('/Employee/Delete/' + id, { __RequestVerificationToken: getToken() }, ...)
+
+// Dangerous — GET would be:
+window.location = '/Employee/Delete/' + id  // never do this
+```
+
+---
+
 ## QUICK REFERENCE — KEY TERMS
 
 | Term | What it is |
