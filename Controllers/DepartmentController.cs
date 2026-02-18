@@ -131,9 +131,8 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         // ---------------------------------------------------------------
-        // DELETE (POST) — Soft delete: set ActiveInactive = false
+        // DELETE (POST) — Hard delete: permanently remove from database
         // URL: POST /Department/Delete/5
-        // We don't remove the record — we just hide it (preserves history)
         // ---------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -144,9 +143,8 @@ namespace EmployeeManagementSystem.Controllers
             if (department == null)
                 return NotFound();
 
-            // Soft delete: mark as inactive instead of removing from DB
-            department.ActiveInactive = false;
-            _context.Departments.Update(department);
+            // Hard delete: permanently remove the record from the DB
+            _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' deleted successfully.";

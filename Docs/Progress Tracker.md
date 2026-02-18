@@ -154,6 +154,7 @@
 - `Views/Department/Create.cshtml`
 - `Views/Department/Edit.cshtml`
 - `Views/Shared/_Layout.cshtml` (updated — added Departments nav link)
+- `Docs/Concepts & Q&A Notes.md` (created — detailed reference for all concepts learned)
 
 ### Key Concepts Learned:
 - **async/await:** Wait for DB response without freezing the app
@@ -309,6 +310,12 @@
 - **Reason:** Better visibility and management; user requested this behavior
 - **Impact:** Removed the ActiveInactive filter from the Index query
 
+### Decision 5: Hard Delete Instead of Soft Delete
+- **Date:** February 18, 2026
+- **Decision:** Changed Department delete to permanently remove the record from the DB
+- **Reason:** User preference — soft delete was causing confusion (deleted records still visible)
+- **Impact:** `_context.Departments.Remove(department)` replaces the ActiveInactive = false approach
+
 ---
 
 ## ISSUES & RESOLUTIONS LOG
@@ -320,6 +327,7 @@
 | 3 | Module 0 | .csproj named incorrectly | Recreated project with correct name | Feb 17 |
 | 4 | Module 0 | RootNamespace set to `_` | Recreated project fresh | Feb 17 |
 | 5 | Module 2 | Departments not showing in list | Checkbox was unchecked by default; fixed by passing `new Department()` from GET Create action | Feb 18 |
+| 6 | Module 2 | Soft delete kept records visible | Changed to hard delete (`Remove()`) per user preference | Feb 18 |
 
 ---
 
@@ -332,6 +340,15 @@
 | 3 | What is `modelBuilder`? | EF's configuration tool for indexes, relationships, constraints | Module 1 |
 | 4 | What is `base`? | Calls the parent class constructor/method before your own code runs | Module 1 |
 | 5 | What is EF? | Entity Framework — interact with DB using C# instead of raw SQL | Module 1 |
+| 6 | `readonly` but assigned in constructor? | readonly allows assignment only once during construction — locked after that | Module 2 |
+| 7 | How does `@section Scripts` handle validation? | data annotations → Tag Helpers render data-val-* HTML attributes → jQuery validation reads them and shows errors automatically | Module 2 |
+| 8 | What is ModelState? | Dictionary of form fields and validation errors; IsValid = true only when zero errors exist | Module 2 |
+| 9 | What is `RedirectToAction(nameof(Index))`? | Sends HTTP 302 to browser to navigate to Index; nameof() returns method name as compile-safe string | Module 2 |
+| 10 | How does asp-action + asp-route-id build the URL? | Razor Tag Helpers run server-side, read route config, generate correct href automatically | Module 2 |
+| 11 | What is `@Html.AntiForgeryToken()`? | Renders a hidden input with a unique encrypted session token to prevent CSRF attacks | Module 2 |
+| 12 | What is a CSRF attack? | Malicious site tricks browser into submitting a request with your session cookie; token prevents this | Module 2 |
+| 13 | How is "Active" checkbox pre-checked? | Model has `= true` default; passing `new Department()` from GET action makes Razor render checkbox as checked | Module 2 |
+| 14 | What does `@` mean in Razor? | Switches from HTML to C# mode; expression is evaluated and output written into HTML | Module 2 |
 
 ---
 
