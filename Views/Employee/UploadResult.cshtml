@@ -1,0 +1,74 @@
+@model EmployeeManagementSystem.Models.UploadResult
+
+@{
+    ViewData["Title"] = "Upload Results";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Upload Results</h2>
+    <div class="d-flex gap-2">
+        <a asp-action="Upload" class="btn btn-outline-primary">Upload Another File</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Back to Employees</a>
+    </div>
+</div>
+
+<!-- Summary cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <div class="text-muted small fw-semibold text-uppercase">Total Rows</div>
+            <div class="fs-2 fw-bold">@Model.TotalRows</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <div class="text-muted small fw-semibold text-uppercase">Imported</div>
+            <div class="fs-2 fw-bold text-success">@Model.SuccessCount</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <div class="text-muted small fw-semibold text-uppercase">Failed</div>
+            <div class="fs-2 fw-bold text-danger">@Model.FailedCount</div>
+        </div>
+    </div>
+</div>
+
+<!-- Row detail table -->
+<div class="card shadow-sm">
+    <div class="card-header fw-semibold">Row Details</div>
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Row</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.Rows)
+                {
+                    <tr>
+                        <td>@row.RowNumber</td>
+                        <td>@(string.IsNullOrWhiteSpace(row.EmployeeName) ? "—" : row.EmployeeName)</td>
+                        <td>
+                            @if (row.IsSuccess)
+                            {
+                                <span class="badge bg-success">Imported</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Failed</span>
+                            }
+                        </td>
+                        <td class="text-muted small">
+                            @(row.IsSuccess ? "Successfully added" : row.ErrorMessage)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

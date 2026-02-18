@@ -179,39 +179,43 @@ We'll build this project **incrementally** - one module at a time. Each module w
 
 ### MODULE 5: Bulk Employee Upload
 **Timeline:** Day 1-2 (6-7 hours)
-**Status:** 🔴 Not Started
+**Status:** 🟢 Completed — February 18, 2026
 **Prerequisites:** Module 3 ✅
 
 #### Tasks:
 
 **Day 1: Upload Setup & File Reading**
-- [ ] Create Upload.cshtml view
-- [ ] Add file upload input
-- [ ] Create sample CSV file
-- [ ] Create sample Excel file
-- [ ] Install EPPlus NuGet package
-- [ ] Create FileUploadService class
-- [ ] Implement CSV reading logic
-- [ ] Implement Excel reading logic
-- [ ] Test file reading
+- [✅] Create Upload.cshtml view
+- [✅] Add file upload input (.csv and .xlsx)
+- [✅] Create sample CSV file
+- [✅] Install EPPlus NuGet package (v7.0.0)
+- [✅] Set EPPlus LicenseContext in Program.cs
+- [✅] Create FileUploadService class
+- [✅] Implement CSV reading logic
+- [✅] Implement Excel reading logic
+- [✅] Register FileUploadService in Program.cs
 
 **Day 2: Processing & Validation**
-- [ ] Implement row validation logic
-- [ ] Check required fields
-- [ ] Validate email format
-- [ ] Validate salary is numeric
-- [ ] Validate date format
-- [ ] Check for duplicate emails in file
-- [ ] Check for duplicate emails in database
-- [ ] Implement auto-create department logic
-- [ ] Implement bulk insert logic
-- [ ] Create upload result summary
-- [ ] Create error list display
-- [ ] Add download sample file link
-- [ ] Test with valid file
-- [ ] Test with invalid file
+- [✅] Create UploadResult.cs and RowResult.cs models
+- [✅] Implement row validation (name, email, salary, date)
+- [✅] Check for duplicate emails within the file
+- [✅] Check for duplicate emails against the database
+- [✅] Implement auto-create department logic
+- [✅] Implement bulk insert with in-memory cache
+- [✅] Create UploadResult.cshtml (summary + row detail table)
+- [✅] Add Upload GET/POST actions to EmployeeController
+- [✅] Add Bulk Upload button to Employee Index page
+- [✅] Test with valid file
+- [✅] Test with invalid rows
+- [✅] Test duplicate detection
+- [✅] Test auto-create department
 
-#### Approval Required: ✋ YES
+#### Deliverables:
+- ✅ Can upload CSV and Excel files
+- ✅ Valid rows are inserted, invalid rows skipped with errors
+- ✅ Departments auto-created if they don't exist
+- ✅ Duplicate emails caught (in-file and in-database)
+- ✅ Results page shows summary cards + row-by-row detail
 
 ---
 

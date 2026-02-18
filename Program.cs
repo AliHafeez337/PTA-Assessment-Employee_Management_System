@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using EmployeeManagementSystem.Data;
+using EmployeeManagementSystem.Services;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+
+// EPPlus license config — required for v5+
+ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+builder.Services.AddScoped<FileUploadService>();
 
 var app = builder.Build();
 

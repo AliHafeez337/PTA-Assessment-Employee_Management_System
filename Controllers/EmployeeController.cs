@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.Models;
+using EmployeeManagementSystem.Services;
 
 namespace EmployeeManagementSystem.Controllers
 {
@@ -171,6 +172,38 @@ namespace EmployeeManagementSystem.Controllers
                 .CountAsync(e => e.DepartmentId == departmentId);
 
             return Json(new { count = count });
+        }
+
+        // GET: /Employee/Upload
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
+        // POST: /Employee/Upload
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(IFormFile file,
+            [FromServices] FileUploadService uploadService)
+        {
+            // Validate file was provided
+            if (file == null || file.Length == 0)
+            {
+                ModelState.AddModelError("", "Please select a file to upload.");
+                return View();
+            }
+
+            // Validate file extension
+            var ext = Path.GetExtension(file.FileName).ToLower();
+            if (ext != ".csv" && ext != ".xlsx")
+            {
+                ModelState.AddModelError("", "Only .csv and .xlsx files are supported.");
+                return View();
+            }
+
+            var result = await uploadService.ProcessFileAsync(file);
+
+            return View("UploadResult", result);
         }
     }
 }

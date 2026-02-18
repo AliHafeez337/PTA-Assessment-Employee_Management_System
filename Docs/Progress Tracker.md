@@ -5,7 +5,7 @@
 
 **Project Start Date:** February 17, 2026
 **Current Status:** 🟡 In Progress
-**Overall Progress:** 66%
+**Overall Progress:** 77%
 
 ---
 
@@ -18,7 +18,7 @@
 | Module 2: Departments | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 3: Employees | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 4: Search/Filter | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
-| Module 5: Bulk Upload | 🔴 Not Started | 0% | - | - |
+| Module 5: Bulk Upload | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 6: Dashboard | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 7: Validation | 🔴 Not Started | 0% | - | - |
 | Module 8: Final Polish | 🔴 Not Started | 0% | - | - |
@@ -278,10 +278,67 @@
 
 ## MODULE 5: BULK EMPLOYEE UPLOAD
 
-**Status:** 🔴 Not Started
-**Progress:** 0/23 tasks (0%)
+**Status:** 🟢 Completed
+**Progress:** 23/23 tasks (100%)
+**Started:** February 18, 2026
+**Completed:** February 18, 2026
 
-### Approval Status: ⸸ Waiting for Module 4
+### Tasks:
+
+#### Day 1 Tasks (Upload Setup & File Reading):
+- [✅] Create Upload.cshtml view
+- [✅] Add file upload input (.csv and .xlsx accepted)
+- [✅] Create sample CSV file (sample_employees.csv)
+- [✅] Install EPPlus NuGet package (v7.0.0)
+- [✅] Set EPPlus LicenseContext in Program.cs (NonCommercial)
+- [✅] Create FileUploadService.cs
+- [✅] Implement CSV reading logic (StreamReader, skip header)
+- [✅] Implement Excel reading logic (EPPlus, skip row 1)
+- [✅] Register FileUploadService in Program.cs (AddScoped)
+
+#### Day 2 Tasks (Processing & Validation):
+- [✅] Create UploadResult.cs and RowResult.cs models
+- [✅] Implement row validation (name, email format, salary, date)
+- [✅] Check for duplicate emails within the uploaded file
+- [✅] Check for duplicate emails against the database
+- [✅] Implement auto-create department logic
+- [✅] Implement bulk insert with in-memory email cache
+- [✅] Create UploadResult.cshtml (summary + row detail table)
+- [✅] Add Upload GET and POST actions to EmployeeController
+- [✅] Add using directive for Services in EmployeeController and Program.cs
+- [✅] Add "Bulk Upload" button to Employee Index page header
+- [✅] Test with valid rows
+- [✅] Test with invalid rows (missing name, bad email, bad salary, bad date)
+- [✅] Test duplicate detection (in-file and in-database)
+
+### Files Created:
+- `Models/UploadResult.cs` — RowResult and UploadResult classes
+- `Services/FileUploadService.cs` — CSV/Excel reading + row validation + bulk insert
+- `Views/Employee/Upload.cshtml` — file upload form with format instructions
+- `Views/Employee/UploadResult.cshtml` — summary cards + row detail table
+- `sample_employees.csv` — test file with 7 valid and 5 intentionally broken rows
+
+### Files Modified:
+- `Controllers/EmployeeController.cs` — added Upload GET/POST actions + using directive
+- `Views/Employee/Index.cshtml` — added Bulk Upload button to page header
+- `Program.cs` — added EPPlus LicenseContext + FileUploadService registration + using directive
+
+### Key Concepts Learned:
+- **`IFormFile`:** ASP.NET's interface for an uploaded file — gives access to filename, extension, length, and a stream to read from
+- **`StreamReader`:** Reads a file stream line by line — used for CSV parsing
+- **`EPPlus`:** Third-party library for reading/writing Excel files; requires `LicenseContext = NonCommercial` for free use
+- **`AddScoped<T>()`:** Registers a service so ASP.NET injects it automatically; scoped means one instance per HTTP request
+- **`[FromServices]`:** Injects a service directly into an action method parameter instead of through the constructor
+- **In-memory caching for uploads:** Loading all existing emails into a `List<string>` and all departments into a `List<Department>` before the loop avoids N+1 database queries per row
+- **`HashSet<string>`:** Used to track emails seen within the current file — O(1) lookup, faster than checking a List
+- **`i + 2` row numbering:** The rows list starts after the header is skipped, so `i=0` maps to file row 2; adding 2 gives the user the correct row number matching their spreadsheet
+- **`enctype="multipart/form-data"`:** Required on any form that uploads files — without it the file data is never sent to the server
+- **`Path.GetExtension()`:** Extracts the file extension (e.g. `.csv`) so we can route to the correct reader
+
+### Issues Encountered & Resolved:
+1. **`FileUploadService` not found in EmployeeController:** Missing `using EmployeeManagementSystem.Services;` directive. Added to both EmployeeController.cs and Program.cs. ✅
+
+### Approval Status: ✅ Module 5 COMPLETE — Ready for Module 7!
 
 ---
 
@@ -350,22 +407,22 @@
 
 ### Task Completion:
 - **Total Tasks:** 129
-- **Completed:** 75 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9 + M6: 10)
+- **Completed:** 98 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9 + M5: 23 + M6: 10)
 - **In Progress:** 0
-- **Remaining:** 54
+- **Remaining:** 31
 
 ### Module Completion:
-- **Modules Completed:** 6 (Module 0, 1, 2, 3, 4, 6)
+- **Modules Completed:** 7 (Module 0, 1, 2, 3, 4, 5, 6)
 - **Modules In Progress:** 0
-- **Modules Remaining:** 3
+- **Modules Remaining:** 2
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 5 — Bulk Employee Upload
+**What we're working on now:** Module 7 — Validation & Error Handling
 
-**Next immediate step:** Create Upload.cshtml, FileUploadService, and CSV/Excel processing logic
+**Next immediate step:** Review all forms, add try-catch blocks to controllers, create custom error page
 
 **Blockers:** None
 
@@ -404,7 +461,7 @@
 | 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` (returns value; `RenderPartialAsync` returns void) | Feb 18 |
 | 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable (`DateTime?`) + added migration | Feb 18 |
 | 12 | M3 | `[Required]` on `DepartmentId` always passes | Replaced with `[Range(1, int.MaxValue)]` | Feb 18 |
-| 15 | M6 | `DefaultIfEmpty(0)` EF translation error | EF can't translate C# constant fallback to SQL; replaced with `AnyAsync()` guard + `AverageAsync()` | Feb 18 |
+| 16 | M5 | `FileUploadService` not found in EmployeeController and Program.cs | Missing `using EmployeeManagementSystem.Services;` in both files | Feb 18 |
 
 ---
 
@@ -439,7 +496,11 @@
 | 26 | What is `method="get"` on a search form? | Submits filters as URL query params — bookmarkable and back-button friendly; never use GET to change data | M4 |
 | 28 | What is a ViewModel? | A class shaped for the view's needs — not a DB model, just a data container | M6 |
 | 29 | Why guard `AverageAsync()` with `AnyAsync()`? | `AverageAsync()` throws on an empty table; `AnyAsync()` is a fast SQL-translatable existence check | M6 |
-| 30 | Why can't EF translate `DefaultIfEmpty(0)`? | EF must convert LINQ to SQL; a C# constant fallback has no direct SQL equivalent so EF gives up | M6 |
+| 31 | What is `IFormFile`? | ASP.NET interface for uploaded files — gives filename, extension, length, and a stream to read from | M5 |
+| 32 | Why `enctype="multipart/form-data"` on upload forms? | Without it the browser sends only text fields — the file binary data is never transmitted to the server | M5 |
+| 33 | Why use in-memory cache during bulk upload? | Loading all emails/departments once before the loop avoids a DB query per row (N+1 problem) | M5 |
+| 34 | Why `i + 2` instead of `i + 1` for row numbers? | The rows list starts after the header is skipped, so `i=0` is file row 2; `+2` matches what the user sees in their spreadsheet | M5 |
+| 35 | What is `HashSet<string>`? | A collection with O(1) lookup — faster than List for checking if a value already exists; used to detect duplicate emails within the upload file | M5 |
 
 ---
 

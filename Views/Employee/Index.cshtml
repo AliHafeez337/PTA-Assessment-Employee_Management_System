@@ -12,9 +12,12 @@
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Employee Management</h2>
-    <button type="button" class="btn btn-primary" onclick="openCreateModal()">
-        + Add Employee
-    </button>
+    <div class="d-flex gap-2">
+        <a asp-action="Upload" class="btn btn-outline-success">↑ Bulk Upload</a>
+        <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+            + Add Employee
+        </button>
+    </div>
 </div>
 
 <!-- ─── SEARCH & FILTER BAR ─────────────────────────────────── -->

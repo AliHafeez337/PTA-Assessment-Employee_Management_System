@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "Bulk Upload Employees";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Bulk Upload Employees</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Back to Employees</a>
+</div>
+
+<!-- Instructions card -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header fw-semibold">File Format Instructions</div>
+    <div class="card-body">
+        <p class="mb-2">Your file must have these columns in this exact order:</p>
+        <table class="table table-sm table-bordered w-auto">
+            <thead class="table-light">
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                    <th>Column 4</th>
+                    <th>Column 5</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Salary</td>
+                    <td>Department Name</td>
+                    <td>Joining Date</td>
+                </tr>
+                <tr class="text-muted">
+                    <td>Ali Hafeez</td>
+                    <td>ali@example.com</td>
+                    <td>75000</td>
+                    <td>Engineering</td>
+                    <td>2024-01-15</td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="mt-2 mb-0 text-muted small">
+            <li>Row 1 must be the header row — it will be skipped</li>
+            <li>Department will be auto-created if it doesn't exist</li>
+            <li>Duplicate emails (in file or in database) will be skipped with an error</li>
+            <li>Date format: YYYY-MM-DD recommended</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Upload form -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" asp-action="Upload">
+            @Html.AntiForgeryToken()
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values
+                        .SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Select File (.csv or .xlsx)</label>
+                <input type="file" name="file" accept=".csv,.xlsx"
+                       class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Upload & Process
+            </button>
+        </form>
+    </div>
+</div>

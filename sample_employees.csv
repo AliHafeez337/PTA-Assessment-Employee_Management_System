@@ -1,0 +1,13 @@
+Name,Email,Salary,Department Name,Joining Date
+Ali Hafeez,ali.hafeez@example.com,95000,Engineering,2024-01-15
+Sara Ahmed,sara.ahmed@example.com,72000,Marketing,2024-02-01
+John Smith,john.smith@example.com,68000,Human Resources,2023-11-10
+Fatima Khan,fatima.khan@example.com,85000,Engineering,2024-03-20
+David Lee,david.lee@example.com,91000,Finance,2023-09-05
+Maria Garcia,maria.garcia@example.com,77000,Marketing,2024-04-12
+Omar Farooq,omar.farooq@example.com,88000,Engineering,2024-01-30
+,missing.name@example.com,60000,IT,2024-02-15
+Invalid Email,notanemail,75000,IT,2024-02-20
+Bad Salary,bad.salary@example.com,ABCDEF,Finance,2024-03-01
+Missing Date,missing.date@example.com,55000,HR,not-a-date
+Ali Hafeez,ali.hafeez@example.com,50000,IT,2024-05-01
