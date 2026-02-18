@@ -10,7 +10,13 @@ namespace EmployeeManagementSystem.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "JoiningDate",
+                table: "Employees",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
         }
 
         /// <inheritdoc />
