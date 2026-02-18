@@ -4,22 +4,75 @@
     ViewData["Title"] = "Employees";
 }
 
-<!-- Success/Error Alert -->
-<div id="alertBox" class="alert d-none" role="alert"></div>
 @Html.AntiForgeryToken()
 
+<!-- Success/Error Alert -->
+<div id="alertBox" class="alert d-none" role="alert"></div>
+
 <!-- Page Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Employee Management</h2>
     <button type="button" class="btn btn-primary" onclick="openCreateModal()">
         + Add Employee
     </button>
 </div>
 
-<!-- Employee Table -->
+<!-- ─── SEARCH & FILTER BAR ─────────────────────────────────── -->
+<form method="get" asp-action="Index" class="card shadow-sm mb-3">
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+
+            <!-- Search by name -->
+            <div class="col-md-5">
+                <label class="form-label fw-semibold">Search by Name</label>
+                <input type="text"
+                       name="searchName"
+                       value="@ViewBag.SearchName"
+                       class="form-control"
+                       placeholder="Type employee name..." />
+            </div>
+
+            <!-- Filter by department -->
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Filter by Department</label>
+                <select name="departmentId" class="form-select">
+                    <option value="0">-- All Departments --</option>
+                    @foreach (var dept in ViewBag.Departments as List<EmployeeManagementSystem.Models.Department>)
+                    {
+                        <option value="@dept.DepartmentId"
+                                selected="@(dept.DepartmentId == (int?)ViewBag.SelectedDepartmentId ? "selected" : null)">
+                            @dept.DepartmentName
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">Clear</a>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<!-- ─── RESULTS COUNT ─────────────────────────────────────────── -->
+<p class="text-muted mb-2">
+    @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) || (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
+    {
+        <span>Showing <strong>@Model.Count</strong> result(s) for applied filters.</span>
+    }
+    else
+    {
+        <span>Total: <strong>@Model.Count</strong> employee(s)</span>
+    }
+</p>
+
+<!-- ─── EMPLOYEE TABLE ────────────────────────────────────────── -->
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-striped table-hover mb-0" id="employeeTable">
+        <table class="table table-striped table-hover mb-0">
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
@@ -36,7 +89,11 @@
                 {
                     <tr>
                         <td colspan="7" class="text-center text-muted py-4">
-                            No employees found. Click "Add Employee" to get started.
+                            No employees found.
+                            @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) || (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
+                            {
+                                <span>Try adjusting your filters or <a asp-action="Index">clear them</a>.</span>
+                            }
                         </td>
                     </tr>
                 }
@@ -70,17 +127,10 @@
     </div>
 </div>
 
-<!-- Total count -->
-@if (Model.Any())
-{
-    <p class="text-muted mt-2">Total: @Model.Count employee(s)</p>
-}
-
-<!-- Modal -->
+<!-- ─── MODAL ─────────────────────────────────────────────────── -->
 <div class="modal fade" id="employeeModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" id="modalContent">
-            <!-- Partial view loads here -->
         </div>
     </div>
 </div>
@@ -88,106 +138,92 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
-<script>
-    // ─── CREATE ───────────────────────────────────────────────
-    function openCreateModal() {
-        $.get('/Employee/Create', function (html) {
-            $('#modalContent').html(html);
-            bindFormSubmit('createForm', '/Employee/Create');
-            $('#employeeModal').modal('show');
-        }).fail(function(xhr) {
-            showAlert('danger', 'Failed to load form: ' + xhr.status);
-        });
-    }
-
-    // ─── EDIT ─────────────────────────────────────────────────
-    function openEditModal(id) {
-        $.get('/Employee/Edit/' + id, function (html) {
-            $('#modalContent').html(html);
-            bindFormSubmit('editForm', '/Employee/Edit');
-            $('#employeeModal').modal('show');
-        }).fail(function(xhr) {
-            showAlert('danger', 'Failed to load form: ' + xhr.status);
-        });
-    }
-
-    // ─── BIND SUBMIT (called after modal content loads) ───────
-    function bindFormSubmit(formId, url) {
-        // Re-parse validation for the newly loaded form
-        $.validator.unobtrusive.parse('#' + formId);
-
-        $('#' + formId).on('submit', function (e) {
-            e.preventDefault();  // Always stop normal submit first
-
-            var form = $(this);
-
-            // Trigger validation - if invalid, stop here
-            if (!form.valid()) {
-                console.log('Form invalid - stopping submit');
-                return;
-            }
-
-            console.log('Posting to:', url);
-            console.log('Data:', form.serialize());
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: form.serialize(),
-                success: function (res) {
-                    console.log('Response:', res);
-
-                    if (res && res.success === true) {
-                        $('#employeeModal').modal('hide');
-                        showAlert('success', res.message);
-                        setTimeout(function () { location.reload(); }, 800);
-                    } else if (res && res.success === false) {
-                        showAlert('danger', res.message);
-                    } else {
-                        // Partial view returned (server-side validation errors)
-                        $('#modalContent').html(res);
-                        bindFormSubmit(formId, url);  // Re-bind after content swap
-                    }
-                },
-                error: function (xhr) {
-                    console.log('AJAX Error:', xhr.status, xhr.responseText);
-                    showAlert('danger', 'Server error ' + xhr.status +
-                        ': ' + xhr.responseText.substring(0, 300));
-                }
+    <script>
+        // ─── CREATE ───────────────────────────────────────────────
+        function openCreateModal() {
+            $.get('/Employee/Create', function (html) {
+                $('#modalContent').html(html);
+                bindFormSubmit('createForm', '/Employee/Create');
+                $('#employeeModal').modal('show');
+            }).fail(function (xhr) {
+                showAlert('danger', 'Failed to load form: ' + xhr.status);
             });
-        });
-    }
+        }
 
-    // ─── DELETE ───────────────────────────────────────────────
-    function deleteEmployee(id, name) {
-        if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
+        // ─── EDIT ─────────────────────────────────────────────────
+        function openEditModal(id) {
+            $.get('/Employee/Edit/' + id, function (html) {
+                $('#modalContent').html(html);
+                bindFormSubmit('editForm', '/Employee/Edit');
+                $('#employeeModal').modal('show');
+            }).fail(function (xhr) {
+                showAlert('danger', 'Failed to load form: ' + xhr.status);
+            });
+        }
 
-        $.post('/Employee/Delete/' + id,
-            { __RequestVerificationToken: getToken() },
-            function (res) {
-                if (res.success) {
-                    $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
-                    showAlert('success', res.message);
-                } else {
-                    showAlert('danger', res.message);
+        // ─── BIND SUBMIT ──────────────────────────────────────────
+        function bindFormSubmit(formId, url) {
+            $.validator.unobtrusive.parse('#' + formId);
+
+            $('#' + formId).on('submit', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                if (!form.valid()) return;
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (res) {
+                        if (res && res.success === true) {
+                            $('#employeeModal').modal('hide');
+                            showAlert('success', res.message);
+                            setTimeout(function () { location.reload(); }, 800);
+                        } else if (res && res.success === false) {
+                            showAlert('danger', res.message);
+                        } else {
+                            $('#modalContent').html(res);
+                            bindFormSubmit(formId, url);
+                        }
+                    },
+                    error: function (xhr) {
+                        showAlert('danger', 'Server error ' + xhr.status + ': ' + xhr.responseText.substring(0, 200));
+                    }
+                });
+            });
+        }
+
+        // ─── DELETE ───────────────────────────────────────────────
+        function deleteEmployee(id, name) {
+            if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
+
+            $.post('/Employee/Delete/' + id,
+                { __RequestVerificationToken: getToken() },
+                function (res) {
+                    if (res.success) {
+                        $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
+                        showAlert('success', res.message);
+                    } else {
+                        showAlert('danger', res.message);
+                    }
                 }
-            }
-        ).fail(function(xhr) {
-            showAlert('danger', 'Delete failed: ' + xhr.status);
-        });
-    }
+            ).fail(function (xhr) {
+                showAlert('danger', 'Delete failed: ' + xhr.status);
+            });
+        }
 
-    // ─── HELPERS ──────────────────────────────────────────────
-    function showAlert(type, message) {
-        $('#alertBox')
-            .removeClass('d-none alert-success alert-danger')
-            .addClass('alert-' + type)
-            .text(message);
-        setTimeout(function () { $('#alertBox').addClass('d-none'); }, 4000);
-    }
+        // ─── HELPERS ──────────────────────────────────────────────
+        function showAlert(type, message) {
+            $('#alertBox')
+                .removeClass('d-none alert-success alert-danger')
+                .addClass('alert-' + type)
+                .text(message);
+            setTimeout(function () { $('#alertBox').addClass('d-none'); }, 4000);
+        }
 
-    function getToken() {
-        return $('input[name="__RequestVerificationToken"]').first().val();
-    }
-</script>
+        function getToken() {
+            return $('input[name="__RequestVerificationToken"]').first().val();
+        }
+    </script>
 }

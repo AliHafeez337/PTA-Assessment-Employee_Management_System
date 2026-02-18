@@ -5,7 +5,7 @@
 
 **Project Start Date:** February 17, 2026
 **Current Status:** 🟡 In Progress
-**Overall Progress:** 44%
+**Overall Progress:** 55%
 
 ---
 
@@ -17,7 +17,7 @@
 | Module 1: Database | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 2: Departments | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 3: Employees | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
-| Module 4: Search/Filter | 🔴 Not Started | 0% | - | - |
+| Module 4: Search/Filter | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 5: Bulk Upload | 🔴 Not Started | 0% | - | - |
 | Module 6: Dashboard | 🔴 Not Started | 0% | - | - |
 | Module 7: Validation | 🔴 Not Started | 0% | - | - |
@@ -239,21 +239,40 @@
 
 ## MODULE 4: SEARCH & FILTER
 
-**Status:** 🔴 Not Started
-**Progress:** 0/9 tasks (0%)
+**Status:** 🟢 Completed
+**Progress:** 9/9 tasks (100%)
+**Started:** February 18, 2026
+**Completed:** February 18, 2026
 
 ### Tasks:
-- [ ] Add search textbox to Employee Index.cshtml
-- [ ] Add department filter dropdown
-- [ ] Implement search functionality (by name)
-- [ ] Implement filter functionality (by department)
-- [ ] Make search and filter work together
-- [ ] Add "Clear filters" button
-- [ ] Show result count
-- [ ] Test with various search terms
-- [ ] Test filter combinations
+- [✅] Add search textbox to Employee Index.cshtml
+- [✅] Add department filter dropdown
+- [✅] Implement search functionality (by name, server-side)
+- [✅] Implement filter functionality (by department, server-side)
+- [✅] Make search and filter work together (combined query)
+- [✅] Add "Clear filters" button
+- [✅] Show result count (changes wording when filters are active)
+- [✅] Test with various search terms
+- [✅] Test filter combinations
 
-### Approval Status: ⸸ Waiting — Ready to Start
+### Files Modified:
+- `Controllers/EmployeeController.cs` — Index action updated to accept `searchName` and `departmentId` parameters
+- `Views/Employee/Index.cshtml` — search/filter bar added above the table
+
+### How It Works:
+- Search form uses `method="get"` — filters appear as URL query parameters: `/Employee?searchName=Ali&departmentId=2`
+- Controller builds the query dynamically using `.AsQueryable()` and chains `.Where()` only when a filter is provided
+- Both filters combine — name search AND department filter can be active simultaneously
+- `ViewBag.SearchName` and `ViewBag.SelectedDepartmentId` are passed back so inputs stay filled after submit
+- "Clear" button is a plain `<a asp-action="Index">` link — navigates to `/Employee` with no parameters
+
+### Key Concepts Learned:
+- **`method="get"` on a form:** Submits filter values as URL query parameters instead of a POST body — bookmarkable, shareable, browser-back-button friendly
+- **`AsQueryable()`:** Returns an IQueryable that lets you chain `.Where()` conditions dynamically before the query hits the database
+- **Deferred execution:** The database query doesn't run until `.ToListAsync()` is called — all the `.Where()` chains just build up the SQL
+- **Optional parameters (`string? searchName`, `int? departmentId`):** Controller accepts filters as nullable — if not provided they're null and no filter is applied
+
+### Approval Status: ✅ Module 4 COMPLETE — Ready for Module 6 (Dashboard)!
 
 ---
 
@@ -302,22 +321,22 @@
 
 ### Task Completion:
 - **Total Tasks:** 129
-- **Completed:** 56 (M0: 13 + M1: 10 + M2: 15 + M3: 18)
+- **Completed:** 65 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9)
 - **In Progress:** 0
-- **Remaining:** 73
+- **Remaining:** 64
 
 ### Module Completion:
-- **Modules Completed:** 4 (Module 0, 1, 2, 3)
+- **Modules Completed:** 5 (Module 0, 1, 2, 3, 4)
 - **Modules In Progress:** 0
-- **Modules Remaining:** 5
+- **Modules Remaining:** 4
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 4 — Search & Filter
+**What we're working on now:** Module 6 — Dashboard
 
-**Next immediate step:** Add search box and department filter dropdown to Employee Index page
+**Next immediate step:** Update HomeController to calculate statistics and build the dashboard view
 
 **Blockers:** None
 
@@ -356,7 +375,7 @@
 | 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` (returns value; `RenderPartialAsync` returns void) | Feb 18 |
 | 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable (`DateTime?`) + added migration | Feb 18 |
 | 12 | M3 | `[Required]` on `DepartmentId` always passes | Replaced with `[Range(1, int.MaxValue)]` | Feb 18 |
-| 13 | M3 | Employee delete returns 400 | No antiforgery token on page; added `@Html.AntiForgeryToken()` to Index.cshtml | Feb 18 |
+| 14 | M4 | Search + filter working | Server-side filtering via `AsQueryable()` + chained `.Where()` calls | Feb 18 |
 
 ---
 
@@ -388,7 +407,8 @@
 | 22 | What is a FK constraint error? | Database blocks deleting a row that other rows still reference; check dependents first in C# | M3 |
 | 23 | What is `.Include()` and why is it needed? | EF eager loading — loads related entities (e.g. Department) in the same query; without it, they're null | M3 |
 | 24 | What is `return Json(...)` vs `return PartialView()`? | Json() sends data to AJAX callers; PartialView() sends HTML; AJAX handler checks `res.success` to tell them apart | M3 |
-| 25 | What is `Html.PartialAsync` vs `Html.RenderPartialAsync`? | `PartialAsync` returns a value (use inside `@section`); `RenderPartialAsync` returns void (use outside sections only) | M3 |
+| 26 | What is `method="get"` on a search form? | Submits filters as URL query params — bookmarkable and back-button friendly; never use GET to change data | M4 |
+| 27 | What is `AsQueryable()` and deferred execution? | Builds up a SQL query in memory; `.Where()` chains add conditions; query only hits the DB when `.ToListAsync()` is called | M4 |
 
 ---
 

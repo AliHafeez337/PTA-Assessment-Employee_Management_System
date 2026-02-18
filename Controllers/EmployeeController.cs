@@ -16,12 +16,37 @@ namespace EmployeeManagementSystem.Controllers
 
         // GET: /Employee/Index
         // Fetches all employees with their department info
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchName, int? departmentId)
         {
-            var employees = await _context.Employees
-                .Include(e => e.Department)  // Eager load department
-                .OrderBy(e => e.Name)
+            // Start with the base query — always include Department
+            var query = _context.Employees
+                .Include(e => e.Department)
+                .AsQueryable();
+
+            // Apply name filter if provided
+            if (!string.IsNullOrWhiteSpace(searchName))
+            {
+                query = query.Where(e => e.Name.Contains(searchName));
+            }
+
+            // Apply department filter if provided
+            if (departmentId.HasValue && departmentId.Value > 0)
+            {
+                query = query.Where(e => e.DepartmentId == departmentId.Value);
+            }
+
+            // Execute the query
+            var employees = await query.OrderBy(e => e.Name).ToListAsync();
+
+            // Populate department dropdown for the filter
+            ViewBag.Departments = await _context.Departments
+                .Where(d => d.ActiveInactive)
+                .OrderBy(d => d.DepartmentName)
                 .ToListAsync();
+
+            // Pass filter values back to the view so inputs stay filled
+            ViewBag.SearchName = searchName;
+            ViewBag.SelectedDepartmentId = departmentId;
 
             return View(employees);
         }

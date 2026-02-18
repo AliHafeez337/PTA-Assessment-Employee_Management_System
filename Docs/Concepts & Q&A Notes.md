@@ -372,7 +372,67 @@ window.location = '/Employee/Delete/' + id  // never do this
 
 ---
 
-## QUICK REFERENCE — KEY TERMS
+## MODULE 4 — SEARCH & FILTER
+
+### Q1: What is `method="get"` on a form and when should you use it?
+HTML forms support two methods: `GET` and `POST`. When a form uses `method="get"`, the field values are appended to the URL as query parameters instead of being sent in the request body:
+
+```
+/Employee?searchName=Ali&departmentId=2
+```
+
+This is the correct choice for search and filter forms because:
+- The URL is **bookmarkable** — you can save or share a filtered view
+- The **browser back button** works correctly
+- **Refreshing** the page re-applies the same filters
+- It makes clear the request is **read-only** (not changing data)
+
+Never use `method="get"` for forms that create, update, or delete data — use `POST` for those.
+
+---
+
+### Q2: What is `AsQueryable()` and what is deferred execution?
+`AsQueryable()` returns an `IQueryable` — an object that represents a database query being built up in memory. The key feature is **deferred execution**: the query does not actually run against the database until you call `.ToListAsync()` (or `.ToList()`, `.FirstOrDefault()`, etc.).
+
+This lets you chain `.Where()` conditions dynamically:
+
+```csharp
+var query = _context.Employees.AsQueryable();  // no DB call yet
+
+if (!string.IsNullOrWhiteSpace(searchName))
+    query = query.Where(e => e.Name.Contains(searchName));  // no DB call yet
+
+if (departmentId > 0)
+    query = query.Where(e => e.DepartmentId == departmentId);  // no DB call yet
+
+var results = await query.ToListAsync();  // DB call happens HERE — one query with all conditions
+```
+
+Without `AsQueryable()`, you'd have to load all employees first and then filter in memory — which is slow and wasteful with large datasets.
+
+---
+
+### Q3: Why pass `ViewBag.SearchName` and `ViewBag.SelectedDepartmentId` back to the view?
+After a `GET` form submits, the page reloads with the filtered results. Without passing the filter values back, the search box and dropdown would go blank — the user would see their results but lose track of what they searched for.
+
+By storing the values in ViewBag and binding them to the inputs:
+```html
+<input type="text" name="searchName" value="@ViewBag.SearchName" ... />
+```
+The inputs stay filled after every search, making the experience feel continuous rather than resetting each time.
+
+---
+
+### Q4: Why is the "Clear" button a link (`<a>`) and not a submit button?
+A submit button would submit the form — it would send `searchName=` and `departmentId=0` as empty parameters, and the controller would have to handle those explicitly.
+
+A plain link navigates directly to `/Employee` with no parameters at all — which is cleaner and simpler:
+```html
+<a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+```
+The controller's parameters are nullable (`string? searchName`, `int? departmentId`) — when no parameters are in the URL, they arrive as `null`, and no filters are applied.
+
+---
 
 | Term | What it is |
 |------|-----------|
@@ -397,8 +457,10 @@ window.location = '/Employee/Delete/' + id  // never do this
 | `.Include()` | EF eager loading — loads related entities in the same query |
 | `DateTime?` | Nullable DateTime — defaults to null instead of 0001-01-01 |
 | `[Range(1, int.MaxValue)]` | Validates int fields that must have a selection (not 0) |
-| `Html.PartialAsync` | Renders a partial view inside a `@section` block |
-| `Html.RenderPartialAsync` | Renders a partial view outside sections only (returns void) |
+| `method="get"` on a form | Submits values as URL query params — bookmarkable, back-button friendly; read-only operations only |
+| `AsQueryable()` | Returns IQueryable — lets you chain `.Where()` conditions before the DB query runs |
+| Deferred execution | Query builds in memory; DB is not hit until `.ToListAsync()` is called |
+| Optional params (`string?`) | Nullable controller params — if not in URL they arrive as null; no filter applied |
 
 ---
 
