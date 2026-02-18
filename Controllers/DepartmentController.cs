@@ -143,7 +143,18 @@ namespace EmployeeManagementSystem.Controllers
             if (department == null)
                 return NotFound();
 
-            // Hard delete: permanently remove the record from the DB
+            // Check if any employees belong to this department
+            bool hasEmployees = await _context.Employees
+                .AnyAsync(e => e.DepartmentId == id);
+
+            if (hasEmployees)
+            {
+                TempData["ErrorMessage"] = $"Cannot delete '{department.DepartmentName}' " +
+                                          $"because it has employees assigned to it. " +
+                                          $"Please reassign or delete those employees first.";
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
 
