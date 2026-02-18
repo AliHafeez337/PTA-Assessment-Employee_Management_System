@@ -9,56 +9,55 @@ namespace EmployeeManagementSystem.Controllers
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(ApplicationDbContext context)
+        public EmployeeController(ApplicationDbContext context, ILogger<EmployeeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: /Employee/Index
-        // Fetches all employees with their department info
         public async Task<IActionResult> Index(string? searchName, int? departmentId)
         {
-            // Start with the base query — always include Department
-            var query = _context.Employees
-                .Include(e => e.Department)
-                .AsQueryable();
-
-            // Apply name filter if provided
-            if (!string.IsNullOrWhiteSpace(searchName))
+            try
             {
-                query = query.Where(e => e.Name.Contains(searchName));
-            }
+                var query = _context.Employees
+                    .Include(e => e.Department)
+                    .AsQueryable();
 
-            // Apply department filter if provided
-            if (departmentId.HasValue && departmentId.Value > 0)
+                if (!string.IsNullOrWhiteSpace(searchName))
+                    query = query.Where(e => e.Name.Contains(searchName));
+
+                if (departmentId.HasValue && departmentId.Value > 0)
+                    query = query.Where(e => e.DepartmentId == departmentId.Value);
+
+                var employees = await query.OrderBy(e => e.Name).ToListAsync();
+
+                ViewBag.Departments = await _context.Departments
+                    .Where(d => d.ActiveInactive)
+                    .OrderBy(d => d.DepartmentName)
+                    .ToListAsync();
+
+                ViewBag.SearchName = searchName;
+                ViewBag.SelectedDepartmentId = departmentId;
+
+                return View(employees);
+            }
+            catch (Exception ex)
             {
-                query = query.Where(e => e.DepartmentId == departmentId.Value);
+                _logger.LogError(ex, "Error loading employees list");
+                TempData["ErrorMessage"] = "An error occurred while loading employees. Please try again.";
+                return View(new List<Employee>());
             }
-
-            // Execute the query
-            var employees = await query.OrderBy(e => e.Name).ToListAsync();
-
-            // Populate department dropdown for the filter
-            ViewBag.Departments = await _context.Departments
-                .Where(d => d.ActiveInactive)
-                .OrderBy(d => d.DepartmentName)
-                .ToListAsync();
-
-            // Pass filter values back to the view so inputs stay filled
-            ViewBag.SearchName = searchName;
-            ViewBag.SelectedDepartmentId = departmentId;
-
-            return View(employees);
         }
 
         // GET: /Employee/Create
-        // Returns the partial view (popup form) for adding an employee
+        // Returns partial view (popup form) for adding an employee
         public async Task<IActionResult> Create()
         {
-            // Populate department dropdown
             ViewBag.Departments = await _context.Departments
-                .Where(d => d.ActiveInactive)  // Only active departments
+                .Where(d => d.ActiveInactive)
                 .OrderBy(d => d.DepartmentName)
                 .ToListAsync();
 
@@ -70,25 +69,30 @@ namespace EmployeeManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee)
         {
-            // Check for duplicate email
+            // Duplicate email check
             bool emailExists = await _context.Employees
                 .AnyAsync(e => e.Email == employee.Email);
 
             if (emailExists)
-            {
                 ModelState.AddModelError("Email", "An employee with this email already exists.");
-            }
 
             if (ModelState.IsValid)
             {
-                _context.Employees.Add(employee);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Employees.Add(employee);
+                    await _context.SaveChangesAsync();
 
-                // Return JSON success so AJAX can handle it
-                return Json(new { success = true, message = "Employee added successfully." });
+                    return Json(new { success = true, message = "Employee added successfully." });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error creating employee '{Email}'", employee.Email);
+                    return Json(new { success = false, message = "An error occurred while saving. Please try again." });
+                }
             }
 
-            // If validation failed, re-populate dropdown and return partial view with errors
+            // Validation failed — re-populate dropdown and return partial with errors
             ViewBag.Departments = await _context.Departments
                 .Where(d => d.ActiveInactive)
                 .OrderBy(d => d.DepartmentName)
@@ -98,15 +102,12 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         // GET: /Employee/Edit/5
-        // Returns the partial view (popup form) pre-filled with employee data
+        // Returns partial view pre-filled with employee data
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
 
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            if (employee == null) return NotFound();
 
             ViewBag.Departments = await _context.Departments
                 .Where(d => d.ActiveInactive)
@@ -121,21 +122,27 @@ namespace EmployeeManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Employee employee)
         {
-            // Check for duplicate email - exclude current employee
+            // Duplicate email check — exclude current employee
             bool emailExists = await _context.Employees
                 .AnyAsync(e => e.Email == employee.Email && e.EmployeeId != employee.EmployeeId);
 
             if (emailExists)
-            {
                 ModelState.AddModelError("Email", "An employee with this email already exists.");
-            }
 
             if (ModelState.IsValid)
             {
-                _context.Employees.Update(employee);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Employees.Update(employee);
+                    await _context.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Employee updated successfully." });
+                    return Json(new { success = true, message = "Employee updated successfully." });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error updating employee ID {Id}", employee.EmployeeId);
+                    return Json(new { success = false, message = "An error occurred while saving. Please try again." });
+                }
             }
 
             ViewBag.Departments = await _context.Departments
@@ -151,21 +158,27 @@ namespace EmployeeManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
+            try
             {
-                return Json(new { success = false, message = "Employee not found." });
+                var employee = await _context.Employees.FindAsync(id);
+
+                if (employee == null)
+                    return Json(new { success = false, message = "Employee not found." });
+
+                _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Employee deleted successfully." });
             }
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true, message = "Employee deleted successfully." });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting employee ID {Id}", id);
+                return Json(new { success = false, message = "An error occurred while deleting. Please try again." });
+            }
         }
 
         // GET: /Employee/GetDepartmentEmployeeCount/5
-        // AJAX endpoint - returns how many employees are in a department
+        // AJAX endpoint — returns employee count for a department
         public async Task<IActionResult> GetDepartmentEmployeeCount(int departmentId)
         {
             int count = await _context.Employees
@@ -186,14 +199,12 @@ namespace EmployeeManagementSystem.Controllers
         public async Task<IActionResult> Upload(IFormFile file,
             [FromServices] FileUploadService uploadService)
         {
-            // Validate file was provided
             if (file == null || file.Length == 0)
             {
                 ModelState.AddModelError("", "Please select a file to upload.");
                 return View();
             }
 
-            // Validate file extension
             var ext = Path.GetExtension(file.FileName).ToLower();
             if (ext != ".csv" && ext != ".xlsx")
             {
@@ -201,9 +212,17 @@ namespace EmployeeManagementSystem.Controllers
                 return View();
             }
 
-            var result = await uploadService.ProcessFileAsync(file);
-
-            return View("UploadResult", result);
+            try
+            {
+                var result = await uploadService.ProcessFileAsync(file);
+                return View("UploadResult", result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing upload file '{FileName}'", file.FileName);
+                ModelState.AddModelError("", "An error occurred while processing the file. Please check the format and try again.");
+                return View();
+            }
         }
     }
 }

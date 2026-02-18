@@ -51,14 +51,13 @@
 <!-- Upload form -->
 <div class="card shadow-sm">
     <div class="card-body">
-        <form method="post" enctype="multipart/form-data" asp-action="Upload">
+        <form method="post" enctype="multipart/form-data" asp-action="Upload" id="uploadForm">
             @Html.AntiForgeryToken()
 
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger">
-                    @foreach (var error in ViewData.ModelState.Values
-                        .SelectMany(v => v.Errors))
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                     {
                         <div>@error.ErrorMessage</div>
                     }
@@ -71,9 +70,36 @@
                        class="form-control" required />
             </div>
 
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="uploadBtn">
                 Upload & Process
             </button>
         </form>
     </div>
 </div>
+
+<!-- Loading overlay — hidden until form is submitted -->
+<div id="uploadOverlay" class="d-none position-fixed top-0 start-0 w-100 h-100
+     align-items-center justify-content-center"
+     style="background: rgba(0,0,0,0.55); z-index: 9999;">
+    <div class="text-center text-white">
+        <div class="spinner-border mb-3" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Processing...</span>
+        </div>
+        <div class="fs-5 fw-semibold">Processing your file, please wait...</div>
+        <div class="text-white-50 small mt-1">This may take a few seconds for large files.</div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function () {
+            // Show the loading overlay
+            const overlay = document.getElementById('uploadOverlay');
+            overlay.classList.remove('d-none');
+            overlay.classList.add('d-flex');
+
+            // Disable the button so the user can't submit twice
+            document.getElementById('uploadBtn').disabled = true;
+        });
+    </script>
+}

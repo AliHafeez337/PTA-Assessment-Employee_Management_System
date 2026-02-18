@@ -7,29 +7,36 @@ namespace EmployeeManagementSystem.Controllers
 {
     public class DepartmentController : Controller
     {
-        // _context gives us access to the database through Entity Framework
-        // The underscore prefix is a C# convention for private fields
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<DepartmentController> _logger;
 
-        // Constructor: ASP.NET automatically injects the DbContext we registered in Program.cs
-        public DepartmentController(ApplicationDbContext context)
+        // ILogger is injected automatically by ASP.NET — used to log errors to the console/output
+        public DepartmentController(ApplicationDbContext context, ILogger<DepartmentController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // ---------------------------------------------------------------
-        // INDEX — Show list of all active departments
-        // URL: GET /Department  or  GET /Department/Index
+        // INDEX — Show list of all departments
+        // URL: GET /Department
         // ---------------------------------------------------------------
         public async Task<IActionResult> Index()
         {
-            // Fetch only active departments, ordered by name
-            // "async/await" means: wait for the DB to respond without freezing the app
-            var departments = await _context.Departments
-                .OrderBy(d => d.DepartmentName)
-                .ToListAsync();
+            try
+            {
+                var departments = await _context.Departments
+                    .OrderBy(d => d.DepartmentName)
+                    .ToListAsync();
 
-            return View(departments);   // Pass the list to Index.cshtml
+                return View(departments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading departments list");
+                TempData["ErrorMessage"] = "An error occurred while loading departments. Please try again.";
+                return View(new List<Department>());
+            }
         }
 
         // ---------------------------------------------------------------
@@ -38,44 +45,42 @@ namespace EmployeeManagementSystem.Controllers
         // ---------------------------------------------------------------
         public IActionResult Create()
         {
-            // Pass a new Department object so the view knows the defaults
-            // (e.g. ActiveInactive = true → checkbox renders as checked)
             return View(new Department());
         }
 
         // ---------------------------------------------------------------
         // CREATE (POST) — Receive form data and save to database
         // URL: POST /Department/Create
-        // [HttpPost] means this action only runs when the form is submitted
-        // [ValidateAntiForgeryToken] protects against cross-site request forgery attacks
         // ---------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Department department)
         {
-            // Check if a department with the same name already exists
+            // Duplicate name check
             bool nameExists = await _context.Departments
                 .AnyAsync(d => d.DepartmentName == department.DepartmentName);
 
             if (nameExists)
-            {
-                // Add a custom error to ModelState so it shows on the form
                 ModelState.AddModelError("DepartmentName", "A department with this name already exists.");
-            }
 
-            // ModelState.IsValid checks all data annotation rules (Required, StringLength etc.)
             if (ModelState.IsValid)
             {
-                department.CreatedDate = DateTime.Now;  // Set creation timestamp
-                _context.Departments.Add(department);   // Stage the new record
-                await _context.SaveChangesAsync();       // Commit to database
+                try
+                {
+                    department.CreatedDate = DateTime.Now;
+                    _context.Departments.Add(department);
+                    await _context.SaveChangesAsync();
 
-                // TempData persists a message for exactly one redirect (shown on Index)
-                TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' created successfully!";
-                return RedirectToAction(nameof(Index));
+                    TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' created successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error creating department '{Name}'", department.DepartmentName);
+                    ModelState.AddModelError("", "An error occurred while saving. Please try again.");
+                }
             }
 
-            // If validation failed, return the same form with error messages
             return View(department);
         }
 
@@ -85,16 +90,13 @@ namespace EmployeeManagementSystem.Controllers
         // ---------------------------------------------------------------
         public async Task<IActionResult> Edit(int? id)
         {
-            // id? means it's nullable — handle the case where no id was provided
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var department = await _context.Departments.FindAsync(id);
 
-            if (department == null)
-                return NotFound();
+            if (department == null) return NotFound();
 
-            return View(department);    // Pass existing data to pre-fill the form
+            return View(department);
         }
 
         // ---------------------------------------------------------------
@@ -105,60 +107,73 @@ namespace EmployeeManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Department department)
         {
-            if (id != department.DepartmentId)
-                return NotFound();
+            if (id != department.DepartmentId) return NotFound();
 
-            // Check for duplicate name — but exclude the current department itself
+            // Duplicate name check — exclude current department
             bool nameExists = await _context.Departments
                 .AnyAsync(d => d.DepartmentName == department.DepartmentName
                             && d.DepartmentId != id);
 
             if (nameExists)
-            {
                 ModelState.AddModelError("DepartmentName", "A department with this name already exists.");
-            }
 
             if (ModelState.IsValid)
             {
-                _context.Departments.Update(department);    // Stage the update
-                await _context.SaveChangesAsync();           // Commit to database
+                try
+                {
+                    _context.Departments.Update(department);
+                    await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' updated successfully!";
-                return RedirectToAction(nameof(Index));
+                    TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' updated successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error updating department ID {Id}", id);
+                    ModelState.AddModelError("", "An error occurred while saving. Please try again.");
+                }
             }
 
             return View(department);
         }
 
         // ---------------------------------------------------------------
-        // DELETE (POST) — Hard delete: permanently remove from database
+        // DELETE (POST) — Hard delete with FK guard
         // URL: POST /Department/Delete/5
         // ---------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var department = await _context.Departments.FindAsync(id);
-
-            if (department == null)
-                return NotFound();
-
-            // Check if any employees belong to this department
-            bool hasEmployees = await _context.Employees
-                .AnyAsync(e => e.DepartmentId == id);
-
-            if (hasEmployees)
+            try
             {
-                TempData["ErrorMessage"] = $"Cannot delete '{department.DepartmentName}' " +
-                                          $"because it has employees assigned to it. " +
-                                          $"Please reassign or delete those employees first.";
-                return RedirectToAction(nameof(Index));
+                var department = await _context.Departments.FindAsync(id);
+
+                if (department == null) return NotFound();
+
+                // Block delete if employees are assigned
+                bool hasEmployees = await _context.Employees
+                    .AnyAsync(e => e.DepartmentId == id);
+
+                if (hasEmployees)
+                {
+                    TempData["ErrorMessage"] = $"Cannot delete '{department.DepartmentName}' " +
+                                              $"because it has employees assigned to it. " +
+                                              $"Please reassign or delete those employees first.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting department ID {Id}", id);
+                TempData["ErrorMessage"] = "An error occurred while deleting. Please try again.";
             }
 
-            _context.Departments.Remove(department);
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = $"Department '{department.DepartmentName}' deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }
