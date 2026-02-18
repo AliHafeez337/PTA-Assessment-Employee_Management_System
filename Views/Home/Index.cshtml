@@ -1,4 +1,5 @@
-﻿@model EmployeeManagementSystem.Models.DashboardViewModel
+﻿@* This view receives a DashboardViewModel with live stats from the database *@
+@model EmployeeManagementSystem.Models.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -9,13 +10,16 @@
     <p class="text-muted">Welcome to the Employee Management System. Here's a quick overview.</p>
 </div>
 
-<!-- ─── STAT CARDS ─────────────────────────────────────────────── -->
+@* ── Stat cards ───────────────────────────────────────────────────────── *@
+@* Three equal-width Bootstrap columns, each containing a card.
+   g-4 = gap between columns. h-100 = all cards stretch to the same height. *@
 <div class="row g-4 mb-5">
 
-    <!-- Total Employees -->
+    @* ── Total Employees ──────────────────────────────────────────── *@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body d-flex align-items-center gap-3 p-4">
+                @* Coloured icon circle — bg-opacity-10 gives a soft tint *@
                 <div class="rounded-circle bg-primary bg-opacity-10 p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                          fill="#0d6efd" viewBox="0 0 16 16">
@@ -27,13 +31,14 @@
                 </div>
                 <div>
                     <div class="text-muted small fw-semibold text-uppercase">Total Employees</div>
+                    @* Model.TotalEmployees = COUNT(*) FROM Employees *@
                     <div class="fs-2 fw-bold text-primary">@Model.TotalEmployees</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Active Departments -->
+    @* ── Active Departments ───────────────────────────────────────── *@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body d-flex align-items-center gap-3 p-4">
@@ -49,13 +54,14 @@
                 </div>
                 <div>
                     <div class="text-muted small fw-semibold text-uppercase">Active Departments</div>
+                    @* Model.TotalActiveDepartments = COUNT(*) FROM Departments WHERE ActiveInactive = 1 *@
                     <div class="fs-2 fw-bold text-success">@Model.TotalActiveDepartments</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Average Salary -->
+    @* ── Average Salary ───────────────────────────────────────────── *@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body d-flex align-items-center gap-3 p-4">
@@ -73,6 +79,7 @@
                 </div>
                 <div>
                     <div class="text-muted small fw-semibold text-uppercase">Average Salary</div>
+                    @* C0 format = currency with no decimal places, e.g. $55,000 *@
                     <div class="fs-2 fw-bold text-warning">@Model.AverageSalary.ToString("C0")</div>
                 </div>
             </div>
@@ -81,7 +88,8 @@
 
 </div>
 
-<!-- ─── QUICK LINKS ─────────────────────────────────────────────── -->
+@* ── Quick links ──────────────────────────────────────────────────────── *@
+@* Give the user a direct path to the two main sections from the dashboard *@
 <div class="row g-3">
     <div class="col-md-6">
         <div class="card shadow-sm border-0">

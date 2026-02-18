@@ -1,15 +1,17 @@
+@* This view receives a list of Employee objects (with Department loaded via .Include()) *@
 @model List<EmployeeManagementSystem.Models.Employee>
 
 @{
     ViewData["Title"] = "Employees";
 }
 
+@* Hidden antiforgery token — used by the AJAX delete call below *@
 @Html.AntiForgeryToken()
 
-<!-- Success/Error Alert -->
+@* ── Alert box — shown/hidden by JavaScript after AJAX actions ──────── *@
 <div id="alertBox" class="alert d-none" role="alert"></div>
 
-<!-- Page Header -->
+@* ── Page header ──────────────────────────────────────────────────────── *@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Employee Management</h2>
     <div class="d-flex gap-2">
@@ -20,12 +22,14 @@
     </div>
 </div>
 
-<!-- ─── SEARCH & FILTER BAR ─────────────────────────────────── -->
+@* ── Search & filter bar ───────────────────────────────────────────────── *@
+@* method="get" submits values as URL query params: /Employee?searchName=Ali&departmentId=2
+   This makes filters bookmarkable and preserves the state on page refresh. *@
 <form method="get" asp-action="Index" class="card shadow-sm mb-3">
     <div class="card-body">
         <div class="row g-2 align-items-end">
 
-            <!-- Search by name -->
+            @* Search by employee name *@
             <div class="col-md-5">
                 <label class="form-label fw-semibold">Search by Name</label>
                 <input type="text"
@@ -35,7 +39,7 @@
                        placeholder="Type employee name..." />
             </div>
 
-            <!-- Filter by department -->
+            @* Filter by department — ViewBag.Departments populated in controller *@
             <div class="col-md-4">
                 <label class="form-label fw-semibold">Filter by Department</label>
                 <select name="departmentId" class="form-select">
@@ -50,9 +54,10 @@
                 </select>
             </div>
 
-            <!-- Buttons -->
+            @* Search / Clear buttons *@
             <div class="col-md-3 d-flex gap-2">
                 <button type="submit" class="btn btn-primary w-100">Search</button>
+                @* Clear = plain link to /Employee with no params — resets all filters *@
                 <a asp-action="Index" class="btn btn-outline-secondary w-100">Clear</a>
             </div>
 
@@ -60,9 +65,10 @@
     </div>
 </form>
 
-<!-- ─── RESULTS COUNT ─────────────────────────────────────────── -->
+@* ── Result count — changes wording when filters are active ───────────── *@
 <p class="text-muted mb-2">
-    @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) || (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
+    @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) ||
+         (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
     {
         <span>Showing <strong>@Model.Count</strong> result(s) for applied filters.</span>
     }
@@ -72,77 +78,85 @@
     }
 </p>
 
-<!-- ─── EMPLOYEE TABLE ────────────────────────────────────────── -->
+@* ── Employee table ───────────────────────────────────────────────────── *@
+@* table-responsive wraps the table in a scrollable container on small screens *@
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Salary</th>
-                    <th>Department</th>
-                    <th>Joining Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!Model.Any())
-                {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-dark">
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No employees found.
-                            @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) || (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
-                            {
-                                <span>Try adjusting your filters or <a asp-action="Index">clear them</a>.</span>
-                            }
-                        </td>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Salary</th>
+                        <th>Department</th>
+                        <th>Joining Date</th>
+                        <th>Actions</th>
                     </tr>
-                }
-                else
-                {
-                    int i = 1;
-                    foreach (var emp in Model)
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
                     {
-                        <tr id="row-@emp.EmployeeId">
-                            <td>@(i++)</td>
-                            <td>@emp.Name</td>
-                            <td>@emp.Email</td>
-                            <td>@emp.Salary.ToString("C")</td>
-                            <td>@(emp.Department?.DepartmentName ?? "N/A")</td>
-                            <td>@emp.JoiningDate?.ToString("MMM dd, yyyy")</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1"
-                                        onclick="openEditModal(@emp.EmployeeId)">
-                                    Edit
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger"
-                                        onclick="deleteEmployee(@emp.EmployeeId, '@emp.Name')">
-                                    Delete
-                                </button>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No employees found.
+                                @if (!string.IsNullOrWhiteSpace(ViewBag.SearchName as string) ||
+                                     (ViewBag.SelectedDepartmentId != null && (int?)ViewBag.SelectedDepartmentId > 0))
+                                {
+                                    <span>Try adjusting your filters or <a asp-action="Index">clear them</a>.</span>
+                                }
                             </td>
                         </tr>
                     }
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- ─── MODAL ─────────────────────────────────────────────────── -->
-<div class="modal fade" id="employeeModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content" id="modalContent">
+                    else
+                    {
+                        int i = 1;
+                        foreach (var emp in Model)
+                        {
+                            @* id="row-X" lets the delete handler target and fade out this row *@
+                            <tr id="row-@emp.EmployeeId">
+                                <td>@(i++)</td>
+                                <td>@emp.Name</td>
+                                <td>@emp.Email</td>
+                                <td>@emp.Salary.ToString("C")</td>
+                                @* Department?.DepartmentName — null-safe in case Include() missed it *@
+                                <td>@(emp.Department?.DepartmentName ?? "N/A")</td>
+                                <td>@emp.JoiningDate?.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary me-1"
+                                            onclick="openEditModal(@emp.EmployeeId)">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            onclick="deleteEmployee(@emp.EmployeeId, '@emp.Name.Replace("'", "\\'")' )">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+@* ── Bootstrap modal container ─────────────────────────────────────────── *@
+@* The modal starts empty — jQuery loads partial view HTML into #modalContent *@
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+</div>
+
 @section Scripts {
+    @* jQuery validation + unobtrusive validation — required for modal forms *@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        // ─── CREATE ───────────────────────────────────────────────
+        // ── CREATE ─────────────────────────────────────────────────────
+        // Loads the empty Create form into the modal via AJAX
         function openCreateModal() {
             $.get('/Employee/Create', function (html) {
                 $('#modalContent').html(html);
@@ -153,7 +167,8 @@
             });
         }
 
-        // ─── EDIT ─────────────────────────────────────────────────
+        // ── EDIT ───────────────────────────────────────────────────────
+        // Loads the Edit form pre-filled with the employee's data
         function openEditModal(id) {
             $.get('/Employee/Edit/' + id, function (html) {
                 $('#modalContent').html(html);
@@ -164,30 +179,38 @@
             });
         }
 
-        // ─── BIND SUBMIT ──────────────────────────────────────────
+        // ── BIND FORM SUBMIT ───────────────────────────────────────────
+        // Wires up AJAX submission and jQuery validation for a given form.
+        // Called after the partial view HTML is injected into the modal,
+        // because validation needs to scan the DOM after the form exists.
         function bindFormSubmit(formId, url) {
+            // Re-parse validation rules for the newly injected form
             $.validator.unobtrusive.parse('#' + formId);
 
             $('#' + formId).on('submit', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // Always first — stops browser default submit
 
                 var form = $(this);
-                if (!form.valid()) return;
+                if (!form.valid()) return; // Client-side validation failed — stop here
 
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: form.serialize(),
+                    data: form.serialize(), // Serializes all inputs including antiforgery token
                     success: function (res) {
                         if (res && res.success === true) {
+                            // Server returned JSON { success: true } — close modal and reload
                             $('#employeeModal').modal('hide');
                             showAlert('success', res.message);
                             setTimeout(function () { location.reload(); }, 800);
                         } else if (res && res.success === false) {
+                            // Server returned JSON { success: false } — show error
                             showAlert('danger', res.message);
                         } else {
+                            // Server returned HTML — validation errors in partial view
+                            // Re-inject the HTML into the modal so errors are visible
                             $('#modalContent').html(res);
-                            bindFormSubmit(formId, url);
+                            bindFormSubmit(formId, url); // Re-bind after DOM update
                         }
                     },
                     error: function (xhr) {
@@ -197,14 +220,16 @@
             });
         }
 
-        // ─── DELETE ───────────────────────────────────────────────
+        // ── DELETE ─────────────────────────────────────────────────────
+        // Sends AJAX POST to delete the employee, then fades out the row
         function deleteEmployee(id, name) {
-            if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
+            if (!confirm('Are you sure you want to delete "' + name + '"?\nThis action cannot be undone.')) return;
 
             $.post('/Employee/Delete/' + id,
                 { __RequestVerificationToken: getToken() },
                 function (res) {
                     if (res.success) {
+                        // Fade out and remove the table row visually
                         $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
                         showAlert('success', res.message);
                     } else {
@@ -216,15 +241,20 @@
             });
         }
 
-        // ─── HELPERS ──────────────────────────────────────────────
+        // ── HELPERS ────────────────────────────────────────────────────
+
+        // Shows a dismissing alert bar at the top of the page
         function showAlert(type, message) {
             $('#alertBox')
                 .removeClass('d-none alert-success alert-danger')
                 .addClass('alert-' + type)
                 .text(message);
+            // Auto-hide after 4 seconds
             setTimeout(function () { $('#alertBox').addClass('d-none'); }, 4000);
         }
 
+        // Reads the antiforgery token from the hidden input on the page
+        // Required because employee delete has no form — token is added via @Html.AntiForgeryToken()
         function getToken() {
             return $('input[name="__RequestVerificationToken"]').first().val();
         }

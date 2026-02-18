@@ -1,21 +1,19 @@
-@* The @model line tells this view what type of data it receives from the controller *@
+@* This view receives a list of Department objects from DepartmentController.Index() *@
 @model List<EmployeeManagementSystem.Models.Department>
 
 @{
-    ViewData["Title"] = "Departments";  @* Sets the browser tab title *@
+    ViewData["Title"] = "Departments";
 }
 
 <div class="container mt-4">
 
-    @* ── Page header ── *@
+    @* ── Page header ─────────────────────────────────────────────── *@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Departments</h2>
-        <a asp-action="Create" class="btn btn-primary">
-            + Add Department
-        </a>
+        <a asp-action="Create" class="btn btn-primary">+ Add Department</a>
     </div>
 
-    @* ── Success / Error messages from TempData ── *@
+    @* ── Success / Error messages (set via TempData after redirects) ── *@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -32,63 +30,86 @@
         </div>
     }
 
-    @* ── Department table ── *@
+    @* ── Department table ─────────────────────────────────────────── *@
     @if (Model.Count == 0)
     {
-        <div class="alert alert-info">No departments found. Click "Add Department" to create one.</div>
+        <div class="alert alert-info">
+            No departments found. Click "Add Department" to create one.
+        </div>
     }
     else
     {
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Department Name</th>
-                    <th>Code</th>
-                    <th>Status</th>
-                    <th>Created Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @* Loop through each department and render a row *@
-                @foreach (var dept in Model)
-                {
+        @* table-responsive makes the table scroll horizontally on small screens *@
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <td>@dept.DepartmentId</td>
-                        <td>@dept.DepartmentName</td>
-                        <td>@dept.DepartmentCode</td>
-                        <td>
-                            @* Green badge for Active, red badge for Inactive *@
-                            @if (dept.ActiveInactive)
-                            {
-                                <span class="badge bg-success">Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Inactive</span>
-                            }
-                        </td>
-                        <td>@dept.CreatedDate.ToString("MMM dd, yyyy")</td>
-                        <td>
-                            @* Edit button — links to Edit action with department's id *@
-                            <a asp-action="Edit" asp-route-id="@dept.DepartmentId"
-                               class="btn btn-sm btn-warning">Edit</a>
-
-                            @* Delete button — submits a form so we can use [HttpPost] *@
-                            <form asp-action="Delete" asp-route-id="@dept.DepartmentId"
-                                  method="post" style="display:inline"
-                                  onsubmit="return confirm('Are you sure you want to delete @dept.DepartmentName?')">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <th>#</th>
+                        <th>Department Name</th>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var dept in Model)
+                    {
+                        <tr>
+                            <td>@dept.DepartmentId</td>
+                            <td>@dept.DepartmentName</td>
+                            <td><code>@dept.DepartmentCode</code></td>
+                            <td>
+                                @* Green badge for Active, red for Inactive *@
+                                @if (dept.ActiveInactive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </td>
+                            <td>@dept.CreatedDate.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                @* Edit → navigates to the Edit page *@
+                                <a asp-action="Edit" asp-route-id="@dept.DepartmentId"
+                                   class="btn btn-sm btn-warning me-1">Edit</a>
+
+                                @* Delete → POST form with confirmation.
+                                   data-name stores the department name safely as a
+                                   JSON-encoded HTML attribute — avoids JS breaking
+                                   if the name contains apostrophes or quotes. *@
+                                <form asp-action="Delete" asp-route-id="@dept.DepartmentId"
+                                      method="post" style="display:inline"
+                                      onsubmit="return confirmDelete(this)">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger"
+                                            data-name="@dept.DepartmentName">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
         <p class="text-muted">Total: @Model.Count department(s)</p>
     }
 
 </div>
+
+@section Scripts {
+    <script>
+        // Reads the department name from the button's data-name attribute.
+        // This is safer than embedding the name directly in the onsubmit string,
+        // because names with apostrophes (e.g. "IT's Team") would break the JS.
+        function confirmDelete(form) {
+            var name = form.querySelector('[data-name]').getAttribute('data-name');
+            return confirm('Are you sure you want to delete "' + name + '"?\nThis action cannot be undone.');
+        }
+    </script>
+}
