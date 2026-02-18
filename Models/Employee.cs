@@ -26,7 +26,7 @@ namespace EmployeeManagementSystem.Models
         public decimal Salary { get; set; }
 
         // Foreign key linking to Departments table
-        [Required(ErrorMessage = "Please select a department")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a department")] // Ensure DepartmentId is not 0
         [Display(Name = "Department")]
         public int DepartmentId { get; set; }
 
@@ -34,7 +34,7 @@ namespace EmployeeManagementSystem.Models
         [Required(ErrorMessage = "Joining date is required")]
         [DataType(DataType.Date)]
         [Display(Name = "Joining Date")]
-        public DateTime JoiningDate { get; set; }
+        public DateTime? JoiningDate { get; set; }
 
         // Navigation property: reference to the parent Department object
         // [ForeignKey] tells EF which property is the FK

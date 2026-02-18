@@ -3,9 +3,9 @@
 
 **📱 macOS Development | SQL Server via Docker (as per PDF)**
 
-**Project Start Date:** February 17, 2026  
-**Current Status:** 🟡 In Progress  
-**Overall Progress:** 33%
+**Project Start Date:** February 17, 2026
+**Current Status:** 🟡 In Progress
+**Overall Progress:** 44%
 
 ---
 
@@ -16,7 +16,7 @@
 | Module 0: Setup | 🟢 Completed | 100% | Feb 17, 2026 | Feb 17, 2026 |
 | Module 1: Database | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 2: Departments | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
-| Module 3: Employees | 🔴 Not Started | 0% | - | - |
+| Module 3: Employees | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 4: Search/Filter | 🔴 Not Started | 0% | - | - |
 | Module 5: Bulk Upload | 🔴 Not Started | 0% | - | - |
 | Module 6: Dashboard | 🔴 Not Started | 0% | - | - |
@@ -27,15 +27,15 @@
 - 🔴 Not Started
 - 🟡 In Progress
 - 🟢 Completed
-- ⸏ Blocked/Waiting
+- ⸸ Blocked/Waiting
 
 ---
 
 ## MODULE 0: PROJECT SETUP
 
-**Status:** 🟢 Completed  
-**Progress:** 13/13 tasks (100%)  
-**Started:** February 17, 2026  
+**Status:** 🟢 Completed
+**Progress:** 13/13 tasks (100%)
+**Started:** February 17, 2026
 **Completed:** February 17, 2026
 
 ### Tasks:
@@ -62,10 +62,10 @@
 - **Project Location:** /Volumes/Office/Assessments/PTA/EmployeeManagementSystem
 
 ### Issues Encountered & Resolved:
-1. **Docker Platform Warning:** Expected on Apple Silicon - SQL Server runs via emulation ✅
-2. **DBeaver "GO" Error:** Fixed - don't use GO command in DBeaver, only in SSMS ✅
-3. **Project .csproj file named incorrectly:** Fixed - recreated project fresh ✅
-4. **RootNamespace set to `_`:** Fixed - recreated project fresh ✅
+1. **Docker Platform Warning:** Expected on Apple Silicon — SQL Server runs via Rosetta emulation ✅
+2. **DBeaver "GO" Error:** Fixed — don't use GO command in DBeaver, only in SSMS ✅
+3. **Project .csproj file named incorrectly:** Fixed — recreated project fresh ✅
+4. **RootNamespace set to `_`:** Fixed — recreated project fresh ✅
 
 ### Approval Status: ✅ Module 0 COMPLETE
 
@@ -73,9 +73,9 @@
 
 ## MODULE 1: DATABASE & ENTITY FRAMEWORK
 
-**Status:** 🟢 Completed  
-**Progress:** 10/10 tasks (100%)  
-**Started:** February 18, 2026  
+**Status:** 🟢 Completed
+**Progress:** 10/10 tasks (100%)
+**Started:** February 18, 2026
 **Completed:** February 18, 2026
 
 ### Tasks:
@@ -104,7 +104,7 @@
 
 ### Database Tables Created:
 - `Departments` — DepartmentId, DepartmentName, DepartmentCode, ActiveInactive, CreatedDate
-- `Employees` — EmployeeId, Name, Email, Salary, DepartmentId (FK), JoiningDate
+- `Employees` — EmployeeId, Name, Email, Salary, DepartmentId (FK), JoiningDate (nullable)
 - `__EFMigrationsHistory` — EF internal table to track applied migrations
 
 ### Key Concepts Learned:
@@ -122,30 +122,26 @@
 
 ## MODULE 2: DEPARTMENT MANAGEMENT
 
-**Status:** 🟢 Completed  
-**Progress:** 15/15 tasks (100%)  
-**Started:** February 18, 2026  
+**Status:** 🟢 Completed
+**Progress:** 15/15 tasks (100%)
+**Started:** February 18, 2026
 **Completed:** February 18, 2026
 
 ### Tasks:
-
-#### Day 1 Tasks (Basic CRUD):
 - [✅] Create DepartmentController.cs
 - [✅] Implement Index action (fetch all departments)
 - [✅] Create Index.cshtml (list with table)
 - [✅] Implement Create GET action
 - [✅] Create Create.cshtml (add form)
 - [✅] Implement Create POST action
-- [✅] Test: Add departments
-
-#### Day 2 Tasks (Edit/Delete/Fixes):
 - [✅] Implement Edit GET action
 - [✅] Create Edit.cshtml (pre-filled form)
 - [✅] Implement Edit POST action
-- [✅] Implement soft delete (ActiveInactive = false)
-- [✅] Add jQuery client-side validation (via _ValidationScriptsPartial)
+- [✅] Implement hard delete with FK guard (blocks delete if employees exist)
+- [✅] Add jQuery client-side validation
 - [✅] Add server-side validation (ModelState + duplicate name check)
-- [✅] Style pages with Bootstrap (badges, table-striped, alerts)
+- [✅] Style pages with Bootstrap
+- [✅] Show ErrorMessage TempData when delete is blocked
 - [✅] Test all CRUD operations
 
 ### Files Created:
@@ -154,106 +150,146 @@
 - `Views/Department/Create.cshtml`
 - `Views/Department/Edit.cshtml`
 - `Views/Shared/_Layout.cshtml` (updated — added Departments nav link)
-- `Docs/Concepts & Q&A Notes.md` (created — detailed reference for all concepts learned)
 
 ### Key Concepts Learned:
 - **async/await:** Wait for DB response without freezing the app
-- **IActionResult:** Return type that can be a View, Redirect, NotFound, etc.
+- **IActionResult:** Return type that can be a View, Redirect, NotFound, Json, etc.
 - **[HttpPost]:** Marks an action to only run on form submissions
 - **[ValidateAntiForgeryToken]:** Security token to prevent cross-site attacks
 - **ModelState.IsValid:** Checks all data annotation validation rules pass
 - **ModelState.AddModelError:** Manually add a validation error (e.g. duplicate name)
-- **TempData:** Persists a value for exactly one redirect (used for success messages)
-- **Soft Delete:** Setting ActiveInactive = false instead of removing the DB row
+- **TempData:** Persists a value for exactly one redirect (used for success/error messages)
+- **Hard Delete:** Permanently removing a record (`_context.Remove()`)
+- **FK Guard on Delete:** Check for dependent records before deleting; show friendly error if blocked
 - **asp-for / asp-action / asp-route-id:** Razor tag helpers that generate correct HTML attributes
-- **Hidden fields:** Carry data (like DepartmentId, CreatedDate) through form submissions invisibly
 
 ### Issues Encountered & Resolved:
-1. **Departments not showing in list:** Create form was saving ActiveInactive = false because checkbox rendered unchecked. Fixed by passing `new Department()` from GET action so default value (true) is applied. ✅
-2. **Design decision — show all departments:** Changed Index query to show both Active and Inactive departments, with color-coded badges (green = Active, red = Inactive) instead of filtering. ✅
+1. **Departments not showing in list:** Checkbox was rendering unchecked by default. Fixed by passing `new Department()` from GET Create action so the default `true` value is applied. ✅
+2. **Soft delete kept records visible:** Changed to hard delete (`Remove()`) per user preference. ✅
+3. **Department delete crashed with FK error:** Added employee count check before delete; shows `TempData["ErrorMessage"]` if blocked. ✅
 
-### Approval Status: ✅ Module 2 COMPLETE - Ready for Module 3!
+### Approval Status: ✅ Module 2 COMPLETE
 
 ---
 
 ## MODULE 3: EMPLOYEE MANAGEMENT
 
-**Status:** 🔴 Not Started  
-**Progress:** 0/18 tasks (0%)  
-**Started:** -  
-**Completed:** -
+**Status:** 🟢 Completed
+**Progress:** 18/18 tasks (100%)
+**Started:** February 18, 2026
+**Completed:** February 18, 2026
 
 ### Tasks:
 
 #### Day 1 Tasks (List & Add):
-- [ ] Create EmployeeController.cs
-- [ ] Implement Index action
-- [ ] Create Index.cshtml
-- [ ] Create _CreateEmployee.cshtml (partial)
-- [ ] Add "Add Employee" button
-- [ ] Populate department dropdown
-- [ ] Implement Create POST action
-- [ ] Add jQuery for modal
-- [ ] Add AJAX form submission
-- [ ] Refresh list after add
-- [ ] Test: Add employees
+- [✅] Create EmployeeController.cs
+- [✅] Implement Index action (with eager-loaded Department via `.Include()`)
+- [✅] Create Index.cshtml (employee table)
+- [✅] Create _CreateEmployee.cshtml (partial view / popup form)
+- [✅] Add "Add Employee" button that opens modal
+- [✅] Populate department dropdown (active departments only)
+- [✅] Implement Create POST action with duplicate email check
+- [✅] Add jQuery modal open/close handling
+- [✅] Add AJAX form submission (no page reload)
+- [✅] Refresh list after add
 
 #### Day 2 Tasks (Edit/Delete/AJAX):
-- [ ] Create _EditEmployee.cshtml (partial)
-- [ ] Implement Edit actions
-- [ ] Implement Delete action
-- [ ] Create GetDepartmentEmployeeCount action
-- [ ] Add jQuery for AJAX call
-- [ ] Display employee count
-- [ ] Add client-side validation
-- [ ] Test all operations
+- [✅] Create _EditEmployee.cshtml (partial view / popup form)
+- [✅] Implement Edit GET and POST actions
+- [✅] Implement Delete action (AJAX, with antiforgery token)
+- [✅] Add `@Html.AntiForgeryToken()` to Index page (required for delete AJAX)
+- [✅] Create GetDepartmentEmployeeCount AJAX endpoint
+- [✅] Display employee count when department is selected in form
+- [✅] Add client-side validation via `_ValidationScriptsPartial`
+- [✅] Test all operations
 
-### Approval Status: ⸏ Waiting - Ready to Start
+### Files Created:
+- `Controllers/EmployeeController.cs`
+- `Views/Employee/Index.cshtml`
+- `Views/Employee/_CreateEmployee.cshtml`
+- `Views/Employee/_EditEmployee.cshtml`
+- `Views/Shared/_Layout.cshtml` (updated — added Employees nav link)
+
+### Migrations Added:
+- `NullableJoiningDate` — changed `JoiningDate` from `DateTime` to `DateTime?`
+
+### Key Concepts Learned:
+- **Partial View:** A fragment of HTML (no layout) returned by a controller and injected into the page via AJAX
+- **e.preventDefault():** Must be first in a submit handler — stops page reload even if later JS throws
+- **[Range] on int:** Use instead of [Required] for int fields — [Required] always passes on value types
+- **DateTime? (nullable):** Defaults to null instead of 0001-01-01, fixing the date picker bug
+- **$.validator.unobtrusive.parse():** Re-wires jQuery validation for forms injected dynamically via AJAX
+- **.Include():** EF eager loading — loads related entities (e.g. Department) in the same query
+- **return Json(...):** Returns JSON to AJAX callers instead of HTML; used for success/failure responses
+- **Html.PartialAsync vs RenderPartialAsync:** Use `PartialAsync` inside `@section` blocks; `RenderPartialAsync` returns void and cannot be used there
+- **@Html.AntiForgeryToken() on list pages:** Required when AJAX calls POST endpoints from a page with no form
+
+### Issues Encountered & Resolved:
+1. **Page refreshing instead of AJAX submit:** `onsubmit` inline handler threw JS error before `return false`. Fixed by switching to jQuery `.on('submit')` with `e.preventDefault()` as the very first line. ✅
+2. **`$.validator is undefined`:** `_ValidationScriptsPartial` not included on Index page. Fixed by adding `@await Html.PartialAsync("_ValidationScriptsPartial")` to the Scripts section. ✅
+3. **Build error: `RenderPartialAsync` in section:** Returns void, can't be used with `@await` inside a section. Fixed by using `Html.PartialAsync` instead. ✅
+4. **Date picker stuck on year 0001:** `DateTime` defaults to `DateTime.MinValue`. Fixed by making `JoiningDate` nullable (`DateTime?`) + added migration. ✅
+5. **`[Required]` on `DepartmentId` always passes:** `int` is a value type, never null. Replaced with `[Range(1, int.MaxValue)]`. ✅
+6. **Employee delete returns 400:** No antiforgery token on page; added `@Html.AntiForgeryToken()` to Index.cshtml. ✅
+7. **Browser HTML5 email tooltip:** `[EmailAddress]` causes Razor to render `type="email"`, triggering native browser validation. Expected behavior — not a bug. ✅
+
+### Approval Status: ✅ Module 3 COMPLETE — Ready for Module 4!
 
 ---
 
 ## MODULE 4: SEARCH & FILTER
 
-**Status:** 🔴 Not Started  
+**Status:** 🔴 Not Started
 **Progress:** 0/9 tasks (0%)
 
-### Approval Status: ⸏ Waiting for Module 3
+### Tasks:
+- [ ] Add search textbox to Employee Index.cshtml
+- [ ] Add department filter dropdown
+- [ ] Implement search functionality (by name)
+- [ ] Implement filter functionality (by department)
+- [ ] Make search and filter work together
+- [ ] Add "Clear filters" button
+- [ ] Show result count
+- [ ] Test with various search terms
+- [ ] Test filter combinations
+
+### Approval Status: ⸸ Waiting — Ready to Start
 
 ---
 
 ## MODULE 5: BULK EMPLOYEE UPLOAD
 
-**Status:** 🔴 Not Started  
+**Status:** 🔴 Not Started
 **Progress:** 0/23 tasks (0%)
 
-### Approval Status: ⸏ Waiting for Module 3
+### Approval Status: ⸸ Waiting for Module 4
 
 ---
 
 ## MODULE 6: DASHBOARD
 
-**Status:** 🔴 Not Started  
+**Status:** 🔴 Not Started
 **Progress:** 0/10 tasks (0%)
 
-### Approval Status: ⸏ Waiting for Module 3
+### Approval Status: ⸸ Waiting for Module 3 ✅ (now unblocked)
 
 ---
 
 ## MODULE 7: VALIDATION & ERROR HANDLING
 
-**Status:** 🔴 Not Started  
+**Status:** 🔴 Not Started
 **Progress:** 0/11 tasks (0%)
 
-### Approval Status: ⸏ Waiting for Previous Modules
+### Approval Status: ⸸ Waiting for Previous Modules
 
 ---
 
 ## MODULE 8: FINAL POLISH
 
-**Status:** 🔴 Not Started  
+**Status:** 🔴 Not Started
 **Progress:** 0/21 tasks (0%)
 
-### Approval Status: ⸏ Waiting for All Modules
+### Approval Status: ⸸ Waiting for All Modules
 
 ---
 
@@ -261,27 +297,27 @@
 
 ### Time Tracking:
 - **Estimated Total Time:** 30-37 hours
-- **Actual Time Spent:** ~3 hours
-- **Time Remaining:** ~27-34 hours
+- **Actual Time Spent:** ~5 hours
+- **Time Remaining:** ~25-32 hours
 
 ### Task Completion:
 - **Total Tasks:** 129
-- **Completed:** 38 (M0: 13 + M1: 10 + M2: 15)
+- **Completed:** 56 (M0: 13 + M1: 10 + M2: 15 + M3: 18)
 - **In Progress:** 0
-- **Remaining:** 91
+- **Remaining:** 73
 
 ### Module Completion:
-- **Modules Completed:** 3 (Module 0, 1, 2)
+- **Modules Completed:** 4 (Module 0, 1, 2, 3)
 - **Modules In Progress:** 0
-- **Modules Remaining:** 6
+- **Modules Remaining:** 5
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 3 — Employee Management
+**What we're working on now:** Module 4 — Search & Filter
 
-**Next immediate step:** Create EmployeeController and Employee list page
+**Next immediate step:** Add search box and department filter dropdown to Employee Index page
 
 **Blockers:** None
 
@@ -289,32 +325,18 @@
 
 ## DECISIONS LOG
 
-### Decision 1: Technology Stack
-- **Date:** February 17, 2026
-- **Decision:** Use ASP.NET Core MVC with Entity Framework Core
-- **Reason:** Required by project specification
-
-### Decision 2: Development Approach
-- **Date:** February 17, 2026
-- **Decision:** Incremental module-by-module development
-- **Reason:** Easier for learning, allows testing at each stage
-
-### Decision 3: EF Core Version
-- **Date:** February 18, 2026
-- **Decision:** Use EF Core v8.0.0 with .NET 10
-- **Reason:** Stable version compatible with SQL Server 2019 Docker setup
-
-### Decision 4: Show All Departments in List
-- **Date:** February 18, 2026
-- **Decision:** Show both Active and Inactive departments in the list with color-coded badges
-- **Reason:** Better visibility and management; user requested this behavior
-- **Impact:** Removed the ActiveInactive filter from the Index query
-
-### Decision 5: Hard Delete Instead of Soft Delete
-- **Date:** February 18, 2026
-- **Decision:** Changed Department delete to permanently remove the record from the DB
-- **Reason:** User preference — soft delete was causing confusion (deleted records still visible)
-- **Impact:** `_context.Departments.Remove(department)` replaces the ActiveInactive = false approach
+| # | Decision | Reason | Date |
+|---|----------|--------|------|
+| 1 | ASP.NET Core MVC + EF Core | Required by spec | Feb 17 |
+| 2 | Incremental module-by-module development | Easier to test and learn | Feb 17 |
+| 3 | EF Core v8.0.0 with .NET 10 | Stable, compatible with SQL Server 2019 Docker | Feb 18 |
+| 4 | Show all departments (Active + Inactive) with badges | Better visibility | Feb 18 |
+| 5 | Hard delete for departments | User preference | Feb 18 |
+| 6 | FK guard on department delete | Prevents crash; shows friendly message instead | Feb 18 |
+| 7 | Nullable `DateTime?` for JoiningDate | Fixes browser date picker defaulting to year 0001 | Feb 18 |
+| 8 | `[Range]` instead of `[Required]` on `int DepartmentId` | `[Required]` is ineffective on value types | Feb 18 |
+| 9 | `@Html.AntiForgeryToken()` on Employee Index page | Required so AJAX delete can send the token | Feb 18 |
+| 10 | jQuery `.on('submit')` with `e.preventDefault()` first | Prevents page refresh even if later JS throws an error | Feb 18 |
 
 ---
 
@@ -322,12 +344,19 @@
 
 | # | Module | Issue | Resolution | Date |
 |---|--------|-------|------------|------|
-| 1 | Module 0 | Docker platform warning on Apple Silicon | Expected — SQL Server runs via Rosetta emulation | Feb 17 |
-| 2 | Module 0 | DBeaver "GO" command error | GO is SSMS-only; removed from DBeaver scripts | Feb 17 |
-| 3 | Module 0 | .csproj named incorrectly | Recreated project with correct name | Feb 17 |
-| 4 | Module 0 | RootNamespace set to `_` | Recreated project fresh | Feb 17 |
-| 5 | Module 2 | Departments not showing in list | Checkbox was unchecked by default; fixed by passing `new Department()` from GET Create action | Feb 18 |
-| 6 | Module 2 | Soft delete kept records visible | Changed to hard delete (`Remove()`) per user preference | Feb 18 |
+| 1 | M0 | Docker platform warning on Apple Silicon | Expected — SQL Server runs via Rosetta emulation | Feb 17 |
+| 2 | M0 | DBeaver "GO" command error | GO is SSMS-only; removed from DBeaver scripts | Feb 17 |
+| 3 | M0 | .csproj named incorrectly | Recreated project with correct name | Feb 17 |
+| 4 | M0 | RootNamespace set to `_` | Recreated project fresh | Feb 17 |
+| 5 | M2 | Departments not showing in list | Checkbox unchecked by default; fixed by passing `new Department()` from GET Create action | Feb 18 |
+| 6 | M2 | Soft delete kept records visible | Changed to hard delete (`Remove()`) per user preference | Feb 18 |
+| 7 | M2 | Department delete crashed with FK error | Added employee count check; shows `TempData["ErrorMessage"]` if blocked | Feb 18 |
+| 8 | M3 | Page refreshing on form submit | Switched from inline `onsubmit` to jQuery `.on('submit')` with `e.preventDefault()` first | Feb 18 |
+| 9 | M3 | `$.validator is undefined` | Added `@await Html.PartialAsync("_ValidationScriptsPartial")` to Employee Index Scripts section | Feb 18 |
+| 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` (returns value; `RenderPartialAsync` returns void) | Feb 18 |
+| 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable (`DateTime?`) + added migration | Feb 18 |
+| 12 | M3 | `[Required]` on `DepartmentId` always passes | Replaced with `[Range(1, int.MaxValue)]` | Feb 18 |
+| 13 | M3 | Employee delete returns 400 | No antiforgery token on page; added `@Html.AntiForgeryToken()` to Index.cshtml | Feb 18 |
 
 ---
 
@@ -335,20 +364,31 @@
 
 | # | Question | Answer | Module |
 |---|----------|--------|--------|
-| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading — related data loaded only when accessed | Module 1 |
-| 2 | What does `get; set;` mean? | C# shorthand property — compiler auto-generates a backing field | Module 1 |
-| 3 | What is `modelBuilder`? | EF's configuration tool for indexes, relationships, constraints | Module 1 |
-| 4 | What is `base`? | Calls the parent class constructor/method before your own code runs | Module 1 |
-| 5 | What is EF? | Entity Framework — interact with DB using C# instead of raw SQL | Module 1 |
-| 6 | `readonly` but assigned in constructor? | readonly allows assignment only once during construction — locked after that | Module 2 |
-| 7 | How does `@section Scripts` handle validation? | data annotations → Tag Helpers render data-val-* HTML attributes → jQuery validation reads them and shows errors automatically | Module 2 |
-| 8 | What is ModelState? | Dictionary of form fields and validation errors; IsValid = true only when zero errors exist | Module 2 |
-| 9 | What is `RedirectToAction(nameof(Index))`? | Sends HTTP 302 to browser to navigate to Index; nameof() returns method name as compile-safe string | Module 2 |
-| 10 | How does asp-action + asp-route-id build the URL? | Razor Tag Helpers run server-side, read route config, generate correct href automatically | Module 2 |
-| 11 | What is `@Html.AntiForgeryToken()`? | Renders a hidden input with a unique encrypted session token to prevent CSRF attacks | Module 2 |
-| 12 | What is a CSRF attack? | Malicious site tricks browser into submitting a request with your session cookie; token prevents this | Module 2 |
-| 13 | How is "Active" checkbox pre-checked? | Model has `= true` default; passing `new Department()` from GET action makes Razor render checkbox as checked | Module 2 |
-| 14 | What does `@` mean in Razor? | Switches from HTML to C# mode; expression is evaluated and output written into HTML | Module 2 |
+| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading — related data loaded only when accessed | M1 |
+| 2 | What does `get; set;` mean? | C# shorthand property — compiler auto-generates a backing field | M1 |
+| 3 | What is `modelBuilder`? | EF's configuration tool for indexes, relationships, constraints | M1 |
+| 4 | What is `base`? | Calls the parent class constructor/method before your own code runs | M1 |
+| 5 | What is EF? | Entity Framework — interact with DB using C# instead of raw SQL | M1 |
+| 6 | `readonly` but assigned in constructor? | readonly allows assignment only once during construction — locked after that | M2 |
+| 7 | How does `@section Scripts` handle validation? | data annotations → Tag Helpers render data-val-* HTML attributes → jQuery validation reads them | M2 |
+| 8 | What is ModelState? | Dictionary of form fields and validation errors; IsValid = true only when zero errors exist | M2 |
+| 9 | What is `RedirectToAction(nameof(Index))`? | Sends HTTP 302 to browser to navigate to Index; nameof() is a compile-safe string | M2 |
+| 10 | How does asp-action + asp-route-id build the URL? | Razor Tag Helpers run server-side, read route config, generate correct href automatically | M2 |
+| 11 | What is `@Html.AntiForgeryToken()`? | Renders a hidden input with a unique encrypted session token to prevent CSRF attacks | M2 |
+| 12 | What is a CSRF attack? | Malicious site tricks browser into submitting a request with your session cookie | M2 |
+| 13 | How is "Active" checkbox pre-checked? | Model has `= true` default; passing `new Department()` from GET action makes Razor render it checked | M2 |
+| 14 | What does `@` mean in Razor? | Switches from HTML to C# mode; expression is evaluated and output written into HTML | M2 |
+| 15 | What is a Partial View? | A fragment of HTML (no layout) returned by a controller and injected into the page via AJAX | M3 |
+| 16 | Why must `e.preventDefault()` be first? | Any JS error after the event starts causes the browser to fall back to default submit (page reload) | M3 |
+| 17 | Why does `[Required]` not work on `int`? | `int` is a value type — never null — so `[Required]` always passes; use `[Range(1, int.MaxValue)]` instead | M3 |
+| 18 | Why did the date picker get stuck on year 0001? | `DateTime` defaults to `DateTime.MinValue` (0001-01-01); fixed by using `DateTime?` (nullable) | M3 |
+| 19 | Why add `_ValidationScriptsPartial` to a list page? | Forms are loaded dynamically via AJAX — jQuery validation libraries must be present on the host page | M3 |
+| 20 | What does `$.validator.unobtrusive.parse()` do? | Re-wires jQuery validation for forms injected into the DOM after page load | M3 |
+| 21 | Why did Employee delete return 400? | Antiforgery token missing — no form on the page; fixed by adding `@Html.AntiForgeryToken()` | M3 |
+| 22 | What is a FK constraint error? | Database blocks deleting a row that other rows still reference; check dependents first in C# | M3 |
+| 23 | What is `.Include()` and why is it needed? | EF eager loading — loads related entities (e.g. Department) in the same query; without it, they're null | M3 |
+| 24 | What is `return Json(...)` vs `return PartialView()`? | Json() sends data to AJAX callers; PartialView() sends HTML; AJAX handler checks `res.success` to tell them apart | M3 |
+| 25 | What is `Html.PartialAsync` vs `Html.RenderPartialAsync`? | `PartialAsync` returns a value (use inside `@section`); `RenderPartialAsync` returns void (use outside sections only) | M3 |
 
 ---
 
@@ -387,13 +427,13 @@ Before marking any module as complete:
 
 ## ACHIEVEMENT MILESTONES
 
-🏆 Milestones we'll celebrate:
+🏆 Milestones:
 
 - [✅] Project setup complete
 - [✅] First database tables created
-- [✅] First CRUD operation working
-- [ ] First popup modal working
-- [ ] AJAX call working
+- [✅] First CRUD operation working (Departments)
+- [✅] First popup modal working (Employee Add)
+- [✅] AJAX call working (employee count + form submit)
 - [ ] File upload working
 - [ ] All features complete
 - [ ] Project deployed/submitted
@@ -404,10 +444,10 @@ Before marking any module as complete:
 
 ### Week 1: (Feb 17 - ongoing)
 **Planned:** Modules 0, 1, 2
-**Completed:** Module 0 ✅, Module 1 ✅, Module 2 ✅
-**Challenges:** Minor checkbox default value bug in Create form — resolved quickly
-**Learnings:** EF Core, MVC flow, Razor tag helpers, async/await, soft delete, TempData, ModelState
-**Next Week Goals:** Complete Modules 3, 4, 6
+**Completed:** Module 0 ✅, Module 1 ✅, Module 2 ✅, Module 3 ✅ (bonus!)
+**Challenges:** 7 bugs in Module 3 — all resolved; most stemmed from AJAX + antiforgery + nullable DateTime interactions
+**Learnings:** EF Core, MVC flow, Razor tag helpers, async/await, partial views, AJAX modal pattern, jQuery validation, FK constraints, nullable types
+**Next Week Goals:** Complete Modules 4, 6 (Dashboard), begin Module 5
 
 ### Week 2: (Start Date - TBD)
 **Planned:** TBD
@@ -429,21 +469,18 @@ Before marking any module as complete:
 
 ### February 17, 2026
 **Time Spent:** ~1 hour
-**What We Did:**
-- Created all project documentation
-- Completed full environment setup (Docker, SQL Server, VS Code, .NET SDK)
-- Project running on http://localhost:5099
+**What We Did:** Full environment setup, all project documentation created. Project running on http://localhost:5099
 
 ### February 18, 2026
-**Time Spent:** ~2 hours
+**Time Spent:** ~5 hours
 **What We Did:**
-- Module 1: Created model classes, DbContext, configured EF, ran migrations
-- Module 2: Built full Department CRUD — controller, 3 views, navbar link
-- Fixed checkbox default value bug (ActiveInactive)
-- Updated Index to show all departments with Active/Inactive badges
+- Module 1: Models, DbContext, EF configuration, migrations
+- Module 2: Full Department CRUD with validation, badges, hard delete + FK guard
+- Module 3: Full Employee CRUD via AJAX popup modals, department count AJAX, validation, delete with antiforgery token
+- Fixed 7 bugs across Module 3 (page refresh, validator undefined, date picker, Required on int, antiforgery, FK constraint, RenderPartialAsync)
+- Added NullableJoiningDate migration
 
-**What's Next:**
-- Module 3: Employee Management (list, popup modal, AJAX)
+**What's Next:** Module 4 — Search & Filter on Employee list
 
 ---
 
@@ -460,4 +497,4 @@ Before marking any module as complete:
 
 **Last Updated:** February 18, 2026
 **Updated By:** Development Team
-**Next Review Date:** End of Module 3
+**Next Review Date:** End of Module 4

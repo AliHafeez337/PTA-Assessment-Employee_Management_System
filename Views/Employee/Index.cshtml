@@ -1,0 +1,193 @@
+@model List<EmployeeManagementSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<!-- Success/Error Alert -->
+<div id="alertBox" class="alert d-none" role="alert"></div>
+@Html.AntiForgeryToken()
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Employee Management</h2>
+    <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+        + Add Employee
+    </button>
+</div>
+
+<!-- Employee Table -->
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0" id="employeeTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Salary</th>
+                    <th>Department</th>
+                    <th>Joining Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No employees found. Click "Add Employee" to get started.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 1;
+                    foreach (var emp in Model)
+                    {
+                        <tr id="row-@emp.EmployeeId">
+                            <td>@(i++)</td>
+                            <td>@emp.Name</td>
+                            <td>@emp.Email</td>
+                            <td>@emp.Salary.ToString("C")</td>
+                            <td>@(emp.Department?.DepartmentName ?? "N/A")</td>
+                            <td>@emp.JoiningDate?.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1"
+                                        onclick="openEditModal(@emp.EmployeeId)">
+                                    Edit
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="deleteEmployee(@emp.EmployeeId, '@emp.Name')">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Total count -->
+@if (Model.Any())
+{
+    <p class="text-muted mt-2">Total: @Model.Count employee(s)</p>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContent">
+            <!-- Partial view loads here -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+<script>
+    // ─── CREATE ───────────────────────────────────────────────
+    function openCreateModal() {
+        $.get('/Employee/Create', function (html) {
+            $('#modalContent').html(html);
+            bindFormSubmit('createForm', '/Employee/Create');
+            $('#employeeModal').modal('show');
+        }).fail(function(xhr) {
+            showAlert('danger', 'Failed to load form: ' + xhr.status);
+        });
+    }
+
+    // ─── EDIT ─────────────────────────────────────────────────
+    function openEditModal(id) {
+        $.get('/Employee/Edit/' + id, function (html) {
+            $('#modalContent').html(html);
+            bindFormSubmit('editForm', '/Employee/Edit');
+            $('#employeeModal').modal('show');
+        }).fail(function(xhr) {
+            showAlert('danger', 'Failed to load form: ' + xhr.status);
+        });
+    }
+
+    // ─── BIND SUBMIT (called after modal content loads) ───────
+    function bindFormSubmit(formId, url) {
+        // Re-parse validation for the newly loaded form
+        $.validator.unobtrusive.parse('#' + formId);
+
+        $('#' + formId).on('submit', function (e) {
+            e.preventDefault();  // Always stop normal submit first
+
+            var form = $(this);
+
+            // Trigger validation - if invalid, stop here
+            if (!form.valid()) {
+                console.log('Form invalid - stopping submit');
+                return;
+            }
+
+            console.log('Posting to:', url);
+            console.log('Data:', form.serialize());
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form.serialize(),
+                success: function (res) {
+                    console.log('Response:', res);
+
+                    if (res && res.success === true) {
+                        $('#employeeModal').modal('hide');
+                        showAlert('success', res.message);
+                        setTimeout(function () { location.reload(); }, 800);
+                    } else if (res && res.success === false) {
+                        showAlert('danger', res.message);
+                    } else {
+                        // Partial view returned (server-side validation errors)
+                        $('#modalContent').html(res);
+                        bindFormSubmit(formId, url);  // Re-bind after content swap
+                    }
+                },
+                error: function (xhr) {
+                    console.log('AJAX Error:', xhr.status, xhr.responseText);
+                    showAlert('danger', 'Server error ' + xhr.status +
+                        ': ' + xhr.responseText.substring(0, 300));
+                }
+            });
+        });
+    }
+
+    // ─── DELETE ───────────────────────────────────────────────
+    function deleteEmployee(id, name) {
+        if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
+
+        $.post('/Employee/Delete/' + id,
+            { __RequestVerificationToken: getToken() },
+            function (res) {
+                if (res.success) {
+                    $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
+                    showAlert('success', res.message);
+                } else {
+                    showAlert('danger', res.message);
+                }
+            }
+        ).fail(function(xhr) {
+            showAlert('danger', 'Delete failed: ' + xhr.status);
+        });
+    }
+
+    // ─── HELPERS ──────────────────────────────────────────────
+    function showAlert(type, message) {
+        $('#alertBox')
+            .removeClass('d-none alert-success alert-danger')
+            .addClass('alert-' + type)
+            .text(message);
+        setTimeout(function () { $('#alertBox').addClass('d-none'); }, 4000);
+    }
+
+    function getToken() {
+        return $('input[name="__RequestVerificationToken"]').first().val();
+    }
+</script>
+}

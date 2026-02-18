@@ -1,0 +1,79 @@
+@model EmployeeManagementSystem.Models.Employee
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Employee</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<form id="editForm">
+    @Html.AntiForgeryToken()
+
+    <!-- Hidden field to carry EmployeeId -->
+    <input type="hidden" asp-for="EmployeeId" />
+
+    <div class="modal-body">
+
+        <!-- Name -->
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label fw-semibold">Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label fw-semibold">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <!-- Salary -->
+        <div class="mb-3">
+            <label asp-for="Salary" class="form-label fw-semibold">Salary</label>
+            <input asp-for="Salary" class="form-control" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <!-- Department -->
+        <div class="mb-3">
+            <label asp-for="DepartmentId" class="form-label fw-semibold">Department</label>
+            <select asp-for="DepartmentId"
+                    class="form-select"
+                    onchange="loadEmployeeCount(this.value)">
+                <option value="">-- Select Department --</option>
+                @foreach (var dept in (ViewBag.Departments as List<EmployeeManagementSystem.Models.Department>)!)
+                {
+                    <option value="@dept.DepartmentId"
+                            selected="@(dept.DepartmentId == Model.DepartmentId ? "selected" : null)">
+                        @dept.DepartmentName
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+            <small id="empCountMsg" class="text-muted mt-1 d-block"></small>
+        </div>
+
+        <!-- Joining Date -->
+        <div class="mb-3">
+            <label asp-for="JoiningDate" class="form-label fw-semibold">Joining Date</label>
+            <input asp-for="JoiningDate" type="date" class="form-control"
+                   value="@Model.JoiningDate?.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="JoiningDate" class="text-danger"></span>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Employee</button>
+    </div>
+</form>
+
+<script>
+    function loadEmployeeCount(deptId) {
+        if (!deptId) { $('#empCountMsg').text(''); return; }
+        $.get('/Employee/GetDepartmentEmployeeCount', { departmentId: deptId }, function (res) {
+            $('#empCountMsg').text('This department currently has ' + res.count + ' employee(s).');
+        });
+    }
+</script>
