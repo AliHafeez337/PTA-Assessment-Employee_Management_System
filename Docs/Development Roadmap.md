@@ -64,39 +64,32 @@ We'll build this project **incrementally** - one module at a time. Each module w
 
 ### MODULE 2: Department Management
 **Timeline:** Day 3-4 (4-5 hours)  
-**Status:** 🔴 Not Started  
-**Prerequisites:** Module 1 ✅ complete
+**Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-
-**Day 3: Basic CRUD**
-- [ ] Create DepartmentController
-- [ ] Implement Index action (list departments)
-- [ ] Create Index.cshtml view
-- [ ] Implement Create GET action
-- [ ] Create Create.cshtml view (add form)
-- [ ] Implement Create POST action
-- [ ] Test: Can add departments
-
-**Day 4: Edit, Delete, Validation**
-- [ ] Implement Edit GET action
-- [ ] Create Edit.cshtml view
-- [ ] Implement Edit POST action
-- [ ] Implement soft delete functionality
-- [ ] Add client-side validation (jQuery)
-- [ ] Add server-side validation
-- [ ] Style pages with Bootstrap
-- [ ] Test all CRUD operations
+- [✅] Create DepartmentController
+- [✅] Implement Index action (list all departments)
+- [✅] Create Index.cshtml view
+- [✅] Implement Create GET action
+- [✅] Create Create.cshtml view (add form)
+- [✅] Implement Create POST action
+- [✅] Implement Edit GET action
+- [✅] Create Edit.cshtml view
+- [✅] Implement Edit POST action
+- [✅] Implement soft delete (ActiveInactive = false)
+- [✅] Add client-side validation (jQuery via _ValidationScriptsPartial)
+- [✅] Add server-side validation (ModelState + duplicate name check)
+- [✅] Style pages with Bootstrap (badges, striped table, alerts)
+- [✅] Test all CRUD operations
 
 #### Deliverables:
-- [ ] Department list page working
-- [ ] Can add new departments
-- [ ] Can edit departments
-- [ ] Can delete departments (soft delete)
-- [ ] Validation working
-- [ ] All pages styled
-
-#### Approval Required: ✋ YES
+- ✅ Department list shows all departments (Active + Inactive) with color-coded badges
+- ✅ Can add new departments
+- ✅ Can edit departments
+- ✅ Can soft delete departments (marked Inactive, not removed from DB)
+- ✅ Duplicate name validation works (client + server side)
+- ✅ Success messages display after every action
+- ✅ Navbar updated with Departments link
 
 ---
 

@@ -1,0 +1,55 @@
+@* This view receives a Department object — empty on GET, filled on POST if validation fails *@
+@model EmployeeManagementSystem.Models.Department
+
+@{
+    ViewData["Title"] = "Add Department";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <h2>Add Department</h2>
+            <hr />
+
+            @* asp-action points the form POST to DepartmentController.Create() *@
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                @* Department Name field *@
+                <div class="mb-3">
+                    <label asp-for="DepartmentName" class="form-label"></label>
+                    <input asp-for="DepartmentName" class="form-control" placeholder="e.g. Information Technology" />
+                    @* asp-validation-for shows the error message for this field *@
+                    <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                </div>
+
+                @* Department Code field *@
+                <div class="mb-3">
+                    <label asp-for="DepartmentCode" class="form-label"></label>
+                    <input asp-for="DepartmentCode" class="form-control" placeholder="e.g. IT" />
+                    <span asp-validation-for="DepartmentCode" class="text-danger"></span>
+                </div>
+
+                @* Active/Inactive checkbox — checked by default (model default is true) *@
+                <div class="mb-3 form-check">
+                    <input asp-for="ActiveInactive" class="form-check-input" />
+                    <label asp-for="ActiveInactive" class="form-check-label">Active</label>
+                </div>
+
+                @* Form buttons *@
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Department</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@* Load jQuery validation scripts — these power the client-side validation *@
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

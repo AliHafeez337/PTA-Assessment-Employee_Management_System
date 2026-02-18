@@ -5,7 +5,7 @@
 
 **Project Start Date:** February 17, 2026  
 **Current Status:** 🟡 In Progress  
-**Overall Progress:** 22%
+**Overall Progress:** 33%
 
 ---
 
@@ -15,7 +15,7 @@
 |--------|--------|----------|------------|----------|
 | Module 0: Setup | 🟢 Completed | 100% | Feb 17, 2026 | Feb 17, 2026 |
 | Module 1: Database | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
-| Module 2: Departments | 🔴 Not Started | 0% | - | - |
+| Module 2: Departments | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 3: Employees | 🔴 Not Started | 0% | - | - |
 | Module 4: Search/Filter | 🔴 Not Started | 0% | - | - |
 | Module 5: Bulk Upload | 🔴 Not Started | 0% | - | - |
@@ -64,9 +64,8 @@
 ### Issues Encountered & Resolved:
 1. **Docker Platform Warning:** Expected on Apple Silicon - SQL Server runs via emulation ✅
 2. **DBeaver "GO" Error:** Fixed - don't use GO command in DBeaver, only in SSMS ✅
-3. **Project .csproj file named incorrectly:** First attempt had `..csproj` instead of `EmployeeManagementSystem.csproj` ✅
-4. **RootNamespace set to `_`:** First template had wrong namespace, recreated project fresh ✅
-5. **Project runs successfully:** Application starts on http://localhost:5099 ✅
+3. **Project .csproj file named incorrectly:** Fixed - recreated project fresh ✅
+4. **RootNamespace set to `_`:** Fixed - recreated project fresh ✅
 
 ### Approval Status: ✅ Module 0 COMPLETE
 
@@ -117,51 +116,62 @@
 - **modelBuilder:** EF's configuration tool for unique indexes, relationships, constraints
 - **base:** Calls the parent class constructor/method before your own code runs
 
-### Issues Encountered:
-- None ✅
-
-### Approval Status: ✅ Module 1 COMPLETE - Ready for Module 2!
+### Approval Status: ✅ Module 1 COMPLETE
 
 ---
 
 ## MODULE 2: DEPARTMENT MANAGEMENT
 
-**Status:** 🔴 Not Started  
-**Progress:** 0/15 tasks (0%)  
-**Started:** -  
-**Completed:** -
+**Status:** 🟢 Completed  
+**Progress:** 15/15 tasks (100%)  
+**Started:** February 18, 2026  
+**Completed:** February 18, 2026
 
 ### Tasks:
 
 #### Day 1 Tasks (Basic CRUD):
-- [ ] Create DepartmentController.cs
-- [ ] Implement Index action
-- [ ] Create Index.cshtml
-- [ ] Implement Create GET action
-- [ ] Create Create.cshtml
-- [ ] Implement Create POST action
-- [ ] Test: Add departments
+- [✅] Create DepartmentController.cs
+- [✅] Implement Index action (fetch all departments)
+- [✅] Create Index.cshtml (list with table)
+- [✅] Implement Create GET action
+- [✅] Create Create.cshtml (add form)
+- [✅] Implement Create POST action
+- [✅] Test: Add departments
 
-#### Day 2 Tasks (Edit/Delete/Validation):
-- [ ] Implement Edit GET action
-- [ ] Create Edit.cshtml
-- [ ] Implement Edit POST action
-- [ ] Implement soft delete
-- [ ] Add jQuery validation
-- [ ] Add server-side validation
-- [ ] Style pages with Bootstrap
-- [ ] Test all CRUD operations
+#### Day 2 Tasks (Edit/Delete/Fixes):
+- [✅] Implement Edit GET action
+- [✅] Create Edit.cshtml (pre-filled form)
+- [✅] Implement Edit POST action
+- [✅] Implement soft delete (ActiveInactive = false)
+- [✅] Add jQuery client-side validation (via _ValidationScriptsPartial)
+- [✅] Add server-side validation (ModelState + duplicate name check)
+- [✅] Style pages with Bootstrap (badges, table-striped, alerts)
+- [✅] Test all CRUD operations
 
 ### Files Created:
-_None yet_
+- `Controllers/DepartmentController.cs`
+- `Views/Department/Index.cshtml`
+- `Views/Department/Create.cshtml`
+- `Views/Department/Edit.cshtml`
+- `Views/Shared/_Layout.cshtml` (updated — added Departments nav link)
 
-### Notes:
-_No notes yet_
+### Key Concepts Learned:
+- **async/await:** Wait for DB response without freezing the app
+- **IActionResult:** Return type that can be a View, Redirect, NotFound, etc.
+- **[HttpPost]:** Marks an action to only run on form submissions
+- **[ValidateAntiForgeryToken]:** Security token to prevent cross-site attacks
+- **ModelState.IsValid:** Checks all data annotation validation rules pass
+- **ModelState.AddModelError:** Manually add a validation error (e.g. duplicate name)
+- **TempData:** Persists a value for exactly one redirect (used for success messages)
+- **Soft Delete:** Setting ActiveInactive = false instead of removing the DB row
+- **asp-for / asp-action / asp-route-id:** Razor tag helpers that generate correct HTML attributes
+- **Hidden fields:** Carry data (like DepartmentId, CreatedDate) through form submissions invisibly
 
-### Issues Encountered:
-_None yet_
+### Issues Encountered & Resolved:
+1. **Departments not showing in list:** Create form was saving ActiveInactive = false because checkbox rendered unchecked. Fixed by passing `new Department()` from GET action so default value (true) is applied. ✅
+2. **Design decision — show all departments:** Changed Index query to show both Active and Inactive departments, with color-coded badges (green = Active, red = Inactive) instead of filtering. ✅
 
-### Approval Status: ⸏ Waiting - Ready to Start
+### Approval Status: ✅ Module 2 COMPLETE - Ready for Module 3!
 
 ---
 
@@ -197,7 +207,7 @@ _None yet_
 - [ ] Add client-side validation
 - [ ] Test all operations
 
-### Approval Status: ⸏ Waiting for Module 2
+### Approval Status: ⸏ Waiting - Ready to Start
 
 ---
 
@@ -250,30 +260,29 @@ _None yet_
 
 ### Time Tracking:
 - **Estimated Total Time:** 30-37 hours
-- **Actual Time Spent:** ~2 hours
-- **Time Remaining:** ~28-35 hours
+- **Actual Time Spent:** ~3 hours
+- **Time Remaining:** ~27-34 hours
 
 ### Task Completion:
 - **Total Tasks:** 129
-- **Completed:** 23 (Module 0: 13 + Module 1: 10)
+- **Completed:** 38 (M0: 13 + M1: 10 + M2: 15)
 - **In Progress:** 0
-- **Remaining:** 106
+- **Remaining:** 91
 
 ### Module Completion:
-- **Modules Planned:** 9
-- **Modules Completed:** 2
+- **Modules Completed:** 3 (Module 0, 1, 2)
 - **Modules In Progress:** 0
-- **Modules Remaining:** 7
+- **Modules Remaining:** 6
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 2 — Department Management
+**What we're working on now:** Module 3 — Employee Management
 
-**Next immediate step:** Create DepartmentController.cs and Department List page
+**Next immediate step:** Create EmployeeController and Employee list page
 
-**Blockers:** None currently
+**Blockers:** None
 
 ---
 
@@ -283,19 +292,22 @@ _None yet_
 - **Date:** February 17, 2026
 - **Decision:** Use ASP.NET Core MVC with Entity Framework Core
 - **Reason:** Required by project specification
-- **Impact:** Determines all technical choices
 
 ### Decision 2: Development Approach
 - **Date:** February 17, 2026
 - **Decision:** Incremental module-by-module development
 - **Reason:** Easier for learning, allows testing at each stage
-- **Impact:** Longer timeline but more stable progress
 
 ### Decision 3: EF Core Version
 - **Date:** February 18, 2026
 - **Decision:** Use EF Core v8.0.0 with .NET 10
-- **Reason:** Stable, well-documented version compatible with SQL Server 2019 Docker setup
-- **Impact:** Slight version mismatch warning with .NET 10 but fully functional
+- **Reason:** Stable version compatible with SQL Server 2019 Docker setup
+
+### Decision 4: Show All Departments in List
+- **Date:** February 18, 2026
+- **Decision:** Show both Active and Inactive departments in the list with color-coded badges
+- **Reason:** Better visibility and management; user requested this behavior
+- **Impact:** Removed the ActiveInactive filter from the Index query
 
 ---
 
@@ -303,10 +315,11 @@ _None yet_
 
 | # | Module | Issue | Resolution | Date |
 |---|--------|-------|------------|------|
-| 1 | Module 0 | Docker platform warning on Apple Silicon | Expected behavior — SQL Server runs via Rosetta emulation | Feb 17 |
-| 2 | Module 0 | DBeaver "GO" command error | GO is SSMS-only syntax; removed from DBeaver scripts | Feb 17 |
-| 3 | Module 0 | .csproj named incorrectly (`..csproj`) | Recreated project with correct name | Feb 17 |
-| 4 | Module 0 | RootNamespace set to `_` | Recreated project fresh with correct template | Feb 17 |
+| 1 | Module 0 | Docker platform warning on Apple Silicon | Expected — SQL Server runs via Rosetta emulation | Feb 17 |
+| 2 | Module 0 | DBeaver "GO" command error | GO is SSMS-only; removed from DBeaver scripts | Feb 17 |
+| 3 | Module 0 | .csproj named incorrectly | Recreated project with correct name | Feb 17 |
+| 4 | Module 0 | RootNamespace set to `_` | Recreated project fresh | Feb 17 |
+| 5 | Module 2 | Departments not showing in list | Checkbox was unchecked by default; fixed by passing `new Department()` from GET Create action | Feb 18 |
 
 ---
 
@@ -314,11 +327,11 @@ _None yet_
 
 | # | Question | Answer | Module |
 |---|----------|--------|--------|
-| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading — EF won't fetch related data until you access the property | Module 1 |
-| 2 | What does `get; set;` mean? | C# shorthand property — compiler auto-generates a hidden backing field for read/write | Module 1 |
-| 3 | What is `modelBuilder`? | EF's configuration tool passed into OnModelCreating — used for indexes, relationships, constraints | Module 1 |
-| 4 | What is `base`? | Calls the parent class constructor/method first before your own code runs | Module 1 |
-| 5 | What is EF? | Entity Framework — library that lets you work with the database using C# instead of raw SQL | Module 1 |
+| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading — related data loaded only when accessed | Module 1 |
+| 2 | What does `get; set;` mean? | C# shorthand property — compiler auto-generates a backing field | Module 1 |
+| 3 | What is `modelBuilder`? | EF's configuration tool for indexes, relationships, constraints | Module 1 |
+| 4 | What is `base`? | Calls the parent class constructor/method before your own code runs | Module 1 |
+| 5 | What is EF? | Entity Framework — interact with DB using C# instead of raw SQL | Module 1 |
 
 ---
 
@@ -361,7 +374,7 @@ Before marking any module as complete:
 
 - [✅] Project setup complete
 - [✅] First database tables created
-- [ ] First CRUD operation working
+- [✅] First CRUD operation working
 - [ ] First popup modal working
 - [ ] AJAX call working
 - [ ] File upload working
@@ -373,24 +386,24 @@ Before marking any module as complete:
 ## WEEKLY REVIEW
 
 ### Week 1: (Feb 17 - ongoing)
-**Planned:** Modules 0, 1, 2  
-**Completed:** Module 0 ✅, Module 1 ✅  
-**Challenges:** Minor setup issues on Apple Silicon — all resolved  
-**Learnings:** EF Core concepts (migrations, DbContext, models), C# properties, Docker SQL Server  
-**Next Week Goals:** Complete Modules 2, 3, 4
+**Planned:** Modules 0, 1, 2
+**Completed:** Module 0 ✅, Module 1 ✅, Module 2 ✅
+**Challenges:** Minor checkbox default value bug in Create form — resolved quickly
+**Learnings:** EF Core, MVC flow, Razor tag helpers, async/await, soft delete, TempData, ModelState
+**Next Week Goals:** Complete Modules 3, 4, 6
 
 ### Week 2: (Start Date - TBD)
-**Planned:** TBD  
-**Completed:** TBD  
-**Challenges:** TBD  
-**Learnings:** TBD  
+**Planned:** TBD
+**Completed:** TBD
+**Challenges:** TBD
+**Learnings:** TBD
 **Next Week Goals:** TBD
 
 ### Week 3: (Start Date - TBD)
-**Planned:** TBD  
-**Completed:** TBD  
-**Challenges:** TBD  
-**Learnings:** TBD  
+**Planned:** TBD
+**Completed:** TBD
+**Challenges:** TBD
+**Learnings:** TBD
 **Next Week Goals:** TBD
 
 ---
@@ -398,26 +411,22 @@ Before marking any module as complete:
 ## DAILY LOG
 
 ### February 17, 2026
-**Time Spent:** ~1 hour  
+**Time Spent:** ~1 hour
 **What We Did:**
 - Created all project documentation
 - Completed full environment setup (Docker, SQL Server, VS Code, .NET SDK)
 - Project running on http://localhost:5099
 
 ### February 18, 2026
-**Time Spent:** ~1 hour  
+**Time Spent:** ~2 hours
 **What We Did:**
-- Created Department.cs and Employee.cs model classes with data annotations and validation
-- Created ApplicationDbContext.cs with relationship and unique index configuration
-- Updated Program.cs to register EF with SQL Server connection string
-- Installed EF Core NuGet packages (SqlServer, Tools, Design — all v8.0.0)
-- Installed dotnet-ef CLI tool globally
-- Ran InitialCreate migration successfully
-- Verified Departments, Employees, and __EFMigrationsHistory tables visible in DBeaver
-- Learned core C# and EF concepts (virtual, get/set, modelBuilder, base, ICollection, EF)
+- Module 1: Created model classes, DbContext, configured EF, ran migrations
+- Module 2: Built full Department CRUD — controller, 3 views, navbar link
+- Fixed checkbox default value bug (ActiveInactive)
+- Updated Index to show all departments with Active/Inactive badges
 
 **What's Next:**
-- Module 2: Department Management (List, Create, Edit, Soft Delete pages)
+- Module 3: Employee Management (list, popup modal, AJAX)
 
 ---
 
@@ -432,6 +441,6 @@ Before marking any module as complete:
 
 ---
 
-**Last Updated:** February 18, 2026  
-**Updated By:** Development Team  
-**Next Review Date:** End of Module 2
+**Last Updated:** February 18, 2026
+**Updated By:** Development Team
+**Next Review Date:** End of Module 3
