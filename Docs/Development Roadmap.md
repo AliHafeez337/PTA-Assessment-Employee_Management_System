@@ -16,7 +16,7 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ## PHASE 1: FOUNDATION (Week 1)
 
 ### MODULE 0: Project Setup & Foundation
-**Timeline:** Day 1 (2-3 hours)  
+**Timeline:** Day 1 (2-3 hours)
 **Status:** 🟢 Completed — February 17, 2026
 
 #### Tasks:
@@ -40,7 +40,7 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ---
 
 ### MODULE 1: Database Design & Entity Framework
-**Timeline:** Day 2 (2 hours)  
+**Timeline:** Day 2 (2 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
@@ -63,7 +63,7 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ---
 
 ### MODULE 2: Department Management
-**Timeline:** Day 3-4 (4-5 hours)  
+**Timeline:** Day 3-4 (4-5 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
@@ -76,19 +76,18 @@ We'll build this project **incrementally** - one module at a time. Each module w
 - [✅] Implement Edit GET action
 - [✅] Create Edit.cshtml view
 - [✅] Implement Edit POST action
-- [✅] Implement soft delete (ActiveInactive = false)
+- [✅] Implement hard delete with FK guard
 - [✅] Add client-side validation (jQuery via _ValidationScriptsPartial)
 - [✅] Add server-side validation (ModelState + duplicate name check)
-- [✅] Style pages with Bootstrap (badges, striped table, alerts)
+- [✅] Style pages with Bootstrap
 - [✅] Test all CRUD operations
 
 #### Deliverables:
 - ✅ Department list shows all departments (Active + Inactive) with color-coded badges
-- ✅ Can add new departments
-- ✅ Can edit departments
-- ✅ Can soft delete departments (marked Inactive, not removed from DB)
+- ✅ Can add, edit, and delete departments
+- ✅ Delete blocked with friendly error if employees are assigned
 - ✅ Duplicate name validation works (client + server side)
-- ✅ Success messages display after every action
+- ✅ Success/error messages display after every action
 - ✅ Navbar updated with Departments link
 
 ---
@@ -96,107 +95,92 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ## PHASE 2: EMPLOYEE MANAGEMENT (Week 2)
 
 ### MODULE 3: Employee CRUD with Popup
-**Timeline:** Day 1-2 (5-6 hours)  
-**Status:** 🔴 Not Started  
-**Prerequisites:** Module 2
+**Timeline:** Day 1-2 (5-6 hours)
+**Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-
-**Day 1: Employee List & Add**
-- [ ] Create EmployeeController
-- [ ] Implement Index action
-- [ ] Create Index.cshtml (employee list with table)
-- [ ] Create _CreateEmployee.cshtml (partial view for popup)
-- [ ] Add "Add Employee" button that opens modal
-- [ ] Populate department dropdown
-- [ ] Implement Create POST action
-- [ ] Add jQuery to handle modal open/close
-- [ ] Add jQuery to submit form via AJAX
-- [ ] Refresh list after adding employee
-- [ ] Test: Can add employees through popup
-
-**Day 2: Edit, Delete, AJAX**
-- [ ] Create _EditEmployee.cshtml (partial view)
-- [ ] Implement Edit GET and POST actions
-- [ ] Add Edit functionality with popup
-- [ ] Implement Delete action with confirmation
-- [ ] Create GetDepartmentEmployeeCount action (AJAX)
-- [ ] Add jQuery to call AJAX on department selection
-- [ ] Display employee count dynamically
-- [ ] Add client-side validation
-- [ ] Test all operations
+- [✅] Create EmployeeController
+- [✅] Implement Index action (with .Include() for Department)
+- [✅] Create Index.cshtml (employee list with table)
+- [✅] Create _CreateEmployee.cshtml (partial view for popup)
+- [✅] Add "Add Employee" button that opens modal
+- [✅] Populate department dropdown (active only)
+- [✅] Implement Create POST action (with duplicate email check)
+- [✅] Add jQuery to handle modal open/close
+- [✅] Add jQuery to submit form via AJAX
+- [✅] Refresh list after saving employee
+- [✅] Create _EditEmployee.cshtml (partial view)
+- [✅] Implement Edit GET and POST actions
+- [✅] Implement Delete action (AJAX with antiforgery token)
+- [✅] Add @Html.AntiForgeryToken() to Index page
+- [✅] Create GetDepartmentEmployeeCount AJAX endpoint
+- [✅] Display employee count on department selection
+- [✅] Add client-side validation (_ValidationScriptsPartial)
+- [✅] Test all operations
 
 #### Deliverables:
-- [ ] Employee list displays correctly
-- [ ] Can add employees via popup
-- [ ] Can edit employees via popup
-- [ ] Can delete employees
-- [ ] Department dropdown populated
-- [ ] AJAX employee count works
-- [ ] Validation working
-
-#### Approval Required: ✋ YES
+- ✅ Employee list displays with department names
+- ✅ Add/Edit employees via popup modal (AJAX, no page reload)
+- ✅ Delete employees with confirmation (row fades out)
+- ✅ Department dropdown shows live employee count
+- ✅ Validation working (client + server side)
 
 ---
 
 ### MODULE 4: Search & Filter
-**Timeline:** Day 3 (2-3 hours)  
-**Status:** 🔴 Not Started  
-**Prerequisites:** Module 3
+**Timeline:** Day 3 (2-3 hours)
+**Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-- [ ] Add search textbox to Index.cshtml
-- [ ] Add department filter dropdown
-- [ ] Implement search functionality
-- [ ] Implement filter functionality
-- [ ] Make search and filter work together
-- [ ] Add "Clear filters" button
-- [ ] Show result count
-- [ ] Test with various search terms
-- [ ] Test filter combinations
+- [✅] Add search textbox to Employee Index.cshtml
+- [✅] Add department filter dropdown
+- [✅] Update Index action to accept searchName and departmentId params
+- [✅] Implement server-side filtering via AsQueryable()
+- [✅] Make search and filter work together (combined query)
+- [✅] Pass filter values back via ViewBag (inputs stay filled)
+- [✅] Add "Clear filters" link
+- [✅] Show result count (changes wording when filters active)
+- [✅] Test all combinations
 
 #### Deliverables:
-- [ ] Search by name works
-- [ ] Filter by department works
-- [ ] Both work together
-- [ ] Clear button works
-- [ ] Result count displays
-
-#### Approval Required: ✋ YES
+- ✅ Search by name works
+- ✅ Filter by department works
+- ✅ Both work together
+- ✅ Clear link resets everything
+- ✅ Result count displays correctly
 
 ---
 
 ### MODULE 6: Dashboard
-**Timeline:** Day 4 (2-3 hours)  
-**Status:** 🔴 Not Started  
-**Prerequisites:** Module 3
+**Timeline:** Day 4 (2-3 hours)
+**Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-- [ ] Create/Update HomeController with statistics
-- [ ] Calculate total employees
-- [ ] Calculate total active departments
-- [ ] Calculate average salary
-- [ ] Create Index.cshtml with stat cards
-- [ ] Style dashboard with Bootstrap cards
-- [ ] Add icons (optional)
-- [ ] Test statistics accuracy
+- [✅] Create DashboardViewModel.cs
+- [✅] Update HomeController to inject ApplicationDbContext
+- [✅] Calculate TotalEmployees (CountAsync)
+- [✅] Calculate TotalActiveDepartments (CountAsync with filter)
+- [✅] Calculate AverageSalary (AnyAsync guard + AverageAsync)
+- [✅] Replace Views/Home/Index.cshtml with dashboard layout
+- [✅] Add three stat cards (Employees, Departments, Average Salary)
+- [✅] Add quick links to Employees and Departments
+- [✅] Verify navbar Home link
+- [✅] Test statistics accuracy
 
 #### Deliverables:
-- [ ] Dashboard displays total employees
-- [ ] Dashboard displays total departments
-- [ ] Dashboard displays average salary
-- [ ] Dashboard looks professional
-
-#### Approval Required: ✋ YES
+- ✅ Dashboard displays total employees, active departments, average salary
+- ✅ Stats are live from the database
+- ✅ Quick links to Employees and Departments sections
+- ✅ Clean Bootstrap card layout with icons
 
 ---
 
 ## PHASE 3: ADVANCED FEATURES (Week 3)
 
 ### MODULE 5: Bulk Employee Upload
-**Timeline:** Day 1-2 (6-7 hours)  
-**Status:** 🔴 Not Started  
-**Prerequisites:** Module 3
+**Timeline:** Day 1-2 (6-7 hours)
+**Status:** 🔴 Not Started
+**Prerequisites:** Module 3 ✅
 
 #### Tasks:
 
@@ -226,15 +210,14 @@ We'll build this project **incrementally** - one module at a time. Each module w
 - [ ] Add download sample file link
 - [ ] Test with valid file
 - [ ] Test with invalid file
-- [ ] Test with large file (1000+ records)
 
 #### Approval Required: ✋ YES
 
 ---
 
 ### MODULE 7: Validation & Error Handling
-**Timeline:** Day 3 (3-4 hours)  
-**Status:** 🔴 Not Started  
+**Timeline:** Day 3 (3-4 hours)
+**Status:** 🔴 Not Started
 **Prerequisites:** All previous modules
 
 #### Tasks:
@@ -255,8 +238,8 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ---
 
 ### MODULE 8: Final Polish & Documentation
-**Timeline:** Day 4 (3-4 hours)  
-**Status:** 🔴 Not Started  
+**Timeline:** Day 4 (3-4 hours)
+**Status:** 🔴 Not Started
 **Prerequisites:** All previous modules
 
 #### Tasks:
@@ -266,7 +249,7 @@ We'll build this project **incrementally** - one module at a time. Each module w
 - [ ] Consistent naming conventions
 - [ ] Review and fix UI inconsistencies
 - [ ] Make responsive (mobile-friendly)
-- [ ] Add navigation menu
+- [ ] Add navigation menu improvements
 - [ ] Polish table styling
 - [ ] Add confirmation dialogs
 - [ ] Test all features across browsers
@@ -281,28 +264,30 @@ We'll build this project **incrementally** - one module at a time. Each module w
 
 ## OVERALL PROGRESS
 
-- Module 0: 🟢 Complete (100%)
-- Module 1: 🟢 Complete (100%)
-- Module 2: 🔴 Not Started (0%)
-- Module 3: 🔴 Not Started (0%)
-- Module 4: 🔴 Not Started (0%)
-- Module 5: 🔴 Not Started (0%)
-- Module 6: 🔴 Not Started (0%)
-- Module 7: 🔴 Not Started (0%)
-- Module 8: 🔴 Not Started (0%)
+| Module | Status | Progress |
+|--------|--------|----------|
+| Module 0: Setup | 🟢 Complete | 100% |
+| Module 1: Database | 🟢 Complete | 100% |
+| Module 2: Departments | 🟢 Complete | 100% |
+| Module 3: Employees | 🟢 Complete | 100% |
+| Module 4: Search/Filter | 🟢 Complete | 100% |
+| Module 5: Bulk Upload | 🔴 Not Started | 0% |
+| Module 6: Dashboard | 🟢 Complete | 100% |
+| Module 7: Validation | 🔴 Not Started | 0% |
+| Module 8: Final Polish | 🔴 Not Started | 0% |
 
-**Overall: ~22% complete**
+**Overall: ~66% complete**
 
 ---
 
 ## ESTIMATED TIMELINE
 
-**Optimistic:** 3 weeks  
-**Realistic:** 4-5 weeks  
-**Pessimistic:** 6 weeks
+**Optimistic:** 1 more week
+**Realistic:** 1-2 more weeks
+**Pessimistic:** 2-3 more weeks
 
 ---
 
-**Document Version:** 2.0  
-**Last Updated:** February 18, 2026  
-**Status:** In Progress
+**Document Version:** 3.0
+**Last Updated:** February 18, 2026
+**Status:** In Progress — Modules 5, 7, 8 remaining

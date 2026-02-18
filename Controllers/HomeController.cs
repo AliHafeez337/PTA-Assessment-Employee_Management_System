@@ -1,24 +1,40 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.Models;
 
-namespace EmployeeManagementSystem.Controllers;
-
-public class HomeController : Controller
+namespace EmployeeManagementSystem.Controllers
 {
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        return View();
-    }
+        private readonly ApplicationDbContext _context;
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public async Task<IActionResult> Index()
+        {
+            var vm = new DashboardViewModel
+            {
+                TotalEmployees = await _context.Employees.CountAsync(),
+
+                TotalActiveDepartments = await _context.Departments
+                    .CountAsync(d => d.ActiveInactive),
+
+                // AverageAsync throws if the table is empty — check first
+                AverageSalary = await _context.Employees.AnyAsync()
+                    ? await _context.Employees.AverageAsync(e => e.Salary)
+                    : 0
+            };
+
+            return View(vm);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }

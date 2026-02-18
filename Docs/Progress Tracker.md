@@ -5,7 +5,7 @@
 
 **Project Start Date:** February 17, 2026
 **Current Status:** 🟡 In Progress
-**Overall Progress:** 55%
+**Overall Progress:** 66%
 
 ---
 
@@ -19,7 +19,7 @@
 | Module 3: Employees | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 4: Search/Filter | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 5: Bulk Upload | 🔴 Not Started | 0% | - | - |
-| Module 6: Dashboard | 🔴 Not Started | 0% | - | - |
+| Module 6: Dashboard | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 7: Validation | 🔴 Not Started | 0% | - | - |
 | Module 8: Final Polish | 🔴 Not Started | 0% | - | - |
 
@@ -287,10 +287,39 @@
 
 ## MODULE 6: DASHBOARD
 
-**Status:** 🔴 Not Started
-**Progress:** 0/10 tasks (0%)
+**Status:** 🟢 Completed
+**Progress:** 10/10 tasks (100%)
+**Started:** February 18, 2026
+**Completed:** February 18, 2026
 
-### Approval Status: ⸸ Waiting for Module 3 ✅ (now unblocked)
+### Tasks:
+- [✅] Create DashboardViewModel.cs
+- [✅] Update HomeController to inject ApplicationDbContext
+- [✅] Calculate TotalEmployees (CountAsync)
+- [✅] Calculate TotalActiveDepartments (CountAsync with filter)
+- [✅] Calculate AverageSalary (AnyAsync check + AverageAsync)
+- [✅] Replace Views/Home/Index.cshtml with dashboard layout
+- [✅] Add three stat cards (Employees, Departments, Average Salary)
+- [✅] Add quick links to Employees and Departments
+- [✅] Verify navbar Home link points to HomeController
+- [✅] Test statistics accuracy
+
+### Files Created/Modified:
+- `Models/DashboardViewModel.cs` — new ViewModel carrying the three stats
+- `Controllers/HomeController.cs` — replaced with DB-connected version
+- `Views/Home/Index.cshtml` — replaced with stat cards + quick links
+
+### Key Concepts Learned:
+- **ViewModel:** A class created specifically to carry data to a view — not a database model, just a container shaped for what the view needs
+- **CountAsync():** Translates to `SELECT COUNT(*) FROM ...` — can take a predicate to count filtered rows
+- **AverageAsync():** Translates to `SELECT AVG(...) FROM ...` — throws if the table is empty, so always guard with `AnyAsync()` first
+- **AnyAsync():** Translates to `SELECT CASE WHEN EXISTS(...) THEN 1 ELSE 0 END` — fast existence check
+- **DefaultIfEmpty(constant) limitation:** EF Core cannot translate `DefaultIfEmpty(0)` with a C# constant into SQL — use `AnyAsync()` guard instead
+
+### Issues Encountered & Resolved:
+1. **`DefaultIfEmpty(0)` could not be translated:** EF Core can't convert a C# constant fallback into SQL. Fixed by using `AnyAsync()` to check for rows first, then calling `AverageAsync()` only if rows exist — both are individually SQL-translatable. ✅
+
+### Approval Status: ✅ Module 6 COMPLETE — Ready for Module 5 (Bulk Upload)!
 
 ---
 
@@ -321,22 +350,22 @@
 
 ### Task Completion:
 - **Total Tasks:** 129
-- **Completed:** 65 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9)
+- **Completed:** 75 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9 + M6: 10)
 - **In Progress:** 0
-- **Remaining:** 64
+- **Remaining:** 54
 
 ### Module Completion:
-- **Modules Completed:** 5 (Module 0, 1, 2, 3, 4)
+- **Modules Completed:** 6 (Module 0, 1, 2, 3, 4, 6)
 - **Modules In Progress:** 0
-- **Modules Remaining:** 4
+- **Modules Remaining:** 3
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 6 — Dashboard
+**What we're working on now:** Module 5 — Bulk Employee Upload
 
-**Next immediate step:** Update HomeController to calculate statistics and build the dashboard view
+**Next immediate step:** Create Upload.cshtml, FileUploadService, and CSV/Excel processing logic
 
 **Blockers:** None
 
@@ -375,7 +404,7 @@
 | 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` (returns value; `RenderPartialAsync` returns void) | Feb 18 |
 | 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable (`DateTime?`) + added migration | Feb 18 |
 | 12 | M3 | `[Required]` on `DepartmentId` always passes | Replaced with `[Range(1, int.MaxValue)]` | Feb 18 |
-| 14 | M4 | Search + filter working | Server-side filtering via `AsQueryable()` + chained `.Where()` calls | Feb 18 |
+| 15 | M6 | `DefaultIfEmpty(0)` EF translation error | EF can't translate C# constant fallback to SQL; replaced with `AnyAsync()` guard + `AverageAsync()` | Feb 18 |
 
 ---
 
@@ -408,7 +437,9 @@
 | 23 | What is `.Include()` and why is it needed? | EF eager loading — loads related entities (e.g. Department) in the same query; without it, they're null | M3 |
 | 24 | What is `return Json(...)` vs `return PartialView()`? | Json() sends data to AJAX callers; PartialView() sends HTML; AJAX handler checks `res.success` to tell them apart | M3 |
 | 26 | What is `method="get"` on a search form? | Submits filters as URL query params — bookmarkable and back-button friendly; never use GET to change data | M4 |
-| 27 | What is `AsQueryable()` and deferred execution? | Builds up a SQL query in memory; `.Where()` chains add conditions; query only hits the DB when `.ToListAsync()` is called | M4 |
+| 28 | What is a ViewModel? | A class shaped for the view's needs — not a DB model, just a data container | M6 |
+| 29 | Why guard `AverageAsync()` with `AnyAsync()`? | `AverageAsync()` throws on an empty table; `AnyAsync()` is a fast SQL-translatable existence check | M6 |
+| 30 | Why can't EF translate `DefaultIfEmpty(0)`? | EF must convert LINQ to SQL; a C# constant fallback has no direct SQL equivalent so EF gives up | M6 |
 
 ---
 
