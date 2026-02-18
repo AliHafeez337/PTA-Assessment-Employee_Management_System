@@ -1,14 +1,16 @@
 total 40
 drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Controllers
-drwxr-xr-x@ 9 alihafeez  staff  288 Feb 17 20:59 Docs
+drwxr-xr-x  2 alihafeez  staff   64 Feb 17 22:18 Data
+drwxr-xr-x@ 9 alihafeez  staff  288 Feb 17 21:34 Docs
 -rw-r--r--  1 alihafeez  staff  211 Feb 17 21:08 EmployeeManagementSystem.csproj
 drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Models
 -rw-r--r--  1 alihafeez  staff  669 Feb 17 21:08 Program.cs
 drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:08 Properties
 -rw-r--r--@ 1 alihafeez  staff   44 Feb 17 17:20 README.md
+drwxr-xr-x  2 alihafeez  staff   64 Feb 17 22:18 Services
 drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 Views
 -rw-r--r--  1 alihafeez  staff  119 Feb 17 21:08 appsettings.Development.json
--rw-r--r--  1 alihafeez  staff  142 Feb 17 21:08 appsettings.json
+-rw-r--r--@ 1 alihafeez  staff  333 Feb 17 22:18 appsettings.json
 drwxr-xr-x  3 alihafeez  staff   96 Feb 17 21:10 bin
 drwxr-xr-x  8 alihafeez  staff  256 Feb 17 21:10 obj
 drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 wwwroot
@@ -17,14 +19,17 @@ drwxr-xr-x  6 alihafeez  staff  192 Feb 17 21:08 wwwroot
 total 8
 -rw-r--r--  1 alihafeez  staff  575 Feb 17 21:08 HomeController.cs
 
+./Data:
+total 0
+
 ./Docs:
 total 200
 -rw-r--r--@ 1 alihafeez  staff  13520 Feb 17 17:23 Development Roadmap.md
--rw-r--r--@ 1 alihafeez  staff      0 Feb 17 21:33 Directories.txt
+-rw-r--r--@ 1 alihafeez  staff      0 Feb 18 07:45 Directories.txt
 -rw-r--r--@ 1 alihafeez  staff  14566 Feb 17 17:22 Module Breakdown.md
--rw-r--r--@ 1 alihafeez  staff  13471 Feb 17 21:30 Progress Tracker.md
+-rw-r--r--@ 1 alihafeez  staff  13471 Feb 17 21:34 Progress Tracker.md
 -rw-r--r--@ 1 alihafeez  staff   8824 Feb 17 17:21 Project Overview & Requirements.md
--rw-r--r--@ 1 alihafeez  staff  19492 Feb 17 21:26 Setup Instructions.md
+-rw-r--r--@ 1 alihafeez  staff  19492 Feb 17 21:34 Setup Instructions.md
 -rw-r--r--@ 1 alihafeez  staff  18871 Feb 17 17:53 Technical Architecture.md
 
 ./Models:
@@ -34,6 +39,9 @@ total 8
 ./Properties:
 total 8
 -rw-r--r--  1 alihafeez  staff  619 Feb 17 21:08 launchSettings.json
+
+./Services:
+total 0
 
 ./Views:
 total 16
