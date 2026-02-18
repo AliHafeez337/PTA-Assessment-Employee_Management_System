@@ -13,14 +13,12 @@ We'll build this project **incrementally** - one module at a time. Each module w
 
 ---
 
-## PHASE 1: FOUNDATION (Week 1)
+## PHASE 1: FOUNDATION
 
 ### MODULE 0: Project Setup & Foundation
-**Timeline:** Day 1 (2-3 hours)
 **Status:** 🟢 Completed — February 17, 2026
 
 #### Tasks:
-- [✅] Install Visual Studio / VS Code + .NET SDK
 - [✅] Install Docker Desktop
 - [✅] Setup SQL Server 2019 in Docker
 - [✅] Create new ASP.NET Core MVC project
@@ -40,7 +38,6 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ---
 
 ### MODULE 1: Database Design & Entity Framework
-**Timeline:** Day 2 (2 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
@@ -63,188 +60,125 @@ We'll build this project **incrementally** - one module at a time. Each module w
 ---
 
 ### MODULE 2: Department Management
-**Timeline:** Day 3-4 (4-5 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
 - [✅] Create DepartmentController
-- [✅] Implement Index action (list all departments)
-- [✅] Create Index.cshtml view
-- [✅] Implement Create GET action
-- [✅] Create Create.cshtml view (add form)
-- [✅] Implement Create POST action
-- [✅] Implement Edit GET action
-- [✅] Create Edit.cshtml view
-- [✅] Implement Edit POST action
-- [✅] Implement hard delete with FK guard
-- [✅] Add client-side validation (jQuery via _ValidationScriptsPartial)
+- [✅] Implement Index, Create (GET/POST), Edit (GET/POST), Delete
+- [✅] Add client-side validation (_ValidationScriptsPartial)
 - [✅] Add server-side validation (ModelState + duplicate name check)
 - [✅] Style pages with Bootstrap
 - [✅] Test all CRUD operations
 
 #### Deliverables:
-- ✅ Department list shows all departments (Active + Inactive) with color-coded badges
-- ✅ Can add, edit, and delete departments
-- ✅ Delete blocked with friendly error if employees are assigned
-- ✅ Duplicate name validation works (client + server side)
-- ✅ Success/error messages display after every action
-- ✅ Navbar updated with Departments link
+- ✅ Department list with Active/Inactive badges
+- ✅ Add, edit, delete departments
+- ✅ Delete blocked with friendly error if employees assigned
+- ✅ Duplicate name validation (client + server)
+- ✅ Success/error messages after every action
 
 ---
 
-## PHASE 2: EMPLOYEE MANAGEMENT (Week 2)
+## PHASE 2: EMPLOYEE MANAGEMENT
 
 ### MODULE 3: Employee CRUD with Popup
-**Timeline:** Day 1-2 (5-6 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
 - [✅] Create EmployeeController
-- [✅] Implement Index action (with .Include() for Department)
-- [✅] Create Index.cshtml (employee list with table)
-- [✅] Create _CreateEmployee.cshtml (partial view for popup)
-- [✅] Add "Add Employee" button that opens modal
-- [✅] Populate department dropdown (active only)
-- [✅] Implement Create POST action (with duplicate email check)
-- [✅] Add jQuery to handle modal open/close
-- [✅] Add jQuery to submit form via AJAX
-- [✅] Refresh list after saving employee
-- [✅] Create _EditEmployee.cshtml (partial view)
-- [✅] Implement Edit GET and POST actions
-- [✅] Implement Delete action (AJAX with antiforgery token)
-- [✅] Add @Html.AntiForgeryToken() to Index page
-- [✅] Create GetDepartmentEmployeeCount AJAX endpoint
-- [✅] Display employee count on department selection
-- [✅] Add client-side validation (_ValidationScriptsPartial)
+- [✅] Employee list with `.Include()` for Department
+- [✅] Add/Edit via Bootstrap modal popup (partial views + AJAX)
+- [✅] Delete via AJAX with antiforgery token
+- [✅] GetDepartmentEmployeeCount AJAX endpoint
+- [✅] Client-side validation (_ValidationScriptsPartial)
 - [✅] Test all operations
 
 #### Deliverables:
-- ✅ Employee list displays with department names
-- ✅ Add/Edit employees via popup modal (AJAX, no page reload)
-- ✅ Delete employees with confirmation (row fades out)
+- ✅ Employee list with department names
+- ✅ Add/Edit via popup modal (no page reload)
+- ✅ Delete with row fade-out animation
 - ✅ Department dropdown shows live employee count
-- ✅ Validation working (client + server side)
+- ✅ Validation working (client + server)
 
 ---
 
 ### MODULE 4: Search & Filter
-**Timeline:** Day 3 (2-3 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-- [✅] Add search textbox to Employee Index.cshtml
-- [✅] Add department filter dropdown
-- [✅] Update Index action to accept searchName and departmentId params
-- [✅] Implement server-side filtering via AsQueryable()
-- [✅] Make search and filter work together (combined query)
-- [✅] Pass filter values back via ViewBag (inputs stay filled)
-- [✅] Add "Clear filters" link
-- [✅] Show result count (changes wording when filters active)
-- [✅] Test all combinations
+- [✅] Search textbox (by name, server-side)
+- [✅] Department filter dropdown
+- [✅] Combined query with AsQueryable()
+- [✅] ViewBag persistence so inputs stay filled
+- [✅] Clear filters link
+- [✅] Result count display
 
 #### Deliverables:
 - ✅ Search by name works
 - ✅ Filter by department works
 - ✅ Both work together
 - ✅ Clear link resets everything
-- ✅ Result count displays correctly
+
+---
+
+## PHASE 3: ADVANCED FEATURES
+
+### MODULE 5: Bulk Employee Upload
+**Status:** 🟢 Completed — February 18, 2026
+
+#### Tasks:
+- [✅] Upload page with format instructions
+- [✅] CSV and Excel (.xlsx) support via EPPlus
+- [✅] FileUploadService with row-level validation
+- [✅] Duplicate email detection (in-file + database)
+- [✅] Auto-create department if not found
+- [✅] In-memory cache to avoid N+1 queries
+- [✅] UploadResult page (summary cards + row detail table)
+- [✅] Loading overlay + button disable (added in Module 7)
+
+#### Deliverables:
+- ✅ CSV and Excel upload working
+- ✅ Valid rows inserted, invalid rows skipped with errors
+- ✅ Departments auto-created
+- ✅ Results page with summary and row-by-row detail
 
 ---
 
 ### MODULE 6: Dashboard
-**Timeline:** Day 4 (2-3 hours)
 **Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-- [✅] Create DashboardViewModel.cs
-- [✅] Update HomeController to inject ApplicationDbContext
-- [✅] Calculate TotalEmployees (CountAsync)
-- [✅] Calculate TotalActiveDepartments (CountAsync with filter)
-- [✅] Calculate AverageSalary (AnyAsync guard + AverageAsync)
-- [✅] Replace Views/Home/Index.cshtml with dashboard layout
-- [✅] Add three stat cards (Employees, Departments, Average Salary)
-- [✅] Add quick links to Employees and Departments
-- [✅] Verify navbar Home link
-- [✅] Test statistics accuracy
+- [✅] DashboardViewModel with TotalEmployees, TotalActiveDepartments, AverageSalary
+- [✅] HomeController updated with ApplicationDbContext
+- [✅] Three Bootstrap stat cards with icons
+- [✅] Quick links to Employees and Departments
 
 #### Deliverables:
-- ✅ Dashboard displays total employees, active departments, average salary
-- ✅ Stats are live from the database
-- ✅ Quick links to Employees and Departments sections
-- ✅ Clean Bootstrap card layout with icons
-
----
-
-## PHASE 3: ADVANCED FEATURES (Week 3)
-
-### MODULE 5: Bulk Employee Upload
-**Timeline:** Day 1-2 (6-7 hours)
-**Status:** 🟢 Completed — February 18, 2026
-**Prerequisites:** Module 3 ✅
-
-#### Tasks:
-
-**Day 1: Upload Setup & File Reading**
-- [✅] Create Upload.cshtml view
-- [✅] Add file upload input (.csv and .xlsx)
-- [✅] Create sample CSV file
-- [✅] Install EPPlus NuGet package (v7.0.0)
-- [✅] Set EPPlus LicenseContext in Program.cs
-- [✅] Create FileUploadService class
-- [✅] Implement CSV reading logic
-- [✅] Implement Excel reading logic
-- [✅] Register FileUploadService in Program.cs
-
-**Day 2: Processing & Validation**
-- [✅] Create UploadResult.cs and RowResult.cs models
-- [✅] Implement row validation (name, email, salary, date)
-- [✅] Check for duplicate emails within the file
-- [✅] Check for duplicate emails against the database
-- [✅] Implement auto-create department logic
-- [✅] Implement bulk insert with in-memory cache
-- [✅] Create UploadResult.cshtml (summary + row detail table)
-- [✅] Add Upload GET/POST actions to EmployeeController
-- [✅] Add Bulk Upload button to Employee Index page
-- [✅] Test with valid file
-- [✅] Test with invalid rows
-- [✅] Test duplicate detection
-- [✅] Test auto-create department
-
-#### Deliverables:
-- ✅ Can upload CSV and Excel files
-- ✅ Valid rows are inserted, invalid rows skipped with errors
-- ✅ Departments auto-created if they don't exist
-- ✅ Duplicate emails caught (in-file and in-database)
-- ✅ Results page shows summary cards + row-by-row detail
+- ✅ Dashboard shows live stats from database
+- ✅ Clean Bootstrap card layout
 
 ---
 
 ### MODULE 7: Validation & Error Handling
-**Timeline:** Day 3 (3-4 hours)
-**Status:** 🔴 Not Started
-**Prerequisites:** All previous modules
+**Status:** 🟢 Completed — February 18, 2026
 
 #### Tasks:
-- [ ] Review all forms for client-side validation
-- [ ] Add jQuery validation to all forms
-- [ ] Add data annotations to models
-- [ ] Implement server-side validation in controllers
-- [ ] Add try-catch blocks to all controller actions
-- [ ] Create custom error page
-- [ ] Add user-friendly error messages
-- [ ] Add success messages for all actions
-- [ ] Add loading indicators
-- [ ] Test validation on all forms
-- [ ] Test error scenarios
+- [✅] Add `ILogger` + `try-catch` to DepartmentController (Create POST, Edit POST, Delete)
+- [✅] Add `ILogger` + `try-catch` to EmployeeController (Create POST, Edit POST, Delete, Upload POST)
+- [✅] Replace default Error page with custom user-friendly page
+- [✅] Add loading overlay + button disable on bulk upload form
 
-#### Approval Required: ✋ YES
+#### Deliverables:
+- ✅ All DB operations wrapped in try-catch — app never crashes raw on a DB error
+- ✅ Errors logged to terminal with ILogger for debugging
+- ✅ User-friendly error page with Back and Home buttons
+- ✅ Upload form shows spinner and blocks double-submit during processing
 
 ---
 
 ### MODULE 8: Final Polish & Documentation
-**Timeline:** Day 4 (3-4 hours)
 **Status:** 🔴 Not Started
-**Prerequisites:** All previous modules
+**Prerequisites:** All previous modules ✅
 
 #### Tasks:
 - [ ] Add comments to all code files
@@ -256,11 +190,10 @@ We'll build this project **incrementally** - one module at a time. Each module w
 - [ ] Add navigation menu improvements
 - [ ] Polish table styling
 - [ ] Add confirmation dialogs
-- [ ] Test all features across browsers
-- [ ] Create README.md
-- [ ] Document setup steps
-- [ ] Create database script
-- [ ] Add sample files
+- [ ] Test all features
+- [ ] Verify README.md and SETUP.md are complete
+- [ ] Verify DatabaseScript.sql is correct
+- [ ] Verify sample_employees.csv is included
 
 #### Approval Required: ✋ YES
 
@@ -275,23 +208,23 @@ We'll build this project **incrementally** - one module at a time. Each module w
 | Module 2: Departments | 🟢 Complete | 100% |
 | Module 3: Employees | 🟢 Complete | 100% |
 | Module 4: Search/Filter | 🟢 Complete | 100% |
-| Module 5: Bulk Upload | 🔴 Not Started | 0% |
+| Module 5: Bulk Upload | 🟢 Complete | 100% |
 | Module 6: Dashboard | 🟢 Complete | 100% |
-| Module 7: Validation | 🔴 Not Started | 0% |
+| Module 7: Validation | 🟢 Complete | 100% |
 | Module 8: Final Polish | 🔴 Not Started | 0% |
 
-**Overall: ~66% complete**
+**Overall: ~88% complete**
 
 ---
 
 ## ESTIMATED TIMELINE
 
-**Optimistic:** 1 more week
-**Realistic:** 1-2 more weeks
-**Pessimistic:** 2-3 more weeks
+**Optimistic:** Complete in 1 more session
+**Realistic:** 1–2 more sessions
+**Pessimistic:** 2 sessions
 
 ---
 
-**Document Version:** 3.0
+**Document Version:** 4.0
 **Last Updated:** February 18, 2026
-**Status:** In Progress — Modules 5, 7, 8 remaining
+**Status:** In Progress — Module 8 remaining

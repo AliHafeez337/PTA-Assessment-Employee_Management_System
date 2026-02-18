@@ -5,7 +5,7 @@
 
 **Project Start Date:** February 17, 2026
 **Current Status:** 🟡 In Progress
-**Overall Progress:** 77%
+**Overall Progress:** 88%
 
 ---
 
@@ -20,7 +20,7 @@
 | Module 4: Search/Filter | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 5: Bulk Upload | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 6: Dashboard | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
-| Module 7: Validation | 🔴 Not Started | 0% | - | - |
+| Module 7: Validation | 🟢 Completed | 100% | Feb 18, 2026 | Feb 18, 2026 |
 | Module 8: Final Polish | 🔴 Not Started | 0% | - | - |
 
 **Legend:**
@@ -161,10 +161,9 @@
 - **TempData:** Persists a value for exactly one redirect (used for success/error messages)
 - **Hard Delete:** Permanently removing a record (`_context.Remove()`)
 - **FK Guard on Delete:** Check for dependent records before deleting; show friendly error if blocked
-- **asp-for / asp-action / asp-route-id:** Razor tag helpers that generate correct HTML attributes
 
 ### Issues Encountered & Resolved:
-1. **Departments not showing in list:** Checkbox was rendering unchecked by default. Fixed by passing `new Department()` from GET Create action so the default `true` value is applied. ✅
+1. **Departments not showing in list:** Checkbox was rendering unchecked by default. Fixed by passing `new Department()` from GET Create action. ✅
 2. **Soft delete kept records visible:** Changed to hard delete (`Remove()`) per user preference. ✅
 3. **Department delete crashed with FK error:** Added employee count check before delete; shows `TempData["ErrorMessage"]` if blocked. ✅
 
@@ -180,8 +179,6 @@
 **Completed:** February 18, 2026
 
 ### Tasks:
-
-#### Day 1 Tasks (List & Add):
 - [✅] Create EmployeeController.cs
 - [✅] Implement Index action (with eager-loaded Department via `.Include()`)
 - [✅] Create Index.cshtml (employee table)
@@ -192,8 +189,6 @@
 - [✅] Add jQuery modal open/close handling
 - [✅] Add AJAX form submission (no page reload)
 - [✅] Refresh list after add
-
-#### Day 2 Tasks (Edit/Delete/AJAX):
 - [✅] Create _EditEmployee.cshtml (partial view / popup form)
 - [✅] Implement Edit GET and POST actions
 - [✅] Implement Delete action (AJAX, with antiforgery token)
@@ -213,27 +208,15 @@
 ### Migrations Added:
 - `NullableJoiningDate` — changed `JoiningDate` from `DateTime` to `DateTime?`
 
-### Key Concepts Learned:
-- **Partial View:** A fragment of HTML (no layout) returned by a controller and injected into the page via AJAX
-- **e.preventDefault():** Must be first in a submit handler — stops page reload even if later JS throws
-- **[Range] on int:** Use instead of [Required] for int fields — [Required] always passes on value types
-- **DateTime? (nullable):** Defaults to null instead of 0001-01-01, fixing the date picker bug
-- **$.validator.unobtrusive.parse():** Re-wires jQuery validation for forms injected dynamically via AJAX
-- **.Include():** EF eager loading — loads related entities (e.g. Department) in the same query
-- **return Json(...):** Returns JSON to AJAX callers instead of HTML; used for success/failure responses
-- **Html.PartialAsync vs RenderPartialAsync:** Use `PartialAsync` inside `@section` blocks; `RenderPartialAsync` returns void and cannot be used there
-- **@Html.AntiForgeryToken() on list pages:** Required when AJAX calls POST endpoints from a page with no form
-
 ### Issues Encountered & Resolved:
-1. **Page refreshing instead of AJAX submit:** `onsubmit` inline handler threw JS error before `return false`. Fixed by switching to jQuery `.on('submit')` with `e.preventDefault()` as the very first line. ✅
-2. **`$.validator is undefined`:** `_ValidationScriptsPartial` not included on Index page. Fixed by adding `@await Html.PartialAsync("_ValidationScriptsPartial")` to the Scripts section. ✅
-3. **Build error: `RenderPartialAsync` in section:** Returns void, can't be used with `@await` inside a section. Fixed by using `Html.PartialAsync` instead. ✅
-4. **Date picker stuck on year 0001:** `DateTime` defaults to `DateTime.MinValue`. Fixed by making `JoiningDate` nullable (`DateTime?`) + added migration. ✅
-5. **`[Required]` on `DepartmentId` always passes:** `int` is a value type, never null. Replaced with `[Range(1, int.MaxValue)]`. ✅
-6. **Employee delete returns 400:** No antiforgery token on page; added `@Html.AntiForgeryToken()` to Index.cshtml. ✅
-7. **Browser HTML5 email tooltip:** `[EmailAddress]` causes Razor to render `type="email"`, triggering native browser validation. Expected behavior — not a bug. ✅
+1. **Page refreshing instead of AJAX submit:** Fixed by switching to jQuery `.on('submit')` with `e.preventDefault()` first. ✅
+2. **`$.validator is undefined`:** Fixed by adding `@await Html.PartialAsync("_ValidationScriptsPartial")` to Index Scripts section. ✅
+3. **Build error: `RenderPartialAsync` in section:** Fixed by using `Html.PartialAsync` instead. ✅
+4. **Date picker stuck on year 0001:** Fixed by making `JoiningDate` nullable (`DateTime?`) + added migration. ✅
+5. **`[Required]` on `DepartmentId` always passes:** Replaced with `[Range(1, int.MaxValue)]`. ✅
+6. **Employee delete returns 400:** Added `@Html.AntiForgeryToken()` to Index.cshtml. ✅
 
-### Approval Status: ✅ Module 3 COMPLETE — Ready for Module 4!
+### Approval Status: ✅ Module 3 COMPLETE
 
 ---
 
@@ -256,23 +239,16 @@
 - [✅] Test filter combinations
 
 ### Files Modified:
-- `Controllers/EmployeeController.cs` — Index action updated to accept `searchName` and `departmentId` parameters
-- `Views/Employee/Index.cshtml` — search/filter bar added above the table
+- `Controllers/EmployeeController.cs` — Index action updated
+- `Views/Employee/Index.cshtml` — search/filter bar added
 
 ### How It Works:
-- Search form uses `method="get"` — filters appear as URL query parameters: `/Employee?searchName=Ali&departmentId=2`
-- Controller builds the query dynamically using `.AsQueryable()` and chains `.Where()` only when a filter is provided
-- Both filters combine — name search AND department filter can be active simultaneously
-- `ViewBag.SearchName` and `ViewBag.SelectedDepartmentId` are passed back so inputs stay filled after submit
-- "Clear" button is a plain `<a asp-action="Index">` link — navigates to `/Employee` with no parameters
+- Search form uses `method="get"` — filters appear as URL query parameters
+- Controller builds query dynamically using `.AsQueryable()` with chained `.Where()` calls
+- `ViewBag.SearchName` and `ViewBag.SelectedDepartmentId` passed back so inputs stay filled
+- "Clear" button is a plain `<a asp-action="Index">` link — navigates to `/Employee` with no params
 
-### Key Concepts Learned:
-- **`method="get"` on a form:** Submits filter values as URL query parameters instead of a POST body — bookmarkable, shareable, browser-back-button friendly
-- **`AsQueryable()`:** Returns an IQueryable that lets you chain `.Where()` conditions dynamically before the query hits the database
-- **Deferred execution:** The database query doesn't run until `.ToListAsync()` is called — all the `.Where()` chains just build up the SQL
-- **Optional parameters (`string? searchName`, `int? departmentId`):** Controller accepts filters as nullable — if not provided they're null and no filter is applied
-
-### Approval Status: ✅ Module 4 COMPLETE — Ready for Module 6 (Dashboard)!
+### Approval Status: ✅ Module 4 COMPLETE
 
 ---
 
@@ -284,8 +260,6 @@
 **Completed:** February 18, 2026
 
 ### Tasks:
-
-#### Day 1 Tasks (Upload Setup & File Reading):
 - [✅] Create Upload.cshtml view
 - [✅] Add file upload input (.csv and .xlsx accepted)
 - [✅] Create sample CSV file (sample_employees.csv)
@@ -295,8 +269,6 @@
 - [✅] Implement CSV reading logic (StreamReader, skip header)
 - [✅] Implement Excel reading logic (EPPlus, skip row 1)
 - [✅] Register FileUploadService in Program.cs (AddScoped)
-
-#### Day 2 Tasks (Processing & Validation):
 - [✅] Create UploadResult.cs and RowResult.cs models
 - [✅] Implement row validation (name, email format, salary, date)
 - [✅] Check for duplicate emails within the uploaded file
@@ -310,35 +282,19 @@
 - [✅] Test with valid rows
 - [✅] Test with invalid rows (missing name, bad email, bad salary, bad date)
 - [✅] Test duplicate detection (in-file and in-database)
+- [✅] Added loading overlay + button disable on submit (Module 7)
 
 ### Files Created:
-- `Models/UploadResult.cs` — RowResult and UploadResult classes
-- `Services/FileUploadService.cs` — CSV/Excel reading + row validation + bulk insert
-- `Views/Employee/Upload.cshtml` — file upload form with format instructions
-- `Views/Employee/UploadResult.cshtml` — summary cards + row detail table
-- `sample_employees.csv` — test file with 7 valid and 5 intentionally broken rows
-
-### Files Modified:
-- `Controllers/EmployeeController.cs` — added Upload GET/POST actions + using directive
-- `Views/Employee/Index.cshtml` — added Bulk Upload button to page header
-- `Program.cs` — added EPPlus LicenseContext + FileUploadService registration + using directive
-
-### Key Concepts Learned:
-- **`IFormFile`:** ASP.NET's interface for an uploaded file — gives access to filename, extension, length, and a stream to read from
-- **`StreamReader`:** Reads a file stream line by line — used for CSV parsing
-- **`EPPlus`:** Third-party library for reading/writing Excel files; requires `LicenseContext = NonCommercial` for free use
-- **`AddScoped<T>()`:** Registers a service so ASP.NET injects it automatically; scoped means one instance per HTTP request
-- **`[FromServices]`:** Injects a service directly into an action method parameter instead of through the constructor
-- **In-memory caching for uploads:** Loading all existing emails into a `List<string>` and all departments into a `List<Department>` before the loop avoids N+1 database queries per row
-- **`HashSet<string>`:** Used to track emails seen within the current file — O(1) lookup, faster than checking a List
-- **`i + 2` row numbering:** The rows list starts after the header is skipped, so `i=0` maps to file row 2; adding 2 gives the user the correct row number matching their spreadsheet
-- **`enctype="multipart/form-data"`:** Required on any form that uploads files — without it the file data is never sent to the server
-- **`Path.GetExtension()`:** Extracts the file extension (e.g. `.csv`) so we can route to the correct reader
+- `Models/UploadResult.cs`
+- `Services/FileUploadService.cs`
+- `Views/Employee/Upload.cshtml`
+- `Views/Employee/UploadResult.cshtml`
+- `sample_employees.csv`
 
 ### Issues Encountered & Resolved:
-1. **`FileUploadService` not found in EmployeeController:** Missing `using EmployeeManagementSystem.Services;` directive. Added to both EmployeeController.cs and Program.cs. ✅
+1. **`FileUploadService` not found:** Missing `using EmployeeManagementSystem.Services;` — added to both files. ✅
 
-### Approval Status: ✅ Module 5 COMPLETE — Ready for Module 7!
+### Approval Status: ✅ Module 5 COMPLETE
 
 ---
 
@@ -362,30 +318,46 @@
 - [✅] Test statistics accuracy
 
 ### Files Created/Modified:
-- `Models/DashboardViewModel.cs` — new ViewModel carrying the three stats
-- `Controllers/HomeController.cs` — replaced with DB-connected version
-- `Views/Home/Index.cshtml` — replaced with stat cards + quick links
-
-### Key Concepts Learned:
-- **ViewModel:** A class created specifically to carry data to a view — not a database model, just a container shaped for what the view needs
-- **CountAsync():** Translates to `SELECT COUNT(*) FROM ...` — can take a predicate to count filtered rows
-- **AverageAsync():** Translates to `SELECT AVG(...) FROM ...` — throws if the table is empty, so always guard with `AnyAsync()` first
-- **AnyAsync():** Translates to `SELECT CASE WHEN EXISTS(...) THEN 1 ELSE 0 END` — fast existence check
-- **DefaultIfEmpty(constant) limitation:** EF Core cannot translate `DefaultIfEmpty(0)` with a C# constant into SQL — use `AnyAsync()` guard instead
+- `Models/DashboardViewModel.cs`
+- `Controllers/HomeController.cs`
+- `Views/Home/Index.cshtml`
 
 ### Issues Encountered & Resolved:
-1. **`DefaultIfEmpty(0)` could not be translated:** EF Core can't convert a C# constant fallback into SQL. Fixed by using `AnyAsync()` to check for rows first, then calling `AverageAsync()` only if rows exist — both are individually SQL-translatable. ✅
+1. **`DefaultIfEmpty(0)` EF translation error:** Replaced with `AnyAsync()` guard + `AverageAsync()`. ✅
 
-### Approval Status: ✅ Module 6 COMPLETE — Ready for Module 5 (Bulk Upload)!
+### Approval Status: ✅ Module 6 COMPLETE
 
 ---
 
 ## MODULE 7: VALIDATION & ERROR HANDLING
 
-**Status:** 🔴 Not Started
-**Progress:** 0/11 tasks (0%)
+**Status:** 🟢 Completed
+**Progress:** 4/4 tasks (100%)
+**Started:** February 18, 2026
+**Completed:** February 18, 2026
 
-### Approval Status: ⸸ Waiting for Previous Modules
+### Tasks:
+- [✅] Add `ILogger` + `try-catch` to DepartmentController (Create POST, Edit POST, Delete)
+- [✅] Add `ILogger` + `try-catch` to EmployeeController (Create POST, Edit POST, Delete, Upload POST)
+- [✅] Replace default Error page with custom user-friendly error page
+- [✅] Add loading overlay + button disable on bulk upload form
+
+### Files Modified:
+- `Controllers/DepartmentController.cs` — ILogger injected via constructor, try-catch on all POST actions
+- `Controllers/EmployeeController.cs` — ILogger injected via constructor, try-catch on all POST actions
+- `Views/Shared/Error.cshtml` — replaced default template with clean error page
+- `Views/Employee/Upload.cshtml` — loading overlay added, submit button disabled on click
+
+### Key Concepts Learned:
+- **`ILogger<T>`:** ASP.NET's built-in logging interface — injected via constructor, writes errors to terminal output with `_logger.LogError(ex, "message", args)`
+- **`try-catch` in controllers:** Wraps `SaveChangesAsync()` so unexpected DB errors show a friendly message instead of a raw crash page. Validation logic stays outside the try block.
+- **Disable button on submit:** Prevents double-submission on slow operations — set `button.disabled = true` inside the form's submit event handler
+- **Loading overlay pattern:** Full-screen fixed `div` hidden by default (`d-none`), shown on form submit by swapping CSS classes (`d-none` → `d-flex`)
+
+### Issues Encountered & Resolved:
+1. **Upload form allowed double-submission:** Disabled submit button inside form submit handler. ✅
+
+### Approval Status: ✅ Module 7 COMPLETE
 
 ---
 
@@ -394,7 +366,7 @@
 **Status:** 🔴 Not Started
 **Progress:** 0/21 tasks (0%)
 
-### Approval Status: ⸸ Waiting for All Modules
+### Approval Status: ⸸ Waiting for Module 7
 
 ---
 
@@ -402,27 +374,25 @@
 
 ### Time Tracking:
 - **Estimated Total Time:** 30-37 hours
-- **Actual Time Spent:** ~5 hours
-- **Time Remaining:** ~25-32 hours
+- **Actual Time Spent:** ~6 hours
+- **Time Remaining:** ~1-2 hours (Module 8 only)
 
 ### Task Completion:
-- **Total Tasks:** 129
-- **Completed:** 98 (M0: 13 + M1: 10 + M2: 15 + M3: 18 + M4: 9 + M5: 23 + M6: 10)
-- **In Progress:** 0
-- **Remaining:** 31
+- **Total Tasks:** 133
+- **Completed:** 102
+- **Remaining:** ~21 (Module 8)
 
 ### Module Completion:
-- **Modules Completed:** 7 (Module 0, 1, 2, 3, 4, 5, 6)
-- **Modules In Progress:** 0
-- **Modules Remaining:** 2
+- **Modules Completed:** 8 (Modules 0–7)
+- **Modules Remaining:** 1 (Module 8)
 
 ---
 
 ## CURRENT FOCUS
 
-**What we're working on now:** Module 7 — Validation & Error Handling
+**What we're working on now:** Module 8 — Final Polish
 
-**Next immediate step:** Review all forms, add try-catch blocks to controllers, create custom error page
+**Next immediate step:** Code comments, UI consistency, confirmation dialogs, responsive check
 
 **Blockers:** None
 
@@ -441,7 +411,9 @@
 | 7 | Nullable `DateTime?` for JoiningDate | Fixes browser date picker defaulting to year 0001 | Feb 18 |
 | 8 | `[Range]` instead of `[Required]` on `int DepartmentId` | `[Required]` is ineffective on value types | Feb 18 |
 | 9 | `@Html.AntiForgeryToken()` on Employee Index page | Required so AJAX delete can send the token | Feb 18 |
-| 10 | jQuery `.on('submit')` with `e.preventDefault()` first | Prevents page refresh even if later JS throws an error | Feb 18 |
+| 10 | jQuery `.on('submit')` with `e.preventDefault()` first | Prevents page refresh even if later JS throws | Feb 18 |
+| 11 | `ILogger<T>` + try-catch only around `SaveChangesAsync()` | Validation stays outside so errors surface correctly | Feb 18 |
+| 12 | Disable upload button on submit | Prevents double-submission during file processing | Feb 18 |
 
 ---
 
@@ -453,15 +425,18 @@
 | 2 | M0 | DBeaver "GO" command error | GO is SSMS-only; removed from DBeaver scripts | Feb 17 |
 | 3 | M0 | .csproj named incorrectly | Recreated project with correct name | Feb 17 |
 | 4 | M0 | RootNamespace set to `_` | Recreated project fresh | Feb 17 |
-| 5 | M2 | Departments not showing in list | Checkbox unchecked by default; fixed by passing `new Department()` from GET Create action | Feb 18 |
-| 6 | M2 | Soft delete kept records visible | Changed to hard delete (`Remove()`) per user preference | Feb 18 |
-| 7 | M2 | Department delete crashed with FK error | Added employee count check; shows `TempData["ErrorMessage"]` if blocked | Feb 18 |
-| 8 | M3 | Page refreshing on form submit | Switched from inline `onsubmit` to jQuery `.on('submit')` with `e.preventDefault()` first | Feb 18 |
-| 9 | M3 | `$.validator is undefined` | Added `@await Html.PartialAsync("_ValidationScriptsPartial")` to Employee Index Scripts section | Feb 18 |
-| 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` (returns value; `RenderPartialAsync` returns void) | Feb 18 |
-| 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable (`DateTime?`) + added migration | Feb 18 |
+| 5 | M2 | Departments not showing in list | Pass `new Department()` from GET Create action | Feb 18 |
+| 6 | M2 | Soft delete kept records visible | Changed to hard delete per user preference | Feb 18 |
+| 7 | M2 | Department delete crashed with FK error | Added employee count check; shows TempData error | Feb 18 |
+| 8 | M3 | Page refreshing on form submit | Switched to jQuery `.on('submit')` with `e.preventDefault()` first | Feb 18 |
+| 9 | M3 | `$.validator is undefined` | Added `_ValidationScriptsPartial` to Employee Index Scripts | Feb 18 |
+| 10 | M3 | Build error: `RenderPartialAsync` in section | Changed to `Html.PartialAsync` | Feb 18 |
+| 11 | M3 | Date picker stuck on year 0001 | Made `JoiningDate` nullable + added migration | Feb 18 |
 | 12 | M3 | `[Required]` on `DepartmentId` always passes | Replaced with `[Range(1, int.MaxValue)]` | Feb 18 |
-| 16 | M5 | `FileUploadService` not found in EmployeeController and Program.cs | Missing `using EmployeeManagementSystem.Services;` in both files | Feb 18 |
+| 13 | M3 | Employee delete returns 400 | Added `@Html.AntiForgeryToken()` to Index.cshtml | Feb 18 |
+| 14 | M5 | `FileUploadService` not found | Added `using EmployeeManagementSystem.Services;` | Feb 18 |
+| 15 | M6 | `DefaultIfEmpty(0)` EF translation error | Replaced with `AnyAsync()` guard + `AverageAsync()` | Feb 18 |
+| 16 | M7 | Upload form allowed double-submission | Disabled submit button inside form submit handler | Feb 18 |
 
 ---
 
@@ -469,111 +444,54 @@
 
 | # | Question | Answer | Module |
 |---|----------|--------|--------|
-| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading — related data loaded only when accessed | M1 |
-| 2 | What does `get; set;` mean? | C# shorthand property — compiler auto-generates a backing field | M1 |
+| 1 | What is `virtual` on a navigation property? | Enables EF lazy loading | M1 |
+| 2 | What does `get; set;` mean? | C# auto-property — compiler generates backing field | M1 |
 | 3 | What is `modelBuilder`? | EF's configuration tool for indexes, relationships, constraints | M1 |
-| 4 | What is `base`? | Calls the parent class constructor/method before your own code runs | M1 |
-| 5 | What is EF? | Entity Framework — interact with DB using C# instead of raw SQL | M1 |
-| 6 | `readonly` but assigned in constructor? | readonly allows assignment only once during construction — locked after that | M2 |
-| 7 | How does `@section Scripts` handle validation? | data annotations → Tag Helpers render data-val-* HTML attributes → jQuery validation reads them | M2 |
-| 8 | What is ModelState? | Dictionary of form fields and validation errors; IsValid = true only when zero errors exist | M2 |
-| 9 | What is `RedirectToAction(nameof(Index))`? | Sends HTTP 302 to browser to navigate to Index; nameof() is a compile-safe string | M2 |
-| 10 | How does asp-action + asp-route-id build the URL? | Razor Tag Helpers run server-side, read route config, generate correct href automatically | M2 |
-| 11 | What is `@Html.AntiForgeryToken()`? | Renders a hidden input with a unique encrypted session token to prevent CSRF attacks | M2 |
-| 12 | What is a CSRF attack? | Malicious site tricks browser into submitting a request with your session cookie | M2 |
-| 13 | How is "Active" checkbox pre-checked? | Model has `= true` default; passing `new Department()` from GET action makes Razor render it checked | M2 |
-| 14 | What does `@` mean in Razor? | Switches from HTML to C# mode; expression is evaluated and output written into HTML | M2 |
-| 15 | What is a Partial View? | A fragment of HTML (no layout) returned by a controller and injected into the page via AJAX | M3 |
-| 16 | Why must `e.preventDefault()` be first? | Any JS error after the event starts causes the browser to fall back to default submit (page reload) | M3 |
-| 17 | Why does `[Required]` not work on `int`? | `int` is a value type — never null — so `[Required]` always passes; use `[Range(1, int.MaxValue)]` instead | M3 |
-| 18 | Why did the date picker get stuck on year 0001? | `DateTime` defaults to `DateTime.MinValue` (0001-01-01); fixed by using `DateTime?` (nullable) | M3 |
-| 19 | Why add `_ValidationScriptsPartial` to a list page? | Forms are loaded dynamically via AJAX — jQuery validation libraries must be present on the host page | M3 |
-| 20 | What does `$.validator.unobtrusive.parse()` do? | Re-wires jQuery validation for forms injected into the DOM after page load | M3 |
-| 21 | Why did Employee delete return 400? | Antiforgery token missing — no form on the page; fixed by adding `@Html.AntiForgeryToken()` | M3 |
-| 22 | What is a FK constraint error? | Database blocks deleting a row that other rows still reference; check dependents first in C# | M3 |
-| 23 | What is `.Include()` and why is it needed? | EF eager loading — loads related entities (e.g. Department) in the same query; without it, they're null | M3 |
-| 24 | What is `return Json(...)` vs `return PartialView()`? | Json() sends data to AJAX callers; PartialView() sends HTML; AJAX handler checks `res.success` to tell them apart | M3 |
-| 26 | What is `method="get"` on a search form? | Submits filters as URL query params — bookmarkable and back-button friendly; never use GET to change data | M4 |
-| 28 | What is a ViewModel? | A class shaped for the view's needs — not a DB model, just a data container | M6 |
-| 29 | Why guard `AverageAsync()` with `AnyAsync()`? | `AverageAsync()` throws on an empty table; `AnyAsync()` is a fast SQL-translatable existence check | M6 |
-| 31 | What is `IFormFile`? | ASP.NET interface for uploaded files — gives filename, extension, length, and a stream to read from | M5 |
-| 32 | Why `enctype="multipart/form-data"` on upload forms? | Without it the browser sends only text fields — the file binary data is never transmitted to the server | M5 |
-| 33 | Why use in-memory cache during bulk upload? | Loading all emails/departments once before the loop avoids a DB query per row (N+1 problem) | M5 |
-| 34 | Why `i + 2` instead of `i + 1` for row numbers? | The rows list starts after the header is skipped, so `i=0` is file row 2; `+2` matches what the user sees in their spreadsheet | M5 |
-| 35 | What is `HashSet<string>`? | A collection with O(1) lookup — faster than List for checking if a value already exists; used to detect duplicate emails within the upload file | M5 |
-
----
-
-## CODE REVIEW CHECKLIST
-
-Before marking any module as complete:
-
-### Functionality:
-- [ ] Feature works as specified
-- [ ] No console errors
-- [ ] No unhandled exceptions
-- [ ] Validation works correctly
-- [ ] Edge cases handled
-
-### Code Quality:
-- [ ] All code is commented
-- [ ] Variable names are meaningful
-- [ ] No unused code
-- [ ] Follows C# conventions
-- [ ] No hardcoded values
-
-### User Experience:
-- [ ] UI is intuitive
-- [ ] Error messages are clear
-- [ ] Success messages appear
-- [ ] Loading states shown
-- [ ] Pages load quickly
-
-### Documentation:
-- [ ] Progress Tracker updated
-- [ ] Code comments explain logic
-- [ ] Complex parts documented
-- [ ] Assumptions noted
-
----
-
-## ACHIEVEMENT MILESTONES
-
-🏆 Milestones:
-
-- [✅] Project setup complete
-- [✅] First database tables created
-- [✅] First CRUD operation working (Departments)
-- [✅] First popup modal working (Employee Add)
-- [✅] AJAX call working (employee count + form submit)
-- [ ] File upload working
-- [ ] All features complete
-- [ ] Project deployed/submitted
+| 4 | What is `base`? | Calls the parent class constructor before yours | M1 |
+| 5 | What is EF? | Interact with DB using C# instead of raw SQL | M1 |
+| 6 | `readonly` but assigned in constructor? | Can only be assigned once, during construction | M2 |
+| 7 | How does `@section Scripts` handle validation? | data annotations → data-val-* HTML attributes → jQuery validation reads them | M2 |
+| 8 | What is ModelState? | Dictionary of form fields and validation errors | M2 |
+| 9 | What is `RedirectToAction(nameof(Index))`? | HTTP 302 redirect; nameof() is compile-safe | M2 |
+| 10 | How does asp-action + asp-route-id build the URL? | Razor Tag Helpers run server-side, generate correct href | M2 |
+| 11 | What is `@Html.AntiForgeryToken()`? | Hidden input with encrypted token to prevent CSRF | M2 |
+| 12 | What is a CSRF attack? | Malicious site tricks browser into submitting with your session cookie | M2 |
+| 13 | How is "Active" checkbox pre-checked? | Model has `= true` default; passing `new Department()` from GET makes Razor render it checked | M2 |
+| 14 | What does `@` mean in Razor? | Switches from HTML to C# mode | M2 |
+| 15 | What is a Partial View? | Fragment of HTML returned by controller, injected via AJAX | M3 |
+| 16 | Why must `e.preventDefault()` be first? | Any JS error after event starts causes browser to fall back to default submit | M3 |
+| 17 | Why does `[Required]` not work on `int`? | `int` is a value type — never null — use `[Range(1, int.MaxValue)]` instead | M3 |
+| 18 | Why did the date picker get stuck on year 0001? | `DateTime` defaults to `DateTime.MinValue` — fixed by using `DateTime?` | M3 |
+| 19 | Why add `_ValidationScriptsPartial` to a list page? | Forms are loaded dynamically via AJAX — jQuery validation must be present on the host page | M3 |
+| 20 | What does `$.validator.unobtrusive.parse()` do? | Re-wires validation for forms injected after page load | M3 |
+| 21 | Why did Employee delete return 400? | Antiforgery token missing — added `@Html.AntiForgeryToken()` to Index page | M3 |
+| 22 | What is a FK constraint error? | Database blocks deleting a row that other rows still reference | M3 |
+| 23 | What is `.Include()` and why is it needed? | EF eager loading — loads related entities in same query | M3 |
+| 24 | What is `return Json(...)` vs `return PartialView()`? | Json() sends data to AJAX callers; PartialView() sends HTML | M3 |
+| 25 | What is `method="get"` on a search form? | Submits filters as URL query params — bookmarkable, back-button friendly | M4 |
+| 26 | What is `AsQueryable()` + deferred execution? | Build query in memory; DB hit only on `ToListAsync()` | M4 |
+| 27 | What is a ViewModel? | Plain C# class shaped for the view's needs — not a DB model | M6 |
+| 28 | Why guard `AverageAsync()` with `AnyAsync()`? | `AverageAsync()` throws on empty table | M6 |
+| 29 | What is `IFormFile`? | ASP.NET interface for uploaded files | M5 |
+| 30 | Why `enctype="multipart/form-data"`? | Without it the browser doesn't transmit file binary data | M5 |
+| 31 | Why use in-memory cache during bulk upload? | Avoids N+1 DB queries — load all emails/departments once before the loop | M5 |
+| 32 | Why `i + 2` for row numbers? | Header row already skipped — `i=0` maps to file row 2 | M5 |
+| 33 | What is `HashSet<string>`? | O(1) lookup — faster than List for duplicate email checks within the file | M5 |
+| 34 | What is `ILogger<T>`? | ASP.NET built-in logging — injected via constructor, logs to terminal with `LogError()` | M7 |
+| 35 | Where should try-catch go in a controller? | Around `SaveChangesAsync()` only — validation stays outside | M7 |
+| 36 | How to prevent double form submission? | Disable the submit button inside the form's submit event handler | M7 |
+| 37 | How does the loading overlay pattern work? | Fixed full-screen div hidden with `d-none`, shown on submit by swapping to `d-flex` | M7 |
 
 ---
 
 ## WEEKLY REVIEW
 
-### Week 1: (Feb 17 - ongoing)
+### Week 1: (Feb 17 - Feb 18, 2026)
 **Planned:** Modules 0, 1, 2
-**Completed:** Module 0 ✅, Module 1 ✅, Module 2 ✅, Module 3 ✅ (bonus!)
-**Challenges:** 7 bugs in Module 3 — all resolved; most stemmed from AJAX + antiforgery + nullable DateTime interactions
-**Learnings:** EF Core, MVC flow, Razor tag helpers, async/await, partial views, AJAX modal pattern, jQuery validation, FK constraints, nullable types
-**Next Week Goals:** Complete Modules 4, 6 (Dashboard), begin Module 5
-
-### Week 2: (Start Date - TBD)
-**Planned:** TBD
-**Completed:** TBD
-**Challenges:** TBD
-**Learnings:** TBD
-**Next Week Goals:** TBD
-
-### Week 3: (Start Date - TBD)
-**Planned:** TBD
-**Completed:** TBD
-**Challenges:** TBD
-**Learnings:** TBD
-**Next Week Goals:** TBD
+**Completed:** Modules 0, 1, 2, 3, 4, 5, 6, 7 ✅
+**Challenges:** 7 bugs in Module 3; empty NullableJoiningDate migration; EPPlus undocumented setup step
+**Learnings:** EF Core, MVC flow, Razor tag helpers, async/await, partial views, AJAX modal pattern, jQuery validation, FK constraints, nullable types, ILogger, try-catch patterns
+**Next Goals:** Complete Module 8 (Final Polish)
 
 ---
 
@@ -584,29 +502,23 @@ Before marking any module as complete:
 **What We Did:** Full environment setup, all project documentation created. Project running on http://localhost:5099
 
 ### February 18, 2026
-**Time Spent:** ~5 hours
+**Time Spent:** ~6 hours
 **What We Did:**
 - Module 1: Models, DbContext, EF configuration, migrations
 - Module 2: Full Department CRUD with validation, badges, hard delete + FK guard
-- Module 3: Full Employee CRUD via AJAX popup modals, department count AJAX, validation, delete with antiforgery token
-- Fixed 7 bugs across Module 3 (page refresh, validator undefined, date picker, Required on int, antiforgery, FK constraint, RenderPartialAsync)
-- Added NullableJoiningDate migration
+- Module 3: Full Employee CRUD via AJAX popup modals, validation, delete with antiforgery token
+- Module 4: Search & filter with AsQueryable, deferred execution, ViewBag persistence
+- Module 5: Bulk upload (CSV + Excel), row validation, duplicate detection, auto-create department
+- Module 6: Dashboard with live stats (CountAsync, AverageAsync, AnyAsync guard)
+- Module 7: ILogger + try-catch on all controllers, custom error page, upload loading overlay
+- Fixed 16 bugs across all modules
+- Generated DatabaseScript.sql from EF migrations
+- Created README.md and SETUP.md
 
-**What's Next:** Module 4 — Search & Filter on Employee list
-
----
-
-## HOW TO USE THIS TRACKER
-
-1. **Update after each work session**
-2. **Check off completed tasks**
-3. **Update percentages**
-4. **Log any issues or decisions**
-5. **Review weekly progress**
-6. **Celebrate milestones!** 🎉
+**What's Next:** Module 8 — Final Polish
 
 ---
 
 **Last Updated:** February 18, 2026
 **Updated By:** Development Team
-**Next Review Date:** End of Module 4
+**Next Review Date:** End of Module 8

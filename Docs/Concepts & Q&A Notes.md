@@ -139,8 +139,6 @@ $('#myForm').on('submit', function(e) {
 ```
 If `e.preventDefault()` is not the first thing that runs, any JavaScript error thrown after the submit event starts will cause the browser to fall back to its default behavior — submitting the form normally and reloading the page. By calling `preventDefault()` first, you guarantee the page never reloads regardless of what happens in the rest of the handler.
 
-This is why `onsubmit="myFunction(); return false;"` is fragile — if `myFunction()` throws an error, `return false` never executes.
-
 ---
 
 ### Q3: Why does `[Required]` not work on `int DepartmentId`?
@@ -148,46 +146,15 @@ This is why `onsubmit="myFunction(); return false;"` is fragile — if `myFuncti
 
 The correct approach is `[Range(1, int.MaxValue)]` which checks that the value is at least 1 (a valid database ID), rejecting 0 (nothing selected).
 
-```csharp
-// Wrong — always passes even when nothing is selected:
-[Required]
-public int DepartmentId { get; set; }
-
-// Correct — fails when value is 0 (no selection):
-[Range(1, int.MaxValue, ErrorMessage = "Please select a department")]
-public int DepartmentId { get; set; }
-```
-
 ---
 
 ### Q4: Why did the date picker get stuck on January / year 0001?
-`DateTime` (non-nullable) in C# defaults to `DateTime.MinValue` which is `0001-01-01`. When this gets bound to `type="date"` in the browser, the picker opens at year 0001, January — and clicking dates in that month appears to do nothing because the selection is invisible at that ancient date.
-
-**Fix:** Make the property nullable (`DateTime?`). Now it defaults to `null` instead of `0001-01-01`, the browser renders the input empty, and the user can freely pick any date.
-
-```csharp
-// Before — defaults to 0001-01-01, breaks the date picker:
-public DateTime JoiningDate { get; set; }
-
-// After — defaults to null, date picker starts empty:
-public DateTime? JoiningDate { get; set; }
-```
-
-Changing from `DateTime` to `DateTime?` requires a new EF migration because the database column's nullability changes.
+`DateTime` (non-nullable) in C# defaults to `DateTime.MinValue` which is `0001-01-01`. The fix is to make the property nullable (`DateTime?`). Now it defaults to `null`, the browser renders the input empty, and the user can freely pick any date.
 
 ---
 
 ### Q5: Why did `_ValidationScriptsPartial` need to be added to the Employee Index page?
-`_ValidationScriptsPartial` loads `jquery.validate.js` and `jquery.validate.unobtrusive.js`. These are normally only included on pages that have forms. The Employee Index page is a list page — it has no form, so the scripts were never loaded.
-
-But because we dynamically load partial view forms into the page via AJAX, the validation libraries need to be present. Without them, `$.validator` is `undefined` and calling `$.validator.unobtrusive.parse()` throws an error.
-
-The fix is to include the partial in the `@section Scripts` block:
-```html
-@await Html.PartialAsync("_ValidationScriptsPartial")
-```
-
-Note: `Html.PartialAsync` (not `Html.RenderPartialAsync`) must be used inside `@section` blocks. `RenderPartialAsync` writes directly to output and returns `void` — it cannot be used with `@await` inside a section.
+The Employee Index page is a list page — it has no form, so the validation scripts were never loaded. But because we dynamically load partial view forms into the page via AJAX, the validation libraries need to be present. Without them, `$.validator` is `undefined`.
 
 ---
 
@@ -197,242 +164,207 @@ jQuery validation scans and sets up rules when the page first loads. When you in
 ---
 
 ### Q7: Why did Employee delete return a 400 error?
-`[ValidateAntiForgeryToken]` on the Delete action requires a valid token in the POST body. The JavaScript `getToken()` function looked for `input[name="__RequestVerificationToken"]` on the page — but the Employee Index page had no form, so no token input existed. The POST was sent with an empty body (Content-Length: 0), and the server rejected it with 400.
-
-**Fix:** Add `@Html.AntiForgeryToken()` directly to the Index page (outside any form). This renders a standalone hidden token input that `getToken()` can find.
+`[ValidateAntiForgeryToken]` on the Delete action requires a valid token in the POST body. The Employee Index page had no form, so no token input existed. The fix: add `@Html.AntiForgeryToken()` directly to the Index page (outside any form).
 
 ---
 
 ### Q8: What is a Foreign Key constraint error and why does it happen on delete?
-A foreign key constraint is a database rule that says: "you cannot have a row in table B (Employees) that references a row in table A (Departments) that doesn't exist." SQL Server enforces this in both directions — you also can't delete a row in A if rows in B still reference it.
-
-When you tried to delete a Department that had Employees, SQL Server blocked it with:
-```
-The DELETE statement conflicted with the REFERENCE constraint "FK_Employees_Departments_DepartmentId"
-```
-
-The correct approach is to check for dependent records in your C# code before attempting the delete, and show the user a friendly message:
-```csharp
-bool hasEmployees = await _context.Employees.AnyAsync(e => e.DepartmentId == id);
-if (hasEmployees)
-{
-    TempData["ErrorMessage"] = "Cannot delete — department has employees assigned.";
-    return RedirectToAction(nameof(Index));
-}
-```
+A foreign key constraint is a database rule that says: "you cannot delete a row in table A if rows in table B still reference it." The correct approach is to check for dependent records in C# before attempting the delete, and show the user a friendly message.
 
 ---
 
 ### Q9: What is `.Include()` and why do we need it for the Employee list?
-`.Include()` is EF's **eager loading** instruction — it tells EF to load a related entity in the same database query.
-
-Without it:
-```csharp
-// Only loads Employee rows — Department is null
-var employees = await _context.Employees.ToListAsync();
-// emp.Department.DepartmentName → NullReferenceException
-```
-
-With it:
-```csharp
-// Loads Employee rows + their Department in one query (a JOIN)
-var employees = await _context.Employees
-    .Include(e => e.Department)
-    .ToListAsync();
-// emp.Department.DepartmentName → "IT" ✅
-```
+`.Include()` is EF's **eager loading** instruction — it tells EF to load a related entity in the same database query (a JOIN). Without it, `emp.Department` is null and accessing `emp.Department.DepartmentName` throws a NullReferenceException.
 
 ---
 
 ### Q10: What is `return Json(...)` and when do we use it vs `return View()`?
-`return Json(data)` sends a JSON response instead of HTML. We use it when the request comes from JavaScript (AJAX) rather than the browser directly.
+`return Json(data)` sends a JSON response instead of HTML. We use it when the request comes from JavaScript (AJAX). The AJAX handler distinguishes between them by checking `res.success`:
 
-In the Employee controller:
-- **Success:** return `Json(new { success = true, message = "..." })` — JS reads this and closes the modal
-- **Validation failure:** return `PartialView(...)` — JS detects it's HTML and injects it back into the modal to show errors
-
-The AJAX handler distinguishes between them by checking `res.success`:
 ```javascript
 if (res && res.success === true) {
-    // JSON success response
+    // JSON success response — close modal
 } else {
-    // HTML partial view response (validation errors)
+    // HTML partial view response — re-inject into modal to show errors
     $('#modalContent').html(res);
 }
 ```
 
 ---
 
-## MODULE 3 — ADDITIONAL Q&A
-
 ### Q11: What is the difference between `View()` and `PartialView()`?
-A normal `View()` returns a full HTML page — layout, navbar, `<html>`, `<head>`, everything. A `PartialView()` returns just a fragment of HTML — only what's inside the `.cshtml` file, nothing else.
-
-We use partial views for modal forms because we only want the form HTML so jQuery can inject it into the modal container. If we used `View()`, the response would include the full layout and injecting that into a modal would break the page.
-
-```
-Controller: return PartialView("_CreateEmployee", model)
-    → sends back only the form HTML
-        → jQuery: $('#modalContent').html(response)
-            → modal opens showing just the form
-```
+A normal `View()` returns a full HTML page — layout, navbar, `<html>`, `<head>`, everything. A `PartialView()` returns just a fragment of HTML — only what's inside the `.cshtml` file.
 
 ---
 
 ### Q12: What is `$.validator.unobtrusive` and what does `.parse()` do?
-`$.validator.unobtrusive` is a jQuery plugin (loaded by `_ValidationScriptsPartial`) that reads `data-val-*` attributes on your inputs and wires up validation rules automatically. When the page first loads it scans all forms. But when you inject a new form via AJAX after the page has loaded, it doesn't know the new form exists — you must tell it to re-scan:
-
-```javascript
-$.validator.unobtrusive.parse('#createForm');
-// "New form was added to the DOM — please set up validation on it"
-```
-
-Without this call, the `data-val-*` attributes are there in the HTML but nothing is listening to them — the form submits without any client-side checks.
+`$.validator.unobtrusive` is a jQuery plugin that reads `data-val-*` attributes and wires up validation rules. When you inject a new form via AJAX after page load, call `$.validator.unobtrusive.parse('#formId')` to tell it to re-scan the new form.
 
 ---
 
 ### Q13: Is it okay to use POST for both Create and Edit?
-Yes — this is standard MVC practice. HTML forms only support two methods: `GET` and `POST`. There is no `<form method="PUT">`. REST convention says use PUT for updates, but that applies to APIs, not traditional web forms.
-
-In MVC, the action URL distinguishes the operation:
-```
-POST /Employee/Create  → creates a new employee
-POST /Employee/Edit    → updates an existing employee
-```
-The hidden `<input asp-for="EmployeeId" />` in the edit form carries the ID so the controller knows which record to update. Same `bindFormSubmit` function works for both — only the URL differs.
+Yes — HTML forms only support GET and POST. REST methods like PUT only apply to APIs. In MVC, the action URL distinguishes the operation. The hidden `<input asp-for="EmployeeId" />` in the edit form carries the ID so the controller knows which record to update.
 
 ---
 
 ### Q14: What is `form.serialize()`?
-It collects all input fields in a form and converts them into a URL-encoded string ready to send in a POST body:
-
-```javascript
-// Form has: Name="Ali", Email="ali@x.com", Salary=5000
-form.serialize()
-// → "Name=Ali&Email=ali%40x.com&Salary=5000&__RequestVerificationToken=xyz..."
-```
-
-This is the exact same format a browser uses when submitting a form normally. The antiforgery token is included automatically because it's a hidden input inside the form. AJAX uses `serialize()` to send the same data without reloading the page.
+It collects all input fields in a form and converts them into a URL-encoded string ready to send in a POST body. The antiforgery token is included automatically because it's a hidden input inside the form.
 
 ---
 
 ### Q15: What is in `res` and why do we inject it back into the modal?
-`res` is whatever the server sends back. The server sends two different things depending on what happened:
-
-**Case A — success:** Server sends JSON:
-```json
-{ "success": true, "message": "Employee added successfully." }
-```
-`res.success` is `true` → close the modal, show the success alert.
-
-**Case B — validation failed:** Server sends HTML (the partial view re-rendered with error messages):
-```html
-<div class="modal-header">...</div>
-<form>
-  <span class="text-danger">Email is required.</span>
-</form>
-```
-
-We inject this HTML back into `#modalContent` because the user is still on the form — they need to see what went wrong without the modal closing. The form re-renders in place with red error messages, and the data they typed is still filled in:
-```javascript
-$('#modalContent').html(res);  // swap the modal content with the error version
-bindFormSubmit(formId, url);   // re-bind submit handler for the new content
-```
+`res` is whatever the server sends back — either JSON (on success) or HTML (on validation failure). We inject the HTML back into `#modalContent` so the user sees the validation errors without the modal closing. The form re-renders with red error messages and their data still filled in.
 
 ---
 
 ### Q16: What does `$(this).remove()` do inside a fadeOut callback?
-`$(this)` inside a `.fadeOut()` callback refers to the element that just finished fading — in this case the table row `<tr id="row-1">`. `.remove()` completely removes it from the DOM:
-
-```javascript
-$('#row-' + id).fadeOut(300, function () {
-    $(this).remove();  // runs after the 300ms fade completes
-});
-```
-
-We do it inside the callback (not immediately) so the visual fade plays first, then the row disappears. Calling `.remove()` directly would make the row vanish instantly with no animation.
+`$(this)` inside a `.fadeOut()` callback refers to the element that just finished fading. `.remove()` completely removes it from the DOM. We do it inside the callback so the visual fade plays first, then the row disappears.
 
 ---
 
 ### Q17: Why do we use POST for delete instead of DELETE?
-Two reasons:
-
-**1. HTML only supports GET and POST.** There is no `<form method="DELETE">`. This is a fundamental HTML limitation — REST methods like DELETE, PUT, and PATCH only exist in the API world, not in browser forms.
-
-**2. GET must never change data.** Browsers, search engines, and proxies cache and pre-fetch GET requests. If delete were a GET link (`/Employee/Delete/5`), a browser pre-fetching links could accidentally delete records. POST is the correct method for anything that changes or removes data.
-
-The antiforgery token on POST adds a second layer of protection — it ensures the request originated from your own page:
-```javascript
-// Correct — POST with token:
-$.post('/Employee/Delete/' + id, { __RequestVerificationToken: getToken() }, ...)
-
-// Dangerous — GET would be:
-window.location = '/Employee/Delete/' + id  // never do this
-```
+HTML only supports GET and POST. There is no `<form method="DELETE">`. Also, GET must never change data — browsers and proxies can cache and pre-fetch GET requests. POST is the correct method for anything that changes or removes data.
 
 ---
 
 ## MODULE 4 — SEARCH & FILTER
 
 ### Q1: What is `method="get"` on a form and when should you use it?
-HTML forms support two methods: `GET` and `POST`. When a form uses `method="get"`, the field values are appended to the URL as query parameters instead of being sent in the request body:
-
-```
-/Employee?searchName=Ali&departmentId=2
-```
-
-This is the correct choice for search and filter forms because:
-- The URL is **bookmarkable** — you can save or share a filtered view
-- The **browser back button** works correctly
-- **Refreshing** the page re-applies the same filters
-- It makes clear the request is **read-only** (not changing data)
-
-Never use `method="get"` for forms that create, update, or delete data — use `POST` for those.
+When a form uses `method="get"`, field values are appended to the URL as query parameters (`/Employee?searchName=Ali&departmentId=2`). Use it for search/filter forms because the URL is bookmarkable, the back button works, and refreshing re-applies the same filters. Never use GET for forms that create, update, or delete data.
 
 ---
 
 ### Q2: What is `AsQueryable()` and what is deferred execution?
-`AsQueryable()` returns an `IQueryable` — an object that represents a database query being built up in memory. The key feature is **deferred execution**: the query does not actually run against the database until you call `.ToListAsync()` (or `.ToList()`, `.FirstOrDefault()`, etc.).
-
-This lets you chain `.Where()` conditions dynamically:
-
-```csharp
-var query = _context.Employees.AsQueryable();  // no DB call yet
-
-if (!string.IsNullOrWhiteSpace(searchName))
-    query = query.Where(e => e.Name.Contains(searchName));  // no DB call yet
-
-if (departmentId > 0)
-    query = query.Where(e => e.DepartmentId == departmentId);  // no DB call yet
-
-var results = await query.ToListAsync();  // DB call happens HERE — one query with all conditions
-```
-
-Without `AsQueryable()`, you'd have to load all employees first and then filter in memory — which is slow and wasteful with large datasets.
+`AsQueryable()` returns an `IQueryable` — an object representing a database query being built up in memory. The query does not run against the database until you call `.ToListAsync()`. This lets you chain `.Where()` conditions dynamically before any SQL is executed.
 
 ---
 
 ### Q3: Why pass `ViewBag.SearchName` and `ViewBag.SelectedDepartmentId` back to the view?
-After a `GET` form submits, the page reloads with the filtered results. Without passing the filter values back, the search box and dropdown would go blank — the user would see their results but lose track of what they searched for.
-
-By storing the values in ViewBag and binding them to the inputs:
-```html
-<input type="text" name="searchName" value="@ViewBag.SearchName" ... />
-```
-The inputs stay filled after every search, making the experience feel continuous rather than resetting each time.
+After a GET form submits, the page reloads with filtered results. Without passing the filter values back, the search box and dropdown would go blank. By binding them to the inputs, the filters stay filled after every search.
 
 ---
 
 ### Q4: Why is the "Clear" button a link (`<a>`) and not a submit button?
-A submit button would submit the form — it would send `searchName=` and `departmentId=0` as empty parameters, and the controller would have to handle those explicitly.
-
-A plain link navigates directly to `/Employee` with no parameters at all — which is cleaner and simpler:
-```html
-<a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
-```
-The controller's parameters are nullable (`string? searchName`, `int? departmentId`) — when no parameters are in the URL, they arrive as `null`, and no filters are applied.
+A plain link navigates directly to `/Employee` with no parameters — which is cleaner than submitting empty values. The controller's nullable parameters (`string? searchName`, `int? departmentId`) arrive as `null` when absent, and no filters are applied.
 
 ---
+
+## MODULE 6 — DASHBOARD
+
+### Q1: What is a ViewModel?
+A class created specifically to carry data to a view — not a database model, just a container shaped for what the view needs.
+
+### Q2: Why guard `AverageAsync()` with `AnyAsync()`?
+`AverageAsync()` throws an exception if the table is empty. `AnyAsync()` is a fast SQL-translatable existence check. Always check first:
+```csharp
+AverageSalary = await _context.Employees.AnyAsync()
+    ? await _context.Employees.AverageAsync(e => e.Salary)
+    : 0;
+```
+
+### Q3: Why does `DefaultIfEmpty(0)` fail with EF?
+EF Core cannot translate a C# constant fallback (`DefaultIfEmpty(0)`) into SQL. Use the `AnyAsync()` guard pattern instead — both `AnyAsync` and `AverageAsync` are individually SQL-translatable.
+
+---
+
+## MODULE 5 — BULK UPLOAD
+
+### Q1: What is `IFormFile`?
+ASP.NET's interface for an uploaded file — gives access to filename, extension, length, and a stream to read from.
+
+### Q2: Why `enctype="multipart/form-data"` on upload forms?
+Without it the browser sends only text fields — the file binary data is never transmitted to the server.
+
+### Q3: Why use in-memory cache during bulk upload?
+Loading all existing emails into a `List<string>` and all departments into a `List<Department>` before the loop avoids N+1 database queries — one query per row would be extremely slow on large files.
+
+### Q4: Why `i + 2` instead of `i + 1` for row numbers?
+The rows list starts after the header is skipped, so `i=0` is file row 2. Adding 2 gives the user the correct row number matching their spreadsheet.
+
+### Q5: What is `HashSet<string>`?
+A collection with O(1) lookup — faster than List for checking if a value already exists. Used to detect duplicate emails within the upload file before hitting the database.
+
+---
+
+## MODULE 7 — VALIDATION & ERROR HANDLING
+
+### Q1: What is `ILogger<T>` and how do we use it?
+`ILogger<T>` is ASP.NET's built-in logging interface. It is injected automatically when added to the constructor — no extra registration needed in `Program.cs`.
+
+```csharp
+private readonly ILogger<DepartmentController> _logger;
+
+public DepartmentController(ApplicationDbContext context, ILogger<DepartmentController> logger)
+{
+    _context = context;
+    _logger = logger;
+}
+```
+
+To log an error with the exception and context:
+```csharp
+_logger.LogError(ex, "Error deleting department ID {Id}", id);
+```
+
+The `{Id}` is a structured logging placeholder — replaced with the actual value in the output. Logs appear in your terminal while `dotnet run` is active.
+
+---
+
+### Q2: Where exactly should try-catch go in a controller action?
+Only around the database operation (`SaveChangesAsync`), not the entire action. Validation and business logic stays outside so errors surface correctly through `ModelState`:
+
+```csharp
+// Validation stays OUTSIDE try-catch
+bool nameExists = await _context.Departments.AnyAsync(...);
+if (nameExists)
+    ModelState.AddModelError("DepartmentName", "Already exists.");
+
+if (ModelState.IsValid)
+{
+    try
+    {
+        // Only the DB write goes inside
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error saving department");
+        ModelState.AddModelError("", "An error occurred. Please try again.");
+    }
+}
+
+return View(department);
+```
+
+---
+
+### Q3: Why disable the submit button on upload?
+File processing takes a few seconds. Without disabling the button, a user clicking twice sends the file twice — inserting duplicates or running two concurrent uploads. The button only needs re-enabling if you want retry without a page reload; since the upload redirects to a results page, re-enabling isn't necessary.
+
+```javascript
+document.getElementById('uploadForm').addEventListener('submit', function () {
+    document.getElementById('uploadBtn').disabled = true;
+});
+```
+
+---
+
+### Q4: How does the loading overlay pattern work?
+The overlay is a full-screen fixed `div` sitting on top of everything (`z-index: 9999`), hidden by default using Bootstrap's `d-none` class. On form submit, JavaScript swaps the classes:
+
+```javascript
+const overlay = document.getElementById('uploadOverlay');
+overlay.classList.remove('d-none');
+overlay.classList.add('d-flex');  // d-flex is needed for centering to work
+```
+
+The semi-transparent black background (`rgba(0,0,0,0.55)`) blocks interaction with the page underneath while the spinner communicates that work is happening.
+
+---
+
+## GLOSSARY
 
 | Term | What it is |
 |------|-----------|
@@ -457,11 +389,20 @@ The controller's parameters are nullable (`string? searchName`, `int? department
 | `.Include()` | EF eager loading — loads related entities in the same query |
 | `DateTime?` | Nullable DateTime — defaults to null instead of 0001-01-01 |
 | `[Range(1, int.MaxValue)]` | Validates int fields that must have a selection (not 0) |
-| `method="get"` on a form | Submits values as URL query params — bookmarkable, back-button friendly; read-only operations only |
-| `AsQueryable()` | Returns IQueryable — lets you chain `.Where()` conditions before the DB query runs |
-| Deferred execution | Query builds in memory; DB is not hit until `.ToListAsync()` is called |
-| Optional params (`string?`) | Nullable controller params — if not in URL they arrive as null; no filter applied |
+| `method="get"` on a form | Submits values as URL query params — bookmarkable, read-only operations only |
+| `AsQueryable()` | Returns IQueryable — lets you chain `.Where()` before the DB query runs |
+| `Deferred execution` | Query builds in memory; DB is not hit until `.ToListAsync()` is called |
+| `Optional params (string?)` | Nullable controller params — if not in URL they arrive as null |
+| `ViewModel` | Plain C# class shaped for the view's needs — not a DB model |
+| `IFormFile` | ASP.NET interface for uploaded files |
+| `enctype="multipart/form-data"` | Required on file upload forms — sends file binary data |
+| `HashSet<string>` | O(1) lookup collection — faster than List for duplicate checks |
+| `N+1 query problem` | Loading data once before a loop instead of querying per row |
+| `ILogger<T>` | ASP.NET built-in logging — injected via constructor, logs to terminal with `LogError()` |
+| `try-catch` in controllers | Wraps `SaveChangesAsync()` so DB errors show a friendly message instead of a crash |
+| `Loading overlay` | Full-screen fixed div hidden by default, shown on submit to indicate processing |
+| `Disable on submit` | `button.disabled = true` in submit handler — prevents double-submission |
 
 ---
 
-**Last Updated:** February 18, 2026
+**Last Updated:** February 18, 2026 (Module 7 complete)
