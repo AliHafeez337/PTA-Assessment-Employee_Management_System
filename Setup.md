@@ -282,7 +282,7 @@ Jane Smith,jane@example.com,60000,HR,2024-02-01
 4. **Departments auto-created on bulk upload.** A department referenced in an upload file that doesn't exist is created automatically as active.
 5. **SQL Server only.** Configured exclusively for SQL Server as specified — no PostgreSQL or SQLite.
 6. **EPPlus NonCommercial license.** Used under the non-commercial license for educational/assessment purposes.
-7. **JoiningDate is optional.** Employees can be saved without a joining date.
+7. **JoiningDate is required.** Employees can be saved without a joining date.
 8. **macOS development environment.** SQL Server runs via Docker with Rosetta 2 emulation on Apple Silicon. Runs identically on Windows with a native SQL Server instance.
 
 ---

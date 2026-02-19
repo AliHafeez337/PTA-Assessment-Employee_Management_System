@@ -53,5 +53,5 @@ docker start sqlserver2019
 1. No authentication — out of scope per project specification
 2. Hard delete for employees; department delete blocked if employees are assigned
 3. Departments are auto-created during bulk upload if they don't exist
-4. JoiningDate is optional
+4. JoiningDate is required
 5. EPPlus used under NonCommercial license for assessment purposes
