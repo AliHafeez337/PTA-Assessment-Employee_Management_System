@@ -364,6 +364,71 @@ The semi-transparent black background (`rgba(0,0,0,0.55)`) blocks interaction wi
 
 ---
 
+---
+
+## MODULE 8 — FINAL POLISH
+
+### Q1: Why can't you embed a model value directly in a JavaScript `confirm()` string?
+
+```html
+<!-- DANGEROUS — breaks if DepartmentName contains an apostrophe -->
+onsubmit="return confirm('Delete @dept.DepartmentName?')"
+```
+
+If `DepartmentName` is `"Ali's Team"`, Razor renders:
+```html
+onsubmit="return confirm('Delete Ali's Team?')"
+```
+The unescaped apostrophe closes the JS string early, causing a syntax error. The fix is to store the value in a `data-*` HTML attribute and read it from JavaScript:
+
+```html
+<button data-name="@dept.DepartmentName">Delete</button>
+```
+```javascript
+function confirmDelete(form) {
+    var name = form.querySelector('[data-name]').getAttribute('data-name');
+    return confirm('Delete "' + name + '"?');
+}
+```
+HTML attribute values are safe for any string content — the browser handles the escaping automatically.
+
+---
+
+### Q2: What is `table-responsive` and why do we need it?
+
+By default, a wide `<table>` overflows its container on small screens — content gets cut off or the entire page scrolls sideways. Wrapping the table in:
+
+```html
+<div class="table-responsive">
+    <table>...</table>
+</div>
+```
+
+Makes only the table scroll horizontally inside its container, while the rest of the page stays fixed. The page layout doesn't break on mobile or narrow windows.
+
+---
+
+### Q3: What does `align-middle` do on a table?
+
+Bootstrap's `align-middle` class applies `vertical-align: middle` to all cells in the table. Without it, when a row contains elements of different heights (like a badge next to plain text, or buttons next to text), the cells align to the top by default — making rows look uneven. `align-middle` vertically centers everything in each row for a cleaner look.
+
+---
+
+### Q4: Why was the `Privacy()` action removed from HomeController?
+
+It was scaffolded automatically when the project was created but serves no purpose in this application. Leaving it in creates a reachable route (`/Home/Privacy`) that returns an empty page — dead code that could confuse reviewers. Removing it keeps the controller clean and the route table accurate.
+
+---
+
+### Q5: What is `[FromServices]` and why use it for FileUploadService?
+
+```csharp
+public async Task<IActionResult> Upload(IFormFile file,
+    [FromServices] FileUploadService uploadService)
+```
+
+`[FromServices]` tells ASP.NET to inject a service directly into a specific action parameter, rather than through the constructor. We use it here because `FileUploadService` is only needed in one action out of eight. Injecting it via the constructor would make it available everywhere and allocate it on every request — even requests that have nothing to do with file uploads. `[FromServices]` is more precise and communicates intent clearly.
+
 ## GLOSSARY
 
 | Term | What it is |
@@ -405,4 +470,4 @@ The semi-transparent black background (`rgba(0,0,0,0.55)`) blocks interaction wi
 
 ---
 
-**Last Updated:** February 18, 2026 (Module 7 complete)
+**Last Updated:** February 19, 2026 (Module 8 complete — project submitted)
